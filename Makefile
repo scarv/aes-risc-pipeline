@@ -36,8 +36,21 @@ spike-configure    :
     $(SPIKE_SUBMODULE)/configure \
         --prefix=$(TC_INSTALL)
 
+spike-update-patch:
+	cd $(SPIKE_SUBMODULE) && git diff --cached > $(SPIKE_PATCH)
+
+spike-apply-patch:
+	cd $(SPIKE_SUBMODULE) && git apply $(SPIKE_PATCH) && git add --all
+
 spike-build:    
 	mkdir -p $(SPIKE_INSTALL)
 	export PATH=$(TC_INSTALL)/bin:$(PATH) && \
 	cd $(SPIKE_BUILD) && \
     make -j 4 && make install
+
+opcodes:
+	cat $(REPO_HOME)/src/toolchain/opcodes.txt \
+    | python3 $(REPO_HOME)/bin/parse_opcodes.py -check
+	cat $(REPO_HOME)/src/toolchain/opcodes.txt \
+    | python3 $(REPO_HOME)/bin/parse_opcodes.py -c > build/opcodes-crypto.h
+

@@ -18,12 +18,13 @@ TC_BUILD        = $(REPO_BUILD)/toolchain/build
 TC_INSTALL      = $(REPO_BUILD)/toolchain/install
 
 PK_SUBMODULE    = $(REPO_HOME)/extern/riscv-pk
-PK_BUILD        = $(REPO_HOME)/toolchain/build
+PK_BUILD        = $(REPO_BUILD)/pk
 PK_INSTALL      = $(TC_INSTALL)
 
 SPIKE_SUBMODULE = $(REPO_HOME)/extern/riscv-isa-sim
-SPIKE_BUILD     = $(REPO_HOME)/toolchain/build
+SPIKE_BUILD     = $(REPO_BUILD)/spike
 SPIKE_INSTALL   = $(TC_INSTALL)
+SPIKE_PATCH     = $(REPO_HOME)/src/toolchain/spike.patch
 
 RISCV_HOST   = riscv64-unknown-elf
 
