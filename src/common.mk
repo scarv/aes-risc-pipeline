@@ -18,6 +18,7 @@ AS      = $(TC_INSTALL)/bin/$(RISCV_PREFIX)-as
 AR      = $(TC_INSTALL)/bin/$(RISCV_PREFIX)-ar
 OBJDUMP = $(TC_INSTALL)/bin/$(RISCV_PREFIX)-objdump
 SPIKE   = $(TC_INSTALL)/bin/spike
+PK      = $(TC_INSTALL)/$(RISCV_HOST)/bin/pk
 
 REPO_SW_BUILD = $(REPO_BUILD)/src
 
@@ -50,6 +51,16 @@ endef
 # 1. Name of the AES variant
 define map_test_program
 $(REPO_SW_BUILD)/bin/test_${1}.elf
+endef
+
+# 1. Name of the AES variant
+define map_test_output
+$(REPO_SW_BUILD)/test/test_${1}.py
+endef
+
+# 1. Name of the AES variant
+define map_test_result
+$(REPO_SW_BUILD)/test/test_${1}.log
 endef
 
 
@@ -99,8 +110,17 @@ $(call map_test_program,${1}) : $(TEST_SRC) $(call map_lib,${1})
 
 ALL_TARGETS += $(call map_test_program,${1})
 
-test-${1} : $(call map_test_program,${1})
-	@echo "Run  $${^}"
+$(call map_test_output,${1}) : $(call map_test_program,${1})
+	@mkdir -p $(dir $(call map_test_output,${1}))
+	$(SPIKE) $(PK) $${<} > $${@}
+	sed -i "s/^bbl loader/#/" $${@}
 
+$(call map_test_result,${1}) : $(call map_test_output,${1})
+	@mkdir -p $(dir $(call map_test_result,${1}))
+	python3 $${<} > $${@}
+
+test-${1} : $(call map_test_program,${1}) \
+            $(call map_test_output,${1}) \
+            $(call map_test_result,${1})
 endef
 

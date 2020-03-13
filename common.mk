@@ -13,6 +13,17 @@
 # Toolchain paths
 # ----------------------------------------------------------------------
 
-TC_SUBMODULE = $(REPO_HOME)/extern/riscv-gnu-toolchain
-TC_BUILD     = $(REPO_BUILD)/toolchain/build
-TC_INSTALL   = $(REPO_BUILD)/toolchain/install
+TC_SUBMODULE    = $(REPO_HOME)/extern/riscv-gnu-toolchain
+TC_BUILD        = $(REPO_BUILD)/toolchain/build
+TC_INSTALL      = $(REPO_BUILD)/toolchain/install
+
+PK_SUBMODULE    = $(REPO_HOME)/extern/riscv-pk
+PK_BUILD        = $(REPO_HOME)/toolchain/build
+PK_INSTALL      = $(TC_INSTALL)
+
+SPIKE_SUBMODULE = $(REPO_HOME)/extern/riscv-isa-sim
+SPIKE_BUILD     = $(REPO_HOME)/toolchain/build
+SPIKE_INSTALL   = $(TC_INSTALL)
+
+RISCV_HOST   = riscv64-unknown-elf
+
