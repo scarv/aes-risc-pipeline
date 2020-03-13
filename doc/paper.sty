@@ -1,0 +1,81 @@
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[plain,shortend]{algorithm2e}
+\usepackage{bytefield}
+\usepackage{caption}
+\usepackage[inline]{enumitem}
+\usepackage{etoolbox}
+\usepackage[hidelinks]{hyperref}
+\usepackage{import}
+\usepackage{listings}
+\usepackage{siunitx}
+\usepackage{subcaption}
+\usepackage{tikz}
+\usepackage{xargs}
+\usepackage{xspace}
+\usepackage{xstring}
+\usepackage{xcolor}
+
+% set flags to conditionally control content in the paper (in addition to document class)
+\newbool{submission} \setbool{submission}{false}
+\newbool{anonymous}  \setbool{anonymous} {false}
+
+% hack-ish control of space etc.
+\captionsetup[subfigure]{justification=centering}
+\setlist{noitemsep,leftmargin=0.65\parindent,align=left,labelwidth=0.65\parindent,labelsep=2pt,topsep=2pt,partopsep=2pt,parsep=2pt}
+\setlength{\textfloatsep}{0.7\baselineskip plus 0.2\baselineskip minus 0.5\baselineskip}
+
+\newcommandx{\SEC}[1][1={}]{\IfEq{#1}{s}{Sections}{Section}\xspace}
+\newcommandx{\TAB}[1][1={}]{\IfEq{#1}{s}{Tables}{Table}\xspace}
+\newcommandx{\FIG}[1][1={}]{\IfEq{#1}{s}{Figures}{Figure}\xspace}
+\newcommandx{\LST}[1][1={}]{\IfEq{#1}{s}{Listings}{Listing}\xspace}
+
+\newcommandx{\REFSEC}[1]{\SEC~\ref{#1}\xspace}
+\newcommandx{\REFTAB}[1]{\TAB~\ref{#1}\xspace}
+\newcommandx{\REFFIG}[1]{\FIG~\ref{#1}\xspace}
+\newcommandx{\REFLST}[1]{\LST~\ref{#1}\xspace}
+
+\newcommandx{\TUPLE}[1]{\ensuremath{({#1})}\xspace}
+\newcommandx{\TABLE}[1]{\ensuremath{[{#1}]}\xspace}
+\newcommandx{\LIST}[1]{\ensuremath{\langle{#1}\rangle}\xspace}
+\newcommandx{\SET}[1]{\ensuremath{\{{#1}\}}\xspace}
+
+\newcommandx{\RADIX}[2]{\ensuremath{{#1}_{({#2})}}\xspace}
+\newcommandx{\ASN}{\ensuremath{\leftarrow}\xspace}
+
+\lstdefinestyle{inline}{
+  escapechar={¬},
+  basicstyle=\ttfamily, 
+  keywordstyle=\ttfamily, 
+  breakautoindent=false,
+  breaklines=false,
+  breakatwhitespace=false,
+  keepspaces=true,
+  showstringspaces=false
+}
+\lstdefinestyle{float}{
+  escapechar={¬},
+  basicstyle=\ttfamily\scriptsize,  
+  breakautoindent=false,
+  breaklines=false,
+  breakatwhitespace=false,
+  keepspaces=true,
+  showstringspaces=false,
+  frame=single,
+  numbers=left
+}
+\lstdefinestyle{block}{
+  escapechar={¬},
+  basicstyle=\ttfamily\scriptsize,  
+  breakautoindent=false,
+  breaklines=false,
+  breakatwhitespace=false,
+  keepspaces=true,
+  showstringspaces=false,
+  frame=single,
+  numbers=left
+}
+\newcommand{\VERB}[2][]{\mbox{\lstinline[style={inline},language={#1}]`#2`}}
+\lstnewenvironment{MKVERB}[1][]{\lstset{basicstyle=\ttfamily,#1}}{}
+\lstalias{ASM}{C}
+

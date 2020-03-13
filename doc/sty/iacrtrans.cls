@@ -1,0 +1,448 @@
+% IACR Transactions DOCUMENT CLASS -- version 0.24 (26 August 2016)
+% Written by Gaetan Leurent gaetan.leurent@inria.fr (2016)
+%
+% To the extent possible under law, the author(s) have dedicated all
+% copyright and related and neighboring rights to this software to the
+% public domain worldwide. This software is distributed without any
+% warranty.
+%
+% You should have received a copy of the CC0 Public Domain Dedication
+% along with this software. If not, see
+% <http://creativecommons.org/publicdomain/zero/1.0/>.
+%
+%
+%%% Class options:
+%
+% [preprint]   Preprint (no copyright info)
+% [submission] Anonymous submission
+% [spthm]      Emulate llncs sptheorem and remove automatic \qed in proof
+% [nohyperref] Disable automatic loading of hyperref
+% [draft]
+%
+%%% HOWTO use this class
+%
+%% Title
+% \title[short]{Long title}
+%
+%% Authors/affiliation: 
+% \author{Alice \and Bob}
+% \institute{ABC\\ \email{alice@abc} \and DEF\\ \email{bob@def}}
+%
+%% Keywords/abstract:
+% \keywords{banana \and apple}
+% \begin{abstract}
+% Lorem ipsum dolor sit amet...
+% \end{abstract}
+%
+%% Warnings
+% - please don't use any \pagestyle of \thispagestyle command
+% - if you have proof with explicit \qed inside, you should either
+%   remove \qed symbols, replace them by \qedhere, or add option [spthm]
+
+\NeedsTeXFormat{LaTeX2e}[1995/12/01]
+\ProvidesClass{iacrtrans}[2016/08/26 v0.24 IACR Transactions Author Class]
+
+% Common definitions
+\def\publname{IACR Transactions on Cryptographic Hardware and Embedded Systems}
+\def\IACR@vol{0}
+\def\IACR@no{0}
+\def\IACR@fp{1}
+\def\IACR@DOI{XXXXXXXX}
+\usepackage{lastpage}
+\def\IACR@lp{\pageref*{LastPage}}
+
+\newcommand{\setfirstpage}[1]{\def\IACR@fp{#1}\setcounter{page}{#1}}
+\newcommand{\setlastpage}[1]{\def\IACR@lp{#1}}
+\newcommand{\setvolume}[1]{\def\IACR@vol{#1}}
+\newcommand{\setnumber}[1]{\def\IACR@no{#1}}
+\newcommand{\setDOI}[1]{\def\IACR@DOI{#1}}
+
+% Options
+\newif\if@loadhr
+\@loadhrtrue
+\DeclareOption{nohyperref}{\@loadhrfalse}
+\newif\if@floatrow
+\@floatrowfalse
+\DeclareOption{floatrow}{\@floatrowtrue}
+\newif\if@submission
+\@submissionfalse
+\newif\if@preprint
+\@preprintfalse
+\DeclareOption{final}{\PassOptionsToClass{\CurrentOption}{article}}      % Default
+\DeclareOption{preprint}{\@preprinttrue}
+\DeclareOption{submission}{\@submissiontrue}
+\DeclareOption{draft}{\@preprinttrue\PassOptionsToClass{\CurrentOption}{article}}
+\newif\if@spthm
+\@spthmfalse
+\DeclareOption{spthm}{\@spthmtrue}
+
+\DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
+\ProcessOptions\relax
+
+% article class with a4paper
+\LoadClass[10pt,twoside]{article}[2007/10/19]
+
+% Geometry
+\RequirePackage[a4paper,hscale=0.65,vscale=0.75,marginratio=1:1]{geometry}
+
+% Title fonts: bf+sf
+\RequirePackage{sectsty}
+\allsectionsfont{\sffamily\boldmath}
+% Also for descrptions
+\renewcommand*\descriptionlabel[1]{\hspace\labelsep
+                                   \normalfont\bfseries\sffamily #1}
+
+
+% Title/Author/affiliations
+\def\@institute{No institute given.}
+\newcommand{\institute}[1]{\gdef\@institute{#1}}
+\newcommand{\authorrunning}[1]{\gdef\IACR@runningauthors{#1}}
+\newcommand{\titlerunning}[1]{\gdef\IACR@runningtitle{#1}}
+
+\newcounter{IACR@author@cnt}
+\newcounter{IACR@inst@cnt}
+\newif\if@IACR@autoinst
+\@IACR@autoinsttrue
+\def\IACR@author@last{0}
+
+\renewcommand\maketitle{\par
+  \begingroup
+    \renewcommand\thefootnote{\@fnsymbol\c@footnote}%
+    \long\def\@makefntext##1{\parindent 1em\noindent
+            \hb@xt@1.8em{%
+                \hss\@textsuperscript{\normalfont\@thefnmark}}##1}%
+    \newpage
+    \global\@topnum\z@   % Prevents figures from going at top of page.
+    \@maketitle
+    \thispagestyle{title}\@thanks
+  \endgroup
+  \setcounter{footnote}{0}%
+  \global\let\thanks\relax
+  \global\let\maketitle\relax
+  \global\let\@maketitle\relax
+  \global\let\@thanks\@empty
+%  \global\let\@author\@empty
+  \global\let\@date\@empty
+%  \global\let\@title\@empty
+  \global\let\title\relax
+  \global\let\author\relax
+  \global\let\date\relax
+  \global\let\and\relax
+}
+\def\@maketitle{%
+  % Count authors and affiliations
+  \setcounter{IACR@author@cnt}{1}%
+  \setcounter{IACR@inst@cnt}{1}%
+  \setbox0\hbox{\def\thanks##1{\global\@IACR@autoinstfalse}\def\inst##1{\global\@IACR@autoinstfalse}\def\and{\stepcounter{IACR@author@cnt}}\@author}%
+  \setbox0\hbox{\def\and{\stepcounter{IACR@inst@cnt}}\@institute}%
+  \xdef\IACR@author@last{\theIACR@author@cnt}%
+  \edef\IACR@inst@last{\theIACR@inst@cnt}%
+  \ifnum\IACR@author@last=\IACR@inst@last\else\@IACR@autoinstfalse\fi
+  \ifnum\IACR@author@last=1 \@IACR@autoinstfalse\fi
+  \newpage
+  \null
+  \vskip 2em%
+  \begin{center}%
+  \let \footnote \thanks
+    {\def\@makefnmark{\rlap{\@textsuperscript{\normalfont\@thefnmark}}}%
+      {\LARGE \bfseries\sffamily\boldmath \@title\par}
+    \ifdefined\@subtitle\vskip .5em{\large\sffamily\bfseries\@subtitle\par}\fi}%
+    \vskip 1.5em%
+    {\large
+      \lineskip .5em%
+        \if@submission
+        Anonymous Submission
+        \else
+        \setcounter{IACR@author@cnt}{1}%
+        \def\and{\if@IACR@autoinst\inst{\theIACR@author@cnt} \fi
+          \stepcounter{IACR@author@cnt}%
+          \ifnum\theIACR@author@cnt=\IACR@author@last\unskip\space and \ignorespaces\else\unskip, \ignorespaces\fi}
+        \@author\if@IACR@autoinst\inst{\theIACR@author@cnt}\fi
+        \vskip 1em\par
+        \small
+        \setcounter{IACR@author@cnt}{1}%
+        \def\and{\par\stepcounter{IACR@author@cnt}$^\theIACR@author@cnt$~}
+        \ifnum\IACR@inst@last>1 $^1$~\fi
+        \@institute
+        \fi
+      }%
+  \end{center}%
+  \par
+  \vskip 1.5em}
+
+\def\IACR@runningauthors{
+  \def\thanks##1{}%
+  \def\inst##1{}%
+  \def\fnmsep{}%
+  \def\\{}%
+  \def\footnote##1{}%
+  \setcounter{IACR@author@cnt}{1}%
+  \def\and{\stepcounter{IACR@author@cnt}%
+    \ifnum\theIACR@author@cnt=\IACR@author@last\unskip\space and \ignorespaces\else\unskip, \ignorespaces\fi}
+  \@author}
+
+\def\IACR@runningtitle{%
+  \def\thanks##1{}%
+  \def\fnmsep{}%
+  \def\\{}%
+  \def\footnote##1{}%
+  \@title}
+
+\def\author{\@ifnextchar[{\IACR@@@author}{\IACR@@author}}
+\def\IACR@@@author[#1]#2{\authorrunning{#1}\gdef\@author{#2}}
+\def\IACR@@author#1{\gdef\@author{#1}}
+
+\if@submission
+\gdef\@author{Anonymous Submission to \publname}
+\renewcommand{\author}[2][]{}
+\renewcommand{\authorrunning}[1]{}
+\renewcommand{\institute}[2][]{}
+\fi
+
+
+\def\title{\@ifnextchar[{\IACR@@@title}{\IACR@@title}}
+\def\IACR@@@title[#1]#2{\gdef\@title{#2}\titlerunning{#1}}
+\def\IACR@@title#1{\gdef\@title{#1}}
+
+\newcommand{\subtitle}[1]{\gdef\@subtitle{#1}}
+
+\newcommand{\inst}[1]{\unskip$^{#1}$}
+\def\fnmsep{\unskip$^,$}
+
+
+% Head/foot
+\RequirePackage{fancyhdr}
+\RequirePackage{graphicx}
+\fancypagestyle{title}{%
+\fancyhf{} % clear all header and footer fields
+\if@submission\else\if@preprint\else
+\fancyfoot[L]{\small Licensed under \href{http://creativecommons.org/licenses/by/4.0/}{Creative Commons License CC-BY 4.0.}\\
+\publname{} Vol.~\IACR@vol, No.\IACR@no, pp.\IACR@fp---\IACR@lp, \href{https://doi.org/\IACR@DOI}{DOI:\IACR@DOI}}
+\fancyfoot[R]{\includegraphics[height=2ex]{CC-by}}
+\if@loadhr
+  \hypersetup{pdfcopyright={Licensed under Creative Commons License CC-BY 4.0.}}
+  \hypersetup{pdflicenseurl={http://creativecommons.org/licenses/by/4.0/}}
+  \hypersetup{pdfsubject={IACR Transactions on Symmetric Cryptology}}
+  \hypersetup{pdflang=en}
+\fi
+\fi\fi
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}}
+\fancyhf{} % clear all header and footer fields
+\fancyhead[RO,LE]{\thepage}
+\fancyhead[RE]{\IACR@runningtitle}
+\fancyhead[LO]{\IACR@runningauthors}
+\renewcommand{\markboth}[2]{}
+\pagestyle{fancy}
+
+\def\subtitle#1{\gdef\@subtitle{#1}}
+
+%Abstract style, keywords
+\def\@IACR@keywords{No keywords given.}
+
+\def\keywords{\@ifnextchar[{\IACR@@@keywords}{\IACR@@keywords}}
+\def\IACR@@@keywords[#1]#2{\gdef\@IACR@PDFkeywords{#1}\gdef\@IACR@keywords{#2}}
+\def\IACR@@keywords#1{\gdef\@IACR@keywords{#1}}
+
+\renewenvironment{abstract}{%
+  \small\quotation\setlength{\parindent}{0pt}\noindent
+  \textbf{\textsf{Abstract.}}}
+  {\smallskip\par\textbf{\textsf{Keywords:}}
+    \def\and{\unskip\space\textperiodcentered\space\ignorespaces}\@IACR@keywords
+  \endquotation%
+  \if@loadhr
+    %% PDF keywords
+    \def\and{, }%
+    \def\thanks##1{}%
+    \def\footnote##1{}%
+    \def\inst##1{}%
+    \def\fnmsep{}%
+    \def\\{}%
+    \def\zap@comma@space##1 ,##2{%
+      ##1%
+      \ifx##2\@empty\else, \expandafter\zap@comma@space\fi
+      ##2}
+    \ifdefined\@IACR@PDFkeywords
+      \hypersetup{pdfkeywords=\@IACR@PDFkeywords}
+    \else
+      \protected@edef\@tmp{\expandafter\@IACR@keywords}
+      \protected@edef\@tmp{\expandafter\zap@comma@space\@tmp{} ,\@empty}
+      \hypersetup{pdfkeywords=\@tmp}
+    \fi
+    %% PDF author
+    \def\zap@one,##1{}
+    \def\zap@last##1,##2{\ifx##1\@empty\else\space and ##1\expandafter\zap@one\fi}
+    \def\zap@last@comma##1,##2,##3{%
+      ##1%
+      \ifx##3\@empty%
+      \expandafter\zap@last\else
+      ,\expandafter\zap@last@comma\fi%
+      ##2,##3}
+      \def\zap@dbl@space##1 ##2{%
+        ##1%
+        \ifx##2\@empty\else\space\expandafter\zap@dbl@space##2\fi}
+    \protected@edef\@tmp{\expandafter\@author}
+  %  \protected@edef\@tmp{\expandafter\IACR@runningauthors}
+    \protected@edef\@tmp{\expandafter\zap@last@comma\@tmp,\@empty,\@empty}
+    \protected@edef\@tmp{\expandafter\zap@comma@space\@tmp{} ,\@empty}
+    \protected@edef\@tmp{\expandafter\zap@dbl@space\@tmp{} \@empty}
+    \hypersetup{pdfauthor=\@tmp}
+    %% PDF title
+    \hypersetup{pdftitle=\IACR@runningtitle}
+  \fi
+}
+
+
+% Hyperref
+\if@loadhr
+  \RequirePackage{xcolor}
+  \RequirePackage{etoolbox}
+  \AtEndPreamble{
+    \@ifpackageloaded{hyperref}{}{\usepackage{hyperref}}
+    \@ifpackageloaded{hyperxmp}{}{\usepackage{hyperxmp}}
+    \hypersetup{colorlinks=true,
+      citecolor=black!70!green,
+      linkcolor=black!70!red}
+  }
+  \setcounter{tocdepth}{2}
+\fi
+% autoref: capitals for Sections, and adding Algorithm
+\def\equationautorefname{Equation}%
+\def\footnoteautorefname{footnote}%
+\def\itemautorefname{item}%
+\def\figureautorefname{Figure}%
+\def\tableautorefname{Table}%
+\def\partautorefname{Part}%
+\def\appendixautorefname{Appendix}%
+\def\chapterautorefname{Chapter}%
+\def\sectionautorefname{Section}%
+\def\subsectionautorefname{Subsection}%
+\def\subsubsectionautorefname{Subsubsection}%
+\def\paragraphautorefname{paragraph}%
+\def\subparagraphautorefname{subparagraph}%
+\def\FancyVerbLineautorefname{line}%
+\def\theoremautorefname{Theorem}%
+\def\pageautorefname{page}%
+\def\algorithmautorefname{Algorithm}
+
+% AMS math
+\RequirePackage{amsmath,amssymb,amsthm}
+\RequirePackage{mathtools}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{example}{Example}
+\newtheorem{exercise}{Exercise}
+\newtheorem{property}{Property}
+\newtheorem{question}{Question}
+\newtheorem{solution}{Solution}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{problem}{Problem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{conjecture}{Conjecture}
+\newtheorem{corollary}{Corollary}
+\newtheorem*{claim}{Claim}
+
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+\newtheorem{note}{Note}
+\newtheorem{case}{Case}
+
+\theoremstyle{plain}
+
+%Emulate LLNCS spnewtheorem
+\if@spthm
+\def\spnewtheorem{\@ifstar{\IACR@spstar}{\IACR@sp}}
+\def\IACR@spstar#1#2#3#4{\newtheorem*{#1}{#2}}
+\def\IACR@sp#1{\@ifnextchar[{\IACR@sp@b{#1}}{\IACR@sp@a{#1}}}
+\def\IACR@sp@a#1#2[#3]#4#5{\newtheorem{#1}{#2}[#3]}
+\def\IACR@sp@b#1[#2]#3#4#5{\newtheorem{#1}[#2]{#3}}
+\renewcommand{\pushQED}[1]{}
+\fi
+
+% Floats and captions
+\if@floatrow
+\RequirePackage{floatrow}
+\floatsetup[table]{style=Plaintop} 
+\RequirePackage{caption}
+\captionsetup{labelfont={sf,bf}}
+\else
+\RequirePackage{float}
+\newcommand\fs@iacrabove{%
+  % Swap \abovecaptionskip and \belowcaptionskip
+  \addtolength\abovecaptionskip{-\belowcaptionskip}
+  \addtolength\belowcaptionskip{\abovecaptionskip}
+  \addtolength\abovecaptionskip{-\belowcaptionskip}
+  \setlength\abovecaptionskip{-\abovecaptionskip}
+  \fs@plaintop%
+  \def\@fs@cfont{\sffamily\bfseries}}
+\newcommand\fs@iacrbelow{%
+  \fs@plain%
+  \def\@fs@cfont{\sffamily\bfseries}}
+\floatstyle{iacrabove}
+\restylefloat{table}
+\floatstyle{iacrbelow}
+\restylefloat{figure}
+\fi
+
+% Extra commands
+\def\email{\@ifnextchar[{\IACR@@email}{\IACR@email}}
+\if@loadhr
+\def\IACR@@email[#1]#2{\href{mailto:#1}{\nolinkurl{#2}}}
+\def\IACR@email#1{\href{mailto:#1}{\nolinkurl{#1}}}
+\else
+\RequirePackage{url}
+\def\IACR@@email[#1]#2{\url{#2}}
+\def\IACR@email#1{\url{#1}}
+\fi
+
+% Line # for submission
+\newcommand\linenomathWithnumbersforAMS{%
+  \ifLineNumbers 
+%%  \ifx\@@par\@@@par\else
+    \ifnum\interlinepenalty>-\linenopenaltypar
+      \global\holdinginserts\thr@@ 
+      \advance\interlinepenalty \linenopenalty
+     \ifhmode                                   % v4.3 
+      \advance\predisplaypenalty \linenopenalty
+     \fi 
+%%      \advance\postdisplaypenalty \linenopenalty
+      \advance\interdisplaylinepenalty \linenopenalty
+    \fi
+  \fi
+  \ignorespaces
+  }
+
+\if@submission
+\RequirePackage[mathlines]{lineno}
+\linenumbers
+\def\linenumberfont{\normalfont\tiny\sffamily\color{gray}}
+
+% Taken from http://phaseportrait.blogspot.fr/2007/08/lineno-and-amsmath-compatibility.html
+\newcommand*\patchAmsMathEnvironmentForLineno[1]{%
+  \expandafter\let\csname old#1\expandafter\endcsname\csname #1\endcsname
+  \expandafter\let\csname oldend#1\expandafter\endcsname\csname end#1\endcsname
+  \renewenvironment{#1}%
+     {\linenomathWithnumbersforAMS\csname old#1\endcsname}%
+     {\csname oldend#1\endcsname\endlinenomath}}% 
+\newcommand*\patchBothAmsMathEnvironmentsForLineno[1]{%
+  \patchAmsMathEnvironmentForLineno{#1}%
+  \patchAmsMathEnvironmentForLineno{#1*}}%
+\AtBeginDocument{%
+%\patchBothAmsMathEnvironmentsForLineno{equation}%
+\patchBothAmsMathEnvironmentsForLineno{align}%
+\patchBothAmsMathEnvironmentsForLineno{flalign}%
+\patchBothAmsMathEnvironmentsForLineno{alignat}%
+\patchBothAmsMathEnvironmentsForLineno{gather}%
+\patchBothAmsMathEnvironmentsForLineno{multline}%
+}
+\fi
+
+% Microtype
+\RequirePackage{microtype}
+
+% Fonts
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
