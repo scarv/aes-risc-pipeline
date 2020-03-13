@@ -17,6 +17,9 @@ TC_SUBMODULE    = $(REPO_HOME)/extern/riscv-gnu-toolchain
 TC_BUILD        = $(REPO_BUILD)/toolchain/build
 TC_INSTALL      = $(REPO_BUILD)/toolchain/install
 
+BINUTILS_SUBMODULE = $(TC_SUBMODULE)/riscv-binutils
+BINUTILS_PATCH  = $(REPO_HOME)/src/toolchain/binutils.patch
+
 PK_SUBMODULE    = $(REPO_HOME)/extern/riscv-pk
 PK_BUILD        = $(REPO_BUILD)/pk
 PK_INSTALL      = $(TC_INSTALL)

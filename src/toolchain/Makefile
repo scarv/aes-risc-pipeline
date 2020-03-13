@@ -26,3 +26,8 @@ build       :
 	mkdir -p $(TC_INSTALL)
 	cd $(TC_BUILD) && make -j 4
 	
+binutils-update-patch:
+	cd $(BINUTILS_SUBMODULE) && git diff --cached > $(BINUTILS_PATCH)
+
+binutils-apply-patch:
+	cd $(BINUTILS_SUBMODULE) && git apply $(BINUTILS_PATCH) && git add --all
