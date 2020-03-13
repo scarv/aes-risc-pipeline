@@ -1,3 +1,6 @@
 [submodule "extern/riscv-gnu-toolchain"]
 	path = extern/riscv-gnu-toolchain
 	url = https://github.com/riscv/riscv-gnu-toolchain.git
+[submodule "extern/riscv-pk"]
+	path = extern/riscv-pk
+	url = https://github.com/riscv/riscv-pk.git
