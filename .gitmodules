@@ -4,3 +4,6 @@
 [submodule "extern/riscv-pk"]
 	path = extern/riscv-pk
 	url = https://github.com/riscv/riscv-pk.git
+[submodule "extern/riscv-isa-sim"]
+	path = extern/riscv-isa-sim
+	url = https://github.com/riscv/riscv-isa-sim.git
