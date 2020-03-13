@@ -14,7 +14,6 @@
 ## Quickstart
 
 - Checkout the repository:
-
   ```sh
   git checkout <REPO PATH>
   cd aes-risc-pipeline
@@ -22,9 +21,29 @@
   ```
 
 - Setup the project workspace:
-
   ```sh
   source bin/conf.sh
+  ```
+
+- Build the toolchain:
+  ```
+  make toolchain-build
+  ```
+
+- Configure and build the ISA simulator
+  ```
+  make spike-configure spike-build
+  ```
+
+- Configure and build the Spike proxy kernel
+  ```
+  make pk-configure pk-build
+  ```
+
+- Build and run the benchmarks:
+  
+  ```
+  make -C src all
   ```
 
 ## Introduction
