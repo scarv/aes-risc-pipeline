@@ -74,16 +74,36 @@ spike-build:
 # Proxy Kernel
 # ------------------------------------------------------------
 
-pk-configure    :
-	mkdir -p $(PK_BUILD)
+pk32-configure    :
+	mkdir -p $(PK32_BUILD)
 	export PATH=$(TC_INSTALL)/bin:$(PATH) && \
-	cd $(PK_BUILD) && \
+	cd $(PK32_BUILD) && \
     $(PK_SUBMODULE)/configure \
         --prefix=$(TC_INSTALL) \
-        --host=$(RISCV_HOST)
+        --host=riscv64-unknown-elf \
+        --with-arch=rv32imac
 
-pk-build:    
-	mkdir -p $(PK_INSTALL)
+pk32-build:    
+	mkdir -p $(PK32_INSTALL)
 	export PATH=$(TC_INSTALL)/bin:$(PATH) && \
-	cd $(PK_BUILD) && \
+	cd $(PK32_BUILD) && \
     make && make install
+
+pk64-configure    :
+	mkdir -p $(PK64_BUILD)
+	export PATH=$(TC_INSTALL)/bin:$(PATH) && \
+	cd $(PK64_BUILD) && \
+    $(PK_SUBMODULE)/configure \
+        --prefix=$(TC_INSTALL) \
+        --host=riscv64-unknown-elf \
+        --with-arch=rv64imac
+
+pk64-build:    
+	mkdir -p $(PK64_INSTALL)
+	export PATH=$(TC_INSTALL)/bin:$(PATH) && \
+	cd $(PK64_BUILD) && \
+    make && make install
+
+pk-configure: pk32-configure pk64-configure
+pk-build    : pk32-build     pk64-build
+
