@@ -18,7 +18,8 @@ AS      = $(TC_INSTALL)/bin/$(RISCV_PREFIX)-as
 AR      = $(TC_INSTALL)/bin/$(RISCV_PREFIX)-ar
 OBJDUMP = $(TC_INSTALL)/bin/$(RISCV_PREFIX)-objdump
 SPIKE   = $(TC_INSTALL)/bin/spike
-PK      = $(TC_INSTALL)/$(RISCV_HOST)/bin/pk
+PK32    = $(TC_INSTALL)/riscv32-unknown-elf/bin/pk
+PK64    = $(TC_INSTALL)/riscv64-unknown-elf/bin/pk
 
 REPO_SW_BUILD = $(REPO_BUILD)/src
 
@@ -27,6 +28,7 @@ TEST_SRC    = $(REPO_HOME)/src/test/test_aes.c \
 
 CFLAGS     += -Wall -O2
 CFLAGS     += -I$(REPO_HOME)/src/aes
+CFLAGS     += -I$(REPO_HOME)/src/aes/share
 
 #
 # Build Macros
@@ -100,19 +102,23 @@ endef
 
 
 # 1. AES variant name to test
+# 2. Compiler flags
+# 3. Spike flags
+# 4. Proxy Kernel Binary
 define add_aes_test_target
 
 $(call map_test_program,${1}) : $(TEST_SRC) $(call map_lib,${1})
 	@mkdir -p $(dir $(call map_test_program,${1}))
-	$(CC) $(CFLAGS) -DAES_VARIANT=${1} \
+	$(CC) $(CFLAGS) ${2} -DAES_VARIANT=${1} \
         -I $(REPO_HOME)/src/test \
         -o $${@} $${^}
+	$(OBJDUMP) -D $${@} > $${@}.dis
 
 ALL_TARGETS += $(call map_test_program,${1})
 
 $(call map_test_output,${1}) : $(call map_test_program,${1})
 	@mkdir -p $(dir $(call map_test_output,${1}))
-	$(SPIKE) $(PK) $${<} > $${@}
+	$(SPIKE) ${3} ${4} $${<} > $${@}
 	sed -i "s/^bbl loader/#/" $${@}
 
 $(call map_test_result,${1}) : $(call map_test_output,${1})

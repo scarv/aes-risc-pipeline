@@ -244,27 +244,27 @@ void    aes_256_dec_key_schedule (
 }
 
 void    aes_128_dec_block(
-    uint8_t     ct [              16],
     uint8_t     pt [              16],
+    uint8_t     ct [              16],
     uint32_t    rk [AES_128_RK_WORDS] 
 ){
-    aes_dec_block (ct, pt, rk, AES_128_NR);
+    aes_dec_block (pt, ct, rk, AES_128_NR);
 }
 
 void    aes_192_dec_block(
-    uint8_t     ct [              16],
     uint8_t     pt [              16],
+    uint8_t     ct [              16],
     uint32_t    rk [AES_192_RK_WORDS] 
 ){
-    aes_dec_block (ct, pt, rk, AES_192_NR);
+    aes_dec_block (pt, ct, rk, AES_192_NR);
 }
 
 void    aes_256_dec_block(
-    uint8_t     ct [              16],
     uint8_t     pt [              16],
+    uint8_t     ct [              16],
     uint32_t    rk [AES_256_RK_WORDS] 
 ){
-    aes_dec_block (ct, pt, rk, AES_256_NR);
+    aes_dec_block (pt, ct, rk, AES_256_NR);
 }
 
 //!@}

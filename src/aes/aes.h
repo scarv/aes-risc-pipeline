@@ -65,6 +65,8 @@ AES  |   Nk  | Nb   | Nr
 #define AES_192_CK_BYTES    24
 #define AES_256_CK_BYTES    32
 
+#define ROTR32(x,c) (((x) >> (c)) | ((x) << (32 - (c))))
+
 
 //! Key expansion function for the AES 128 parameterisation - encrypt
 void    aes_128_enc_key_schedule (
