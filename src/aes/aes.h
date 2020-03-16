@@ -66,6 +66,7 @@ AES  |   Nk  | Nb   | Nr
 #define AES_256_CK_BYTES    32
 
 #define ROTR32(x,c) (((x) >> (c)) | ((x) << (32 - (c))))
+#define ROTL32(x,c) (((x) << (c)) | ((x) >> (32 - (c))))
 
 
 //! Key expansion function for the AES 128 parameterisation - encrypt
