@@ -27,9 +27,18 @@ void    aes_key_schedule (
 ){
     const int        Nb = 4;
 
-    for(int i = 0; i < Nb; i ++) {
-        U8_TO_U32_LE(rk[i], ck,  4*i);
-    }
+    uint32_t q0,q1,q2,q3; // Quadrants
+    uint32_t c0,c1,c2,c3; // Columns
+
+    U8_TO_U32_LE(c0, ck, 4*0);
+    U8_TO_U32_LE(c1, ck, 4*1);
+    U8_TO_U32_LE(c2, ck, 4*2);
+    U8_TO_U32_LE(c3, ck, 4*3);
+
+    PACK_QUAD_0(rk[0], c0, c1);
+    PACK_QUAD_1(rk[1], c2, c3);
+    PACK_QUAD_2(rk[2], c0, c1);
+    PACK_QUAD_3(rk[3], c2, c3);
     
     for(int i = 4; i < Nk*(Nr+1); i += 1) {
 
@@ -63,91 +72,37 @@ void    aes_enc_block (
     int round = 0;
 
     uint32_t n0, n1, n2, n3;
-    uint32_t t0, t1, t2, t3;
+    uint32_t c0, c1, c2, c3;
+    uint32_t q0, q1, q2, q3;
 
-    U8_TO_U32_LE(t0, pt, 0);
-    U8_TO_U32_LE(t1, pt, 4);
-    U8_TO_U32_LE(t2, pt, 8);
-    U8_TO_U32_LE(t3, pt,12);
+    U8_TO_U32_LE(c0, pt, 0);
+    U8_TO_U32_LE(c1, pt, 4);
+    U8_TO_U32_LE(c2, pt, 8);
+    U8_TO_U32_LE(c3, pt,12);
 
-    t0 ^= rk[0];
-    t1 ^= rk[1];
-    t2 ^= rk[2];
-    t3 ^= rk[3];
+    PACK_QUAD_0(q0, c0, c1);
+    PACK_QUAD_1(q1, c2, c3);
+    PACK_QUAD_2(q2, c0, c1);
+    PACK_QUAD_3(q3, c2, c3);
+
+    q0 ^= rk[0];
+    q1 ^= rk[1];
+    q2 ^= rk[2];
+    q3 ^= rk[3];
 
     for(round = 1; round < nr; round ++) {
         
-        //
-        // Sub Bytes
-        t0 = _saes_v1_encs(t0);
-        t1 = _saes_v1_encs(t1);
-        t2 = _saes_v1_encs(t2);
-        t3 = _saes_v1_encs(t3);
-
-        //
-        // Shift Rows
-        n0 = (t0 & 0x000000FF) | (t1 & 0x0000FF00) |
-             (t2 & 0x00FF0000) | (t3 & 0xFF000000) ;
-        
-        n1 = (t1 & 0x000000FF) | (t2 & 0x0000FF00) | 
-             (t3 & 0x00FF0000) | (t0 & 0xFF000000) ;
-        
-        n2 = (t2 & 0x000000FF) | (t3 & 0x0000FF00) |
-             (t0 & 0x00FF0000) | (t1 & 0xFF000000) ;
-
-        n3 = (t3 & 0x000000FF) | (t0 & 0x0000FF00) |
-             (t1 & 0x00FF0000) | (t2 & 0xFF000000) ;
-
-        //
-        // Mix Columns
-
-        t0 = _saes_v1_encm(n0);
-        t1 = _saes_v1_encm(n1);
-        t2 = _saes_v1_encm(n2);
-        t3 = _saes_v1_encm(n3);
-        
-        //
-        // Add Round Key
-
-        t0 ^= rk[4*round + 0];
-        t1 ^= rk[4*round + 1];
-        t2 ^= rk[4*round + 2];
-        t3 ^= rk[4*round + 3];
     }
-    //
-    // Sub Bytes
-    t0 = _saes_v1_encs(t0);
-    t1 = _saes_v1_encs(t1);
-    t2 = _saes_v1_encs(t2);
-    t3 = _saes_v1_encs(t3);
 
-    //
-    // Shift Rows
-    n0 = (t0 & 0x000000FF) | (t1 & 0x0000FF00) |
-         (t2 & 0x00FF0000) | (t3 & 0xFF000000) ;
-    
-    n1 = (t1 & 0x000000FF) | (t2 & 0x0000FF00) | 
-         (t3 & 0x00FF0000) | (t0 & 0xFF000000) ;
-    
-    n2 = (t2 & 0x000000FF) | (t3 & 0x0000FF00) |
-         (t0 & 0x00FF0000) | (t1 & 0xFF000000) ;
-
-    n3 = (t3 & 0x000000FF) | (t0 & 0x0000FF00) |
-         (t1 & 0x00FF0000) | (t2 & 0xFF000000) ;
-
-    
-    //
-    // Add Round Key
-
-    t0 = n0 ^ rk[4*round + 0];
-    t1 = n1 ^ rk[4*round + 1];
-    t2 = n2 ^ rk[4*round + 2];
-    t3 = n3 ^ rk[4*round + 3];
+    UNPACK_COL_0(c0, q0, q2);
+    UNPACK_COL_1(c1, q0, q2);
+    UNPACK_COL_2(c2, q1, q3);
+    UNPACK_COL_3(c3, q1, q3);
         
-    U32_TO_U8_LE(ct, t0, 0);
-    U32_TO_U8_LE(ct, t1, 4);
-    U32_TO_U8_LE(ct, t2, 8);
-    U32_TO_U8_LE(ct, t3,12);
+    U32_TO_U8_LE(ct, c0,  0);
+    U32_TO_U8_LE(ct, c1,  4);
+    U32_TO_U8_LE(ct, c2,  8);
+    U32_TO_U8_LE(ct, c3, 12);
 }
 
 
