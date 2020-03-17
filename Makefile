@@ -15,6 +15,8 @@ include $(REPO_HOME)/common.mk
 toolchain-% :
 	$(MAKE) -C $(REPO_HOME)/src/toolchain ${*}
 	
+paper:
+	$(MAKE) -C $(REPO_HOME)/doc all
 
 opcodes:
 	cat $(REPO_HOME)/src/toolchain/opcodes.txt \
