@@ -374,8 +374,6 @@ def make_c(match,mask):
     mask_vars[name]  = "MASK_%s"  % name2
     print('#define %s %s' % (match_vars[name], hex(match[name])))
     print('#define %s %s' % (mask_vars[name] , hex(mask[name])))
-    print('#define MATCH_%s %s' % (name2, hex(match[name])))
-    print('#define MASK_%s  %s' % (name2, hex(mask[name])))
   for num, name in csrs+csrs32:
     print('#define CSR_%s %s' % (name.upper(), hex(num)))
   for num, name in causes:
@@ -402,7 +400,7 @@ def make_c(match,mask):
 
       argstring = ",".join([acodes[a] for a in arguments[mnemonic]])
 
-      line = "{%-22s, 0, INSN_CLASS_ZSCRYPTO, %10s, %s, %s, match_opcode, 0}," % (
+      line = "{%-22s, 0, INSN_CLASS_I, %10s, %s, %s, match_opcode, 0}," % (
         "\"%s\""%mnemonic,
         "\"%s\""%argstring,
         match_vars[mnemonic],
