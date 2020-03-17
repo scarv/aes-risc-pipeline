@@ -17,8 +17,10 @@
 // AES
 //
 
-static inline uint32_t _saes_v1_enc(uint32_t rs1) {uint32_t rd; __asm__("saes.v1.enc %0, %1" : "=r"(rd) : "r"(rs1)); return rd;}
-static inline uint32_t _saes_v1_dec(uint32_t rs1) {uint32_t rd; __asm__("saes.v1.dec %0, %1" : "=r"(rd) : "r"(rs1)); return rd;}
+static inline uint32_t _saes_v1_encs(uint32_t rs1) {uint32_t rd; __asm__("saes.v1.encs %0, %1" : "=r"(rd) : "r"(rs1)); return rd;}
+static inline uint32_t _saes_v1_encm(uint32_t rs1) {uint32_t rd; __asm__("saes.v1.encm %0, %1" : "=r"(rd) : "r"(rs1)); return rd;}
+static inline uint32_t _saes_v1_decs(uint32_t rs1) {uint32_t rd; __asm__("saes.v1.decs %0, %1" : "=r"(rd) : "r"(rs1)); return rd;}
+static inline uint32_t _saes_v1_decm(uint32_t rs1) {uint32_t rd; __asm__("saes.v1.decm %0, %1" : "=r"(rd) : "r"(rs1)); return rd;}
 
 static inline uint32_t _saes_v2_sub_enc   (uint32_t rs1, uint32_t rs2) {uint32_t rd; __asm__("saes.v2.sub.enc    %0, %1, %2" : "=r"(rd) : "r"(rs1), "r"(rs2)); return rd;}
 static inline uint32_t _saes_v2_sub_encrot(uint32_t rs1, uint32_t rs2) {uint32_t rd; __asm__("saes.v2.sub.encrot %0, %1, %2" : "=r"(rd) : "r"(rs1), "r"(rs2)); return rd;}

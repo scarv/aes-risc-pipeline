@@ -38,12 +38,12 @@ void    aes_key_schedule (
         if( i % Nk == 0 ) {
 
             temp  = ROTR32(temp, 8);
-            temp  = _saes_v1_enc(temp);
+            temp  = _saes_v1_encs(temp);
             temp ^= round_const[i/Nk];
 
         } else if ( (Nk > 6) && (i % Nk == 4)) {
             
-            temp  = _saes_v1_enc(temp);
+            temp  = _saes_v1_encs(temp);
 
         }
 
@@ -51,6 +51,9 @@ void    aes_key_schedule (
     }
 }
 
+
+/*
+ * Commented out because we are now using the mix instructions.
 
 //! Forward mix columns transformation.
 static uint32_t aes_mix_column_enc(
@@ -77,6 +80,7 @@ static uint32_t aes_mix_column_enc(
 
     return tr;
 }
+*/
 
 
 /*!
@@ -106,10 +110,10 @@ void    aes_enc_block (
         
         //
         // Sub Bytes
-        t0 = _saes_v1_enc(t0);
-        t1 = _saes_v1_enc(t1);
-        t2 = _saes_v1_enc(t2);
-        t3 = _saes_v1_enc(t3);
+        t0 = _saes_v1_encs(t0);
+        t1 = _saes_v1_encs(t1);
+        t2 = _saes_v1_encs(t2);
+        t3 = _saes_v1_encs(t3);
 
         //
         // Shift Rows
@@ -128,10 +132,10 @@ void    aes_enc_block (
         //
         // Mix Columns
 
-        t0 = aes_mix_column_enc(n0);
-        t1 = aes_mix_column_enc(n1);
-        t2 = aes_mix_column_enc(n2);
-        t3 = aes_mix_column_enc(n3);
+        t0 = _saes_v1_encm(n0);
+        t1 = _saes_v1_encm(n1);
+        t2 = _saes_v1_encm(n2);
+        t3 = _saes_v1_encm(n3);
         
         //
         // Add Round Key
@@ -143,10 +147,10 @@ void    aes_enc_block (
     }
     //
     // Sub Bytes
-    t0 = _saes_v1_enc(t0);
-    t1 = _saes_v1_enc(t1);
-    t2 = _saes_v1_enc(t2);
-    t3 = _saes_v1_enc(t3);
+    t0 = _saes_v1_encs(t0);
+    t1 = _saes_v1_encs(t1);
+    t2 = _saes_v1_encs(t2);
+    t3 = _saes_v1_encs(t3);
 
     //
     // Shift Rows

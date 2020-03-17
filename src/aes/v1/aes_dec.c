@@ -19,6 +19,8 @@ extern void    aes_key_schedule (
     const int  Nr   //!< Number of rounds.
 );
 
+/*
+ * Commented out since we are now using the mix columns instruction.
 //! Inverse mix columns transformation.
 static uint32_t aes_mix_column_dec(
     uint32_t col
@@ -44,6 +46,7 @@ static uint32_t aes_mix_column_dec(
 
     return tr;
 }
+*/
 
 
 /*!
@@ -94,10 +97,10 @@ void    aes_dec_block (
         //
         // Inv SubBytes
 
-        t0 = _saes_v1_dec(n0);
-        t1 = _saes_v1_dec(n1);
-        t2 = _saes_v1_dec(n2);
-        t3 = _saes_v1_dec(n3);
+        t0 = _saes_v1_decs(n0);
+        t1 = _saes_v1_decs(n1);
+        t2 = _saes_v1_decs(n2);
+        t3 = _saes_v1_decs(n3);
 
         //
         // Add Round Key
@@ -110,10 +113,10 @@ void    aes_dec_block (
         //
         // Inv MixColumns
 
-        t0 = aes_mix_column_dec(t0);
-        t1 = aes_mix_column_dec(t1);
-        t2 = aes_mix_column_dec(t2);
-        t3 = aes_mix_column_dec(t3);
+        t0 = _saes_v1_decm(t0);
+        t1 = _saes_v1_decm(t1);
+        t2 = _saes_v1_decm(t2);
+        t3 = _saes_v1_decm(t3);
 
     }
 
@@ -135,10 +138,10 @@ void    aes_dec_block (
     //
     // Inv SubBytes
 
-    t0 = _saes_v1_dec(n0);
-    t1 = _saes_v1_dec(n1);
-    t2 = _saes_v1_dec(n2);
-    t3 = _saes_v1_dec(n3);
+    t0 = _saes_v1_decs(n0);
+    t1 = _saes_v1_decs(n1);
+    t2 = _saes_v1_decs(n2);
+    t3 = _saes_v1_decs(n3);
 
     //
     // Add Round Key
