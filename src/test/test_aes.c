@@ -50,6 +50,23 @@ int main(int argc, char ** argv) {
         printf("erk             = ");
         puthex_py((uint8_t*)erk , AES_128_RK_BYTES );
         printf("\n");
+
+//#define UNPACK_COL_0(D, Q0, Q2) { D = (Q0 >>         16) | (Q2 & 0xFFFF0000);}
+//#define UNPACK_COL_1(D, Q0, Q2) { D = (Q0 &  0x0000FFFF) | (Q2 << 16       );}
+//#define UNPACK_COL_2(D, Q1, Q3) { D = (Q1 >>         16) | (Q3 & 0xFFFF0000);}
+//#define UNPACK_COL_3(D, Q1, Q3) { D = (Q1 &  0x0000FFFF) | (Q3 << 16       );}
+//
+//        for(int i = 0; i < AES_128_RK_WORDS; i += 4) {
+//            uint32_t c0,c1,c2,c3;
+//            UNPACK_COL_0(c0, erk[i+0], erk[i+2]);
+//            UNPACK_COL_1(c1, erk[i+0], erk[i+2]);
+//            UNPACK_COL_2(c2, erk[i+1], erk[i+3]);
+//            UNPACK_COL_3(c3, erk[i+1], erk[i+3]);
+//            printf("# %08X %08X\n"  , BS32(c0), BS32(erk[i+0]));
+//            printf("# %08X %08X\n"  , BS32(c1), BS32(erk[i+1]));
+//            printf("# %08X %08X\n"  , BS32(c2), BS32(erk[i+2]));
+//            printf("# %08X %08X\n\n", BS32(c3), BS32(erk[i+3]));
+//        }
         
         printf("drk             = ");
         puthex_py((uint8_t*)drk , AES_128_RK_BYTES );

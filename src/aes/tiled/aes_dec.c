@@ -20,6 +20,13 @@ extern void    aes_key_schedule (
 );
 
 
+// Defined in aes/tiled/aes_enc.c
+extern void aes_pack_key_schedule (
+    uint32_t * rk,
+    const int  Nr
+);
+
+
 /*!
 @brief Generic single-block AES encrypt function
 @param [out] pt - Output plaintext
@@ -35,97 +42,64 @@ void    aes_dec_block (
 ){
     
     int      round;
+    uint32_t c0, c1, c2, c3;
+    uint32_t q0, q1, q2, q3;
     uint32_t n0, n1, n2, n3;
-    uint32_t t0, t1, t2, t3;
 
-    U8_TO_U32_LE(t0, ct,  0) 
-    U8_TO_U32_LE(t1, ct,  4) 
-    U8_TO_U32_LE(t2, ct,  8) 
-    U8_TO_U32_LE(t3, ct, 12) 
+    U8_TO_U32_LE(c0, ct,  0) 
+    U8_TO_U32_LE(c1, ct,  4) 
+    U8_TO_U32_LE(c2, ct,  8) 
+    U8_TO_U32_LE(c3, ct, 12) 
+    
+    PACK_QUAD_0(q0, c0, c1)
+    PACK_QUAD_1(q1, c2, c3)
+    PACK_QUAD_2(q2, c0, c1)
+    PACK_QUAD_3(q3, c2, c3)
 
-    t0 ^= rk[4*nr + 0];
-    t1 ^= rk[4*nr + 1];
-    t2 ^= rk[4*nr + 2];
-    t3 ^= rk[4*nr + 3];
+    q0 ^= rk[4*nr + 0];
+    q1 ^= rk[4*nr + 1];
+    q2 ^= rk[4*nr + 2];
+    q3 ^= rk[4*nr + 3];
+        
+    n0  = _saes_v5_dsrsub(q0, q1, 0);
+    n1  = _saes_v5_dsrsub(q1, q0, 0);
+    n2  = _saes_v5_dsrsub(q2, q3, 1);
+    n3  = _saes_v5_dsrsub(q3, q2, 1);
 
     for(round = nr-1; round >= 1; round --) {
-
-        //
-        // Inv ShiftRows
         
-        n0 = (t0 & 0x000000FF) | (t3 & 0x0000FF00) |
-             (t2 & 0x00FF0000) | (t1 & 0xFF000000) ;
+        n0 ^= rk[4*round+0];
+        n1 ^= rk[4*round+1];
+        n2 ^= rk[4*round+2];
+        n3 ^= rk[4*round+3];
+
+        q0  = _saes_v5_dmix(n0, n2, 0);
+        q1  = _saes_v5_dmix(n1, n3, 0);
+        q2  = _saes_v5_dmix(n2, n0, 0);
+        q3  = _saes_v5_dmix(n3, n1, 0);
         
-        n1 = (t1 & 0x000000FF) | (t0 & 0x0000FF00) | 
-             (t3 & 0x00FF0000) | (t2 & 0xFF000000) ;
-        
-        n2 = (t2 & 0x000000FF) | (t1 & 0x0000FF00) |
-             (t0 & 0x00FF0000) | (t3 & 0xFF000000) ;
-
-        n3 = (t3 & 0x000000FF) | (t2 & 0x0000FF00) |
-             (t1 & 0x00FF0000) | (t0 & 0xFF000000) ;
-
-        //
-        // Inv SubBytes
-
-        t0 = _saes_v1_decs(n0);
-        t1 = _saes_v1_decs(n1);
-        t2 = _saes_v1_decs(n2);
-        t3 = _saes_v1_decs(n3);
-
-        //
-        // Add Round Key
-
-        t0 ^= rk[4*round + 0];
-        t1 ^= rk[4*round + 1];
-        t2 ^= rk[4*round + 2];
-        t3 ^= rk[4*round + 3];
-
-        //
-        // Inv MixColumns
-
-        t0 = _saes_v1_decm(t0);
-        t1 = _saes_v1_decm(t1);
-        t2 = _saes_v1_decm(t2);
-        t3 = _saes_v1_decm(t3);
+        n0  = _saes_v5_dsrsub(q0, q1, 0);
+        n1  = _saes_v5_dsrsub(q1, q0, 0);
+        n2  = _saes_v5_dsrsub(q2, q3, 1);
+        n3  = _saes_v5_dsrsub(q3, q2, 1);
 
     }
-
-    //
-    // Inv ShiftRows
+        
+    n0 ^= rk[0];
+    n1 ^= rk[1];
+    n2 ^= rk[2];
+    n3 ^= rk[3];
     
-    n0 = (t0 & 0x000000FF) | (t3 & 0x0000FF00) |
-         (t2 & 0x00FF0000) | (t1 & 0xFF000000) ;
+    UNPACK_COL_0(c0, n0, n2);
+    UNPACK_COL_1(c1, n0, n2);
+    UNPACK_COL_2(c2, n1, n3);
+    UNPACK_COL_3(c3, n1, n3);
+
     
-    n1 = (t1 & 0x000000FF) | (t0 & 0x0000FF00) | 
-         (t3 & 0x00FF0000) | (t2 & 0xFF000000) ;
-    
-    n2 = (t2 & 0x000000FF) | (t1 & 0x0000FF00) |
-         (t0 & 0x00FF0000) | (t3 & 0xFF000000) ;
-
-    n3 = (t3 & 0x000000FF) | (t2 & 0x0000FF00) |
-         (t1 & 0x00FF0000) | (t0 & 0xFF000000) ;
-
-    //
-    // Inv SubBytes
-
-    t0 = _saes_v1_decs(n0);
-    t1 = _saes_v1_decs(n1);
-    t2 = _saes_v1_decs(n2);
-    t3 = _saes_v1_decs(n3);
-
-    //
-    // Add Round Key
-
-    t0 ^= rk[4*round + 0];
-    t1 ^= rk[4*round + 1];
-    t2 ^= rk[4*round + 2];
-    t3 ^= rk[4*round + 3];
-    
-    U32_TO_U8_LE(pt, t0, 0);
-    U32_TO_U8_LE(pt, t1, 4);
-    U32_TO_U8_LE(pt, t2, 8);
-    U32_TO_U8_LE(pt, t3,12);
+    U32_TO_U8_LE(pt, c0, 0);
+    U32_TO_U8_LE(pt, c1, 4);
+    U32_TO_U8_LE(pt, c2, 8);
+    U32_TO_U8_LE(pt, c3,12);
 }
 
 void    aes_128_dec_key_schedule (
@@ -133,6 +107,7 @@ void    aes_128_dec_key_schedule (
     uint8_t     ck [AES_128_CK_BYTES] 
 ){
     aes_key_schedule(rk, ck, AES_128_NK, AES_128_NR);
+    aes_pack_key_schedule(rk, AES_128_NR);
 }
 
 void    aes_192_dec_key_schedule (
@@ -140,6 +115,7 @@ void    aes_192_dec_key_schedule (
     uint8_t     ck [AES_128_CK_BYTES] 
 ){
     aes_key_schedule(rk, ck, AES_192_NK, AES_192_NR);
+    aes_pack_key_schedule(rk, AES_192_NR);
 }
 
 void    aes_256_dec_key_schedule (
@@ -147,6 +123,7 @@ void    aes_256_dec_key_schedule (
     uint8_t     ck [AES_128_CK_BYTES] 
 ){
     aes_key_schedule(rk, ck, AES_256_NK, AES_256_NR);
+    aes_pack_key_schedule(rk, AES_256_NR);
 }
 
 void    aes_128_dec_block(

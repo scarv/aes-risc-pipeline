@@ -14,6 +14,13 @@
 //! Length of test input for a hash function.
 #define TEST_HASH_INPUT_LENGTH 1024
 
+#define BS32(X) ( \
+    ((X & 0xFF000000) >> 24) | \
+    ((X & 0x00FF0000) >>  8) | \
+    ((X & 0x0000FF00) <<  8) | \
+    ((X & 0x000000FF) << 24)  \
+)
+
 //
 // Misc
 // ----------------------------------------------------------------------
