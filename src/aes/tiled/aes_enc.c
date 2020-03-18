@@ -112,15 +112,15 @@ void    aes_enc_block (
     q3 ^= rk[3];
 
     for(round = 1; round < nr; round ++) {
-        n0  = _saes_v5_esrsub(q0, q1, 0);
-        n1  = _saes_v5_esrsub(q1, q0, 0);
-        n2  = _saes_v5_esrsub(q2, q3, 1);
-        n3  = _saes_v5_esrsub(q3, q2, 1);
+        n0  = _saes_v5_esrsub_lo(q0, q1);
+        n1  = _saes_v5_esrsub_lo(q1, q0);
+        n2  = _saes_v5_esrsub_hi(q2, q3);
+        n3  = _saes_v5_esrsub_hi(q3, q2);
 
-        q0  = _saes_v5_emix(n0, n2, 0);
-        q1  = _saes_v5_emix(n1, n3, 0);
-        q2  = _saes_v5_emix(n2, n0, 0);
-        q3  = _saes_v5_emix(n3, n1, 0);
+        q0  = _saes_v5_emix(n0, n2);
+        q1  = _saes_v5_emix(n1, n3);
+        q2  = _saes_v5_emix(n2, n0);
+        q3  = _saes_v5_emix(n3, n1);
 
         q0 ^= rk[4*round+0];
         q1 ^= rk[4*round+1];
@@ -129,10 +129,10 @@ void    aes_enc_block (
 
     }
         
-    n0 = _saes_v5_esrsub(q0, q1, 0);
-    n1 = _saes_v5_esrsub(q1, q0, 0);
-    n2 = _saes_v5_esrsub(q2, q3, 1);
-    n3 = _saes_v5_esrsub(q3, q2, 1);
+    n0 = _saes_v5_esrsub_lo(q0, q1);
+    n1 = _saes_v5_esrsub_lo(q1, q0);
+    n2 = _saes_v5_esrsub_hi(q2, q3);
+    n3 = _saes_v5_esrsub_hi(q3, q2);
 
     q0 = n0 ^ rk[4*round+0];
     q1 = n1 ^ rk[4*round+1];

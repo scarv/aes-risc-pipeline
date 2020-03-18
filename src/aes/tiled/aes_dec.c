@@ -61,10 +61,10 @@ void    aes_dec_block (
     q2 ^= rk[4*nr + 2];
     q3 ^= rk[4*nr + 3];
         
-    n0  = _saes_v5_dsrsub(q0, q1, 0);
-    n1  = _saes_v5_dsrsub(q1, q0, 0);
-    n2  = _saes_v5_dsrsub(q2, q3, 1);
-    n3  = _saes_v5_dsrsub(q3, q2, 1);
+    n0  = _saes_v5_dsrsub_lo(q0, q1);
+    n1  = _saes_v5_dsrsub_lo(q1, q0);
+    n2  = _saes_v5_dsrsub_hi(q2, q3);
+    n3  = _saes_v5_dsrsub_hi(q3, q2);
 
     for(round = nr-1; round >= 1; round --) {
         
@@ -73,15 +73,15 @@ void    aes_dec_block (
         n2 ^= rk[4*round+2];
         n3 ^= rk[4*round+3];
 
-        q0  = _saes_v5_dmix(n0, n2, 0);
-        q1  = _saes_v5_dmix(n1, n3, 0);
-        q2  = _saes_v5_dmix(n2, n0, 0);
-        q3  = _saes_v5_dmix(n3, n1, 0);
+        q0  = _saes_v5_dmix(n0, n2);
+        q1  = _saes_v5_dmix(n1, n3);
+        q2  = _saes_v5_dmix(n2, n0);
+        q3  = _saes_v5_dmix(n3, n1);
         
-        n0  = _saes_v5_dsrsub(q0, q1, 0);
-        n1  = _saes_v5_dsrsub(q1, q0, 0);
-        n2  = _saes_v5_dsrsub(q2, q3, 1);
-        n3  = _saes_v5_dsrsub(q3, q2, 1);
+        n0  = _saes_v5_dsrsub_lo(q0, q1);
+        n1  = _saes_v5_dsrsub_lo(q1, q0);
+        n2  = _saes_v5_dsrsub_hi(q2, q3);
+        n3  = _saes_v5_dsrsub_hi(q3, q2);
 
     }
         
