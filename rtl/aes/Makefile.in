@@ -2,6 +2,7 @@
 include aes/v1/Makefile.in
 include aes/v2/Makefile.in
 include aes/v3/Makefile.in
+include aes/tiled/Makefile.in
 
 #
 # Synthesise just the SBoxes to see what the overhead is
