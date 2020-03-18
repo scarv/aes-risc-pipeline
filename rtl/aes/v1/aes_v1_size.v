@@ -10,6 +10,7 @@ input   wire        g_clk   ,
 input   wire        g_resetn,
 input   wire        valid   , // Input data valid
 input   wire        dec     , // Encrypt (0) or decrypt (1)
+input   wire        mix     , // Do MixColumns (1) or SubBytes (0)
 input   wire [31:0] rs1     , // Input source register
 
 output  wire        ready   , // Finished computing?
@@ -31,7 +32,10 @@ wire [ 7:0] sb_out      ;
 // Intermediate value storage registers.
 reg  [ 7:0] r0, r1, r2, r3;
 
-assign      rd          = {r3, r2, r1, r0};
+wire [31:0] result_sb   = {r3, r2, r1, r0};
+wire [31:0] result_mc   ;
+
+assign      rd          = mix ? result_mc : result_sb;
 
 // Shift down RS1 per byte to get input to SBOX.
 /* verilator lint_off WIDTH */
@@ -39,7 +43,8 @@ assign      sb_in       =  rs1 >> {fsm,3'b000}       ;
 /* verilator lint_on WIDTH */
 
 // Have we finished computing every SBOX?
-assign      ready       =  fsm == FSM_B3            ;
+assign      ready       =  
+    mix ? 1'b1 : fsm == FSM_B3            ;
 
 // Intermediate value load enable registers.
 wire        r0_ld_en    = (fsm == FSM_IDLE) && valid;
@@ -51,7 +56,7 @@ wire        r3_ld_en    = (fsm == FSM_B2  )         ;
 // FSM Next state.
 always @(*) begin
     case(fsm)
-        FSM_IDLE: n_fsm = valid ? FSM_B0 : FSM_IDLE;
+        FSM_IDLE: n_fsm = valid && !mix ? FSM_B0 : FSM_IDLE;
         FSM_B0  : n_fsm = FSM_B1;
         FSM_B1  : n_fsm = FSM_B2;
         FSM_B2  : n_fsm = FSM_B3;
@@ -92,6 +97,10 @@ aes_sbox i_aes_sbox(
 .in (sb_in ),
 .inv(dec   ),
 .out(sb_out)
+);
+
+aes_mixcolumn i_aes_mixcolumn(
+    .col_in(rs1), .dec(dec), .col_out(result_mc)
 );
 
 endmodule
