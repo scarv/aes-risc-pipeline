@@ -34,9 +34,7 @@
 
 module sbox_inv_mid( output [17:0] y, input [20:0] x );
 
-    /* verilator lint_off UNOPTFLAT */
     wire [45:0] t;
-    /* verilator lint_on UNOPTFLAT */
 
     assign  t[ 0] = x[ 3] ^  x[12];
     assign  t[ 1] = x[ 9] &  x[ 5];
@@ -149,9 +147,7 @@ endmodule
 
 module sbox_aes_out( output [7:0] y, input [17:0] x);
 
-    /* verilator lint_off UNOPTFLAT */
     wire [29:0] t;
-    /* verilator lint_on UNOPTFLAT */
 
     assign  t[ 0] = x[11] ^  x[12];
     assign  t[ 1] = x[ 0] ^  x[ 6];
@@ -198,9 +194,7 @@ endmodule
 
 module aes_fwd_sbox( output [7:0] fx, input [7:0] in );
 
-    /* verilator lint_off UNOPTFLAT */
     wire [20:0] t1;
-    /* verilator lint_on UNOPTFLAT */
     wire [17:0] t2;
 
     sbox_aes_top top ( t1, in );
@@ -220,9 +214,7 @@ endmodule
 
 module sbox_aesi_top( output [20:0] y, input [7:0] x);
 
-    /* verilator lint_off UNOPTFLAT */
     wire [4:0] t;
-    /* verilator lint_on UNOPTFLAT */
 
     assign  y[17] = x[ 7] ^  x[ 4];
     assign  y[16] = x[ 6] ^~ x[ 4];
@@ -257,9 +249,7 @@ endmodule
 
 module sbox_aesi_out( output [7:0] y, input [17:0] x);
 
-    /* verilator lint_off UNOPTFLAT */
     wire [29:0] t;
-    /* verilator lint_on UNOPTFLAT */
 
     assign  t[ 0] = x[ 2] ^  x[11];
     assign  t[ 1] = x[ 8] ^  x[ 9];
@@ -305,9 +295,7 @@ endmodule
 
 module aes_inv_sbox( output [7:0] fx, input [7:0] in );
 
-    /* verilator lint_off UNOPTFLAT */
     wire [20:0] t1;
-    /* verilator lint_on UNOPTFLAT */
     wire [17:0] t2;
 
     sbox_aesi_top top ( t1, in );
