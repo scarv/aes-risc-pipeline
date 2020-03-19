@@ -1,5 +1,5 @@
 
-SBOX = aes/share/aes_sbox_shared.v
+SBOX = aes/share/aes_sbox_shared.v aes/share/aes_mixcolumn.v
 
 AES_V1_SIZE_FILES    = aes/v1/aes_v1_size.v $(SBOX)
 

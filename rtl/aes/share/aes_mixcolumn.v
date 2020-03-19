@@ -76,6 +76,23 @@ assign byte_out = xtN(b0,4'he) ^ xtN(b1,4'hb) ^ xtN(b2,4'hd) ^ xtN(b3,4'h9);
 
 endmodule
 
+
+module aes_mixcolumn_byte (
+input   wire [31:0] col_in    ,
+input   wire        dec       ,
+output  wire [ 7:0] byte_out
+);
+
+wire [7:0] b_dec;
+wire [7:0] b_enc;
+
+aes_mixcolumn_byte_enc i_enc(.col_in(col_in),.byte_out(b_enc));
+aes_mixcolumn_byte_dec i_dec(.col_in(col_in),.byte_out(b_dec));
+
+assign byte_out = dec ? b_dec : b_enc;
+
+endmodule
+
 //
 // AES Forward MixColumn Word module
 //

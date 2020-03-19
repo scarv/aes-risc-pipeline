@@ -12,16 +12,17 @@ smtbmc boolector
 
 [script]
 read -formal aes_mixcolumn.v
-read -formal aes_sbox_latency.v
+read -formal aes_sbox_shared.v
 read -formal tb_aes_tiled.v
 
 latency: read -formal aes_tiled.v
 
-prep -top tb_aes_v1
+prep -top tb_aes_tiled
 
 [files]
 latency: aes/tiled/aes_tiled.v
-aes/share/aes_sbox_latency.v
+aes/share/aes_sbox_shared.v
 aes/share/aes_mixcolumn.v
+aes/share/aes_functions.vh
 aes/tiled/tb_aes_tiled.v
 
