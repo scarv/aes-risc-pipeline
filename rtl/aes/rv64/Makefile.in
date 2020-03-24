@@ -5,6 +5,6 @@ $(eval $(call add_synth_target,aes64_size,aes/rv64/aes64.v $(SBOX), aes64))
 $(eval $(call add_synth_target,aes64_latency,aes/rv64/aes64.v $(SBOX), aes64))
 
 
-AES_RV64_PROVE_FILES = aes/rv64/tb_aes64.v aes/rv64/aes64.v $(SBOX)
+AES_V3_1_PROVE_FILES = aes/rv64/tb_aes64.v aes/rv64/aes64.v $(SBOX)
 
-$(eval $(call add_prove_target,prove_aes64,aes/rv64/verify.sby,$(AES_RV64_PROVE_FILES)))
+$(eval $(call add_prove_target,prove_aes64,aes/rv64/verify.sby,$(AES_V3_1_PROVE_FILES)))
