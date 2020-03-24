@@ -13,5 +13,6 @@ include $(REPO_HOME)/src/aes/v1/Makefile.in
 include $(REPO_HOME)/src/aes/v2/Makefile.in
 include $(REPO_HOME)/src/aes/v3/Makefile.in
 include $(REPO_HOME)/src/aes/tiled/Makefile.in
+include $(REPO_HOME)/src/aes/rv64/Makefile.in
 
 all: $(ALL_TARGETS)

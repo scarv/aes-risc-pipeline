@@ -227,4 +227,3 @@ void    aes_256_enc_block(
     aes_enc_block (ct, pt, rk, AES_256_NR);
 }
 
-//!@}

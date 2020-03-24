@@ -16,6 +16,7 @@ opcodebits ={}
 
 acodes = {}
 acodes['bs'     ] = "w"
+acodes['rcon'   ] = "W"
 acodes['rd'     ] = "d"
 acodes['rdp'    ] = "(N,M)"
 acodes['rs1'    ] = "s"
@@ -24,6 +25,7 @@ acodes['rs3'    ] = "r"
 
 arglut = {}
 arglut['bs'] = (31,30)
+arglut['rcon'] = (23,20)
 
 arglut['rd'] = (11,7)
 arglut['rdp'] = (11,8)
