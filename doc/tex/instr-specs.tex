@@ -119,13 +119,17 @@ saes64.imix(rs1):              // Inverse MixColumns
 
 \begin{lstlisting}[language=pseudo]
 saes.v5.srsub(rs1, rs2, enc, hi):
-    tmp.8[0] = rs2.8[2] if hi else rs1.8[2]
-    tmp.8[1] = rs2.8[1] if hi else rs1.8[0]
-    tmp.8[2] = rs2.8[0] if hi else rs1.8[1]
-    tmp.8[3] = rs1.8[3] if hi else rs2.8[3]
     if(enc):
+        tmp.8[0] = rs2.8[2] if hi else rs1.8[2]
+        tmp.8[1] = rs2.8[1] if hi else rs1.8[0]
+        tmp.8[2] = rs2.8[0] if hi else rs1.8[1]
+        tmp.8[3] = rs1.8[3] if hi else rs2.8[3]
         tmp.8[i] =    AESSBox[tmp.8[i]] for i=0..3
     else:
+        tmp.8[0] = rs2.8[2] if hi else rs1.8[2]
+        tmp.8[1] = rs1.8[1] if hi else rs1.8[0]
+        tmp.8[2] = rs2.8[0] if hi else rs2.8[1]
+        tmp.8[3] = rs2.8[3] if hi else rs1.8[3]
         tmp.8[i] = InvAESSBox[tmp.8[i]] for i=0..3
     if(hi):
         rd.32    = {tmp.8[2],tmp.8[3],tmp.8[0],tmp.8[1]}
