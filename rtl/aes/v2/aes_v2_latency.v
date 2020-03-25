@@ -73,8 +73,8 @@ endfunction
 //
 // Mix operation input selection
 wire [ 7:0] mix_0    = rs1[ 7: 0];
-wire [ 7:0] mix_1    = rs2[15: 8];
-wire [ 7:0] mix_2    = rs1[23:16];
+wire [ 7:0] mix_1    = rs1[15: 8];
+wire [ 7:0] mix_2    = rs2[23:16];
 wire [ 7:0] mix_3    = rs2[31:24];
 
 //
@@ -89,7 +89,7 @@ wire [31:0] mix_enc     = {mix_enc_3, mix_enc_2, mix_enc_1, mix_enc_0};
 //
 // Mix instruction - decrypt.
 wire [ 7:0] mix_dec_0   = mixcolumn_dec(mix_0, mix_1, mix_2, mix_3);
-wire [ 7:0] mix_dec_1   = mixcolumn_dec(mix_1, mix_2, mix_0, mix_3);
+wire [ 7:0] mix_dec_1   = mixcolumn_dec(mix_1, mix_2, mix_3, mix_0);
 wire [ 7:0] mix_dec_2   = mixcolumn_dec(mix_2, mix_3, mix_0, mix_1);
 wire [ 7:0] mix_dec_3   = mixcolumn_dec(mix_3, mix_0, mix_1, mix_2);
 

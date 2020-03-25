@@ -56,8 +56,8 @@ function [7:0] mixcolumn_dec;
 endfunction
 
 wire [ 7:0] mix_0    = dut_rs1[ 7: 0];
-wire [ 7:0] mix_1    = dut_rs2[15: 8];
-wire [ 7:0] mix_2    = dut_rs1[23:16];
+wire [ 7:0] mix_1    = dut_rs1[15: 8];
+wire [ 7:0] mix_2    = dut_rs2[23:16];
 wire [ 7:0] mix_3    = dut_rs2[31:24];
 
 //
@@ -72,7 +72,7 @@ wire [31:0] mix_enc_grm = {
 wire [31:0] mix_dec_grm = {
     mixcolumn_dec(mix_3, mix_0, mix_1, mix_2),
     mixcolumn_dec(mix_2, mix_3, mix_0, mix_1),
-    mixcolumn_dec(mix_1, mix_2, mix_0, mix_3),
+    mixcolumn_dec(mix_1, mix_2, mix_3, mix_0),
     mixcolumn_dec(mix_0, mix_1, mix_2, mix_3)
 };
 
