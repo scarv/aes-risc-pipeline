@@ -45,21 +45,26 @@ wire [ 7:0] sub_t1 = dut_hi ? `BYTE(dut_rs2, 1) : `BYTE(dut_rs1,0);
 wire [ 7:0] sub_t2 = dut_hi ? `BYTE(dut_rs2, 0) : `BYTE(dut_rs1,1);
 wire [ 7:0] sub_t3 = dut_hi ? `BYTE(dut_rs1, 3) : `BYTE(dut_rs2,3);
 
+wire [ 7:0] subi_t0= dut_hi ? `BYTE(dut_rs2,2) : `BYTE(dut_rs1,2);
+wire [ 7:0] subi_t1= dut_hi ? `BYTE(dut_rs1,1) : `BYTE(dut_rs1,0);
+wire [ 7:0] subi_t2= dut_hi ? `BYTE(dut_rs2,0) : `BYTE(dut_rs2,1);
+wire [ 7:0] subi_t3= dut_hi ? `BYTE(dut_rs2,3) : `BYTE(dut_rs1,3);
+
 wire [ 7:0] sub_f0 = aes_sbox_fwd(sub_t0);
 wire [ 7:0] sub_f1 = aes_sbox_fwd(sub_t1);
 wire [ 7:0] sub_f2 = aes_sbox_fwd(sub_t2);
 wire [ 7:0] sub_f3 = aes_sbox_fwd(sub_t3);
 
-wire [ 7:0] sub_i0 = aes_sbox_inv(sub_t0);
-wire [ 7:0] sub_i1 = aes_sbox_inv(sub_t1);
-wire [ 7:0] sub_i2 = aes_sbox_inv(sub_t2);
-wire [ 7:0] sub_i3 = aes_sbox_inv(sub_t3);
+wire [ 7:0] sub_i0 = aes_sbox_inv(subi_t0);
+wire [ 7:0] sub_i1 = aes_sbox_inv(subi_t1);
+wire [ 7:0] sub_i2 = aes_sbox_inv(subi_t2);
+wire [ 7:0] sub_i3 = aes_sbox_inv(subi_t3);
 
-wire [31:0] sbsr_fwd_hi = {sub_f2, sub_f3, sub_f0, sub_f1};
-wire [31:0] sbsr_fwd_lo = {sub_f1, sub_f3, sub_f0, sub_f2};
-
-wire [31:0] sbsr_inv_hi = {sub_i2, sub_i3, sub_i0, sub_i1};
-wire [31:0] sbsr_inv_lo = {sub_i1, sub_i3, sub_i0, sub_i2};
+wire [31:0] sbsr_fwd_hi = {sub_f1, sub_f0, sub_f3, sub_f2};
+wire [31:0] sbsr_fwd_lo = {sub_f2, sub_f0, sub_f3, sub_f1};
+                                                         
+wire [31:0] sbsr_inv_hi = {sub_i1, sub_i0, sub_i3, sub_i2};
+wire [31:0] sbsr_inv_lo = {sub_i2, sub_i0, sub_i3, sub_i1};
 
 //
 // MixColumns
@@ -77,8 +82,8 @@ wire [ 7:0] d_n1  = mixcolumn_byte_dec2({col_0[23:0], col_0[31:24]});
 wire [ 7:0] d_n2  = mixcolumn_byte_dec2( col_1                     );
 wire [ 7:0] d_n3  = mixcolumn_byte_dec2({col_1[23:0], col_1[31:24]});
 
-wire [31:0] mix_enc = {e_n2, e_n3, e_n0, e_n1};
-wire [31:0] mix_dec = {d_n2, d_n3, d_n0, d_n1};
+wire [31:0] mix_enc = {e_n1, e_n0, e_n3, e_n2};
+wire [31:0] mix_dec = {d_n1, d_n0, d_n3, d_n2};
 
 // Just apply sub-bytes to each element of rs1.
 wire [31:0] result_sb   = {

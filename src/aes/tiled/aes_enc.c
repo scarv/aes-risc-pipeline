@@ -38,12 +38,12 @@ void    aes_key_schedule (
         if( i % Nk == 0 ) {
 
             temp  = ROTR32(temp, 8);
-            temp  = _saes_v1_encs(temp);
+            temp  = _saes_v5_sub(temp);
             temp ^= round_const[i/Nk];
 
         } else if ( (Nk > 6) && (i % Nk == 4)) {
             
-            temp  = _saes_v1_encs(temp);
+            temp  = _saes_v5_sub(temp);
 
         }
 

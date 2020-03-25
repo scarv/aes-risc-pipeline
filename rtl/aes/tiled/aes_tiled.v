@@ -49,16 +49,16 @@ assign      sbinf_1     = op_sb ? `BYTEOF(rs1,1) :  sbsr_sbin_1     ;
 assign      sbinf_2     = op_sb ? `BYTEOF(rs1,2) :  sbsr_sbin_2     ;
 assign      sbinf_3     = op_sb ? `BYTEOF(rs1,3) :  sbsr_sbin_3     ;
 
-assign      sbini_0     =                           sbsr_sbin_0     ;
-assign      sbini_1     =                           sbsr_sbin_1     ;
-assign      sbini_2     =                           sbsr_sbin_2     ;
-assign      sbini_3     =                           sbsr_sbin_3     ;
+assign      sbini_0     = hi    ? `BYTEOF(rs2,2) : `BYTEOF(rs1,2)   ;
+assign      sbini_1     = hi    ? `BYTEOF(rs1,1) : `BYTEOF(rs1,0)   ;
+assign      sbini_2     = hi    ? `BYTEOF(rs2,0) : `BYTEOF(rs2,1)   ;
+assign      sbini_3     = hi    ? `BYTEOF(rs2,3) : `BYTEOF(rs1,3)   ;
 
-wire [31:0] sbsr_fwd    =  hi ? {sbfwd_2, sbfwd_3, sbfwd_0, sbfwd_1}: 
-                                {sbfwd_1, sbfwd_3, sbfwd_0, sbfwd_2}; 
-
-wire [31:0] sbsr_inv    =  hi ? {sbinv_2, sbinv_3, sbinv_0, sbinv_1}: 
-                                {sbinv_1, sbinv_3, sbinv_0, sbinv_2}; 
+wire [31:0] sbsr_fwd    =  hi ? {sbfwd_1, sbfwd_0, sbfwd_3, sbfwd_2}: 
+                                {sbfwd_2, sbfwd_0, sbfwd_3, sbfwd_1}; 
+                                                                   
+wire [31:0] sbsr_inv    =  hi ? {sbinv_1, sbinv_0, sbinv_3, sbinv_2}: 
+                                {sbinv_2, sbinv_0, sbinv_3, sbinv_1}; 
 
 wire [31:0] result_sbsr = dec ? sbsr_inv : sbsr_fwd;
 wire [31:0] result_sb   = {sbfwd_3, sbfwd_2, sbfwd_1, sbfwd_0}; 
@@ -81,7 +81,7 @@ wire [31:0] mc_1        = {mi1_3, mi1_2, mi1_1, mi1_0};
 wire [31:0] mc_0r       = {mi0_2, mi0_1, mi0_0, mi0_3};
 wire [31:0] mc_1r       = {mi1_2, mi1_1, mi1_0, mi1_3};
 
-wire [31:0] result_mix  = {mo1_0, mo1_1, mo0_0, mo0_1};
+wire [31:0] result_mix  = {mo0_1, mo0_0, mo1_1, mo1_0};
 
 //
 // Result multiplexing

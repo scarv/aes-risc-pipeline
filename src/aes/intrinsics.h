@@ -56,6 +56,7 @@ static inline uint32_t _saes_v5_esrsub_lo(uint32_t rs1, uint32_t rs2){uint32_t r
 static inline uint32_t _saes_v5_dsrsub_lo(uint32_t rs1, uint32_t rs2){uint32_t rd; __asm__("saes.v5.dsrsub.lo %0, %1, %2" : "=r"(rd) : "r"(rs1), "r"(rs2)); return rd;}
 static inline uint32_t _saes_v5_emix     (uint32_t rs1, uint32_t rs2){uint32_t rd; __asm__("saes.v5.emix      %0, %1, %2" : "=r"(rd) : "r"(rs1), "r"(rs2)); return rd;}
 static inline uint32_t _saes_v5_dmix     (uint32_t rs1, uint32_t rs2){uint32_t rd; __asm__("saes.v5.dmix      %0, %1, %2" : "=r"(rd) : "r"(rs1), "r"(rs2)); return rd;}
+static inline uint64_t _saes_v5_sub      (uint64_t rs1              ){uint64_t rd; __asm__("saes.v5.sub      %0, %1     " : "=r"(rd) : "r"(rs1)          ); return rd;}
 
 #endif // __RISCV_CRYPTO_INTRINSICS__
 

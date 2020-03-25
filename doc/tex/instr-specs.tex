@@ -132,6 +132,9 @@ saes.v5.srsub(rs1, rs2, enc, hi):
     else:
         rd.32    = {tmp.8[1],tmp.8[3],tmp.8[0],tmp.8[2]}
 
+saes.v5.sub(rs1):
+    rd.8[i] = AESSBox[rs1.8[i]] for i = 0..3
+
 saes.v5.mix(rs1, rs2, enc):
     col0.8[3] = rs1.8[2]
     col0.8[2] = rs1.8[3]
