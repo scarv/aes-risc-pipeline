@@ -205,9 +205,9 @@ module aes_fwd_sbox( output [7:0] fx, input [7:0] in );
     wire [17:0] t2;
     /* verilator lint_on UNOPTFLAT */
 
-    sbox_aes_top top ( t1, in );
-    sbox_inv_mid mid ( t2, t1 );
-    sbox_aes_out out ( fx, t2 );
+    sbox_aes_top top ( .y(t1), .x(in) );
+    sbox_inv_mid mid ( .y(t2), .x(t1) );
+    sbox_aes_out out ( .y(fx), .x(t2) );
 
 endmodule
 
@@ -312,9 +312,9 @@ module aes_inv_sbox( output [7:0] fx, input [7:0] in );
     wire [17:0] t2;
     /* verilator lint_on UNOPTFLAT */
 
-    sbox_aesi_top top ( t1, in );
-    sbox_inv_mid mid ( t2, t1 );
-    sbox_aesi_out out ( fx, t2 );
+    sbox_aesi_top top ( .y(t1), .x(in) );
+    sbox_inv_mid mid  ( .y(t2), .x(t1) );
+    sbox_aesi_out out ( .y(fx), .x(t2) );
 
 endmodule
 
