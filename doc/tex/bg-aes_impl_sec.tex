@@ -2,51 +2,49 @@
 
 % TODO
 
-%@misc{SaaRohHam:16,
-%    author = {Sami Saab, Pankaj Rohatgi, and Craig Hampel},
-%    title = {Side-Channel Protections for Cryptographic Instruction Set Extensions},
-%    howpublished = {Cryptology ePrint Archive, Report 2016/700},
-%    year = {2016},
-%    note = {\url{https://eprint.iacr.org/2016/700}},
-%}
-%
-%@inproceedings{MulDewFre:10,
-%  keywords     = KEYWORDS,
-%  author       = {T. M\"{u}ller and A. Dewald and F.C. Freiling},
-%  title        = {{AESSE}: A Cold-boot Resistant Implementation of {AES}},
-%  booktitle    = {European Workshop on System Security (EUROSEC)},
-%  pages        = {42--47},
-%  year         = {2010}
-%}
-%
-%@inproceedings{GEPT:09,
-%  keywords     = KEYWORDS,
-%  author       = {J. Gro{\ss}sch\"{a}dl and E. Oswald and D. Page and M. Tunstall},
-%  title        = {Side-Channel Analysis of Cryptographic Software via Early-Terminating Multiplications},
-%  booktitle    = {Information, Security and Cryptology (ICISC)},
-%  publisher    = {Springer-Verlag},
-%  series       = {LNCS 5984},
-%  pages        = {176--192},
-%  year         = {2009}
-%}
+Although the security of AES against a cryptanalytic attack is defined by
+the design, and so out of scope, the concept of implementation attacks is
+of central importance.
+In essence, an implementation attack focuses on
+the concrete, in practice implementation
+rather than
+the abstract, on paper     specification:
+fundamentally, this suggests countermeasures against such attacks must be
+considered alongside the implementation they relate to.
 
-%analogue,
-%e.g., DPA- and EM-based
-%attacks
-%
-%discrete, 
-%e.g., time-based, 
-%attacks
-%
-%data-oblivious\footnote{
-%we use this term in preference to constant-time
-%}
-%
-%attacks on AES-specific state, 
-%inter
-%cold-boot -> AESSE
-%
-%Overarching conclusion is that mitigation of such attacks must be considered
-%alongside the implementation they relate to
+AES is an important target, 
+
+ active (e.g., fault injection)
+or
+passive (i.e., side-channel),
+attack techniques.
+
+with the latter sub-divided into those dependent on
+analogue,
+e.g., power-based~\cite{},
+or
+discrete, 
+e.g.,  time-based~\cite{KoeQui:99},
+leakage.
+
+From a positive perspective, use of ISEs
+{\em can} provide some inherent protection against certain attacks.
+For example,
+ISEs typically yield constant (i.e., data-oblivious) execution latency,
+so prevent some classes of time- or micro-architectural
+(see, e.g.,~\cite[Section 4]{Szefer:19} and ~\cite[Section 4]{GYCH:18})
+(e.g., cache-based) attack techniques.
+From a negative perspective, however,
+use of ISEs presents some unique challenges.
+For example, 
+Saab et al.\cite{SaaRohHam:16}
+discuss power-based attacks on ISEs, AES-NI specifically; they conclude
+that naive use of AES-NI will yield exploitable leakage.  Mitigation of
+such leakage, in general, demands that the ISE to be flexible enough to
+compose with appropriate
+(e.g., hiding~\cite[Chapter 7]{dpabook} or masking~\cite[Chapter 10]{dpabook})
+countermeasures.
+
+% TODO: Tillich, Herbst, Mangard: ACNS 2007
 
 % =============================================================================
