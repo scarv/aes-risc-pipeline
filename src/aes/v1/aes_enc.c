@@ -52,37 +52,6 @@ void    aes_key_schedule (
 }
 
 
-/*
- * Commented out because we are now using the mix instructions.
-
-//! Forward mix columns transformation.
-static uint32_t aes_mix_column_enc(
-    uint32_t col
-){
-    uint8_t b0,b1,b2,b3;
-    uint8_t s0,s1,s2,s3;
-    
-    s0 = (col >>  0) & 0xFF;
-    s1 = (col >>  8) & 0xFF;
-    s2 = (col >> 16) & 0xFF;
-    s3 = (col >> 24) & 0xFF;
-
-    b0 = XT2(s0) ^ XT3(s1) ^    (s2) ^    (s3);
-    b1 =    (s0) ^ XT2(s1) ^ XT3(s2) ^    (s3);
-    b2 =    (s0) ^    (s1) ^ XT2(s2) ^ XT3(s3);
-    b3 = XT3(s0) ^    (s1) ^    (s2) ^ XT2(s3);
-
-    uint32_t tr = 
-        (((uint32_t)b3) << 24) |
-        (((uint32_t)b2) << 16) |
-        (((uint32_t)b1) <<  8) |
-        (((uint32_t)b0) <<  0) ;
-
-    return tr;
-}
-*/
-
-
 /*!
 */
 void    aes_enc_block (
@@ -96,10 +65,7 @@ void    aes_enc_block (
     uint32_t n0, n1, n2, n3;
     uint32_t t0, t1, t2, t3;
 
-    U8_TO_U32_LE(t0, pt, 0);
-    U8_TO_U32_LE(t1, pt, 4);
-    U8_TO_U32_LE(t2, pt, 8);
-    U8_TO_U32_LE(t3, pt,12);
+    AES_LOAD_STATE(t0,t1,t2,t3,pt);
 
     t0 ^= rk[0];
     t1 ^= rk[1];
@@ -188,10 +154,7 @@ void    aes_128_enc_key_schedule (
 ){
     uint32_t    t0,t1,t2,t3,tr;
 
-    U8_TO_U32_LE(t0, ck,  0);
-    U8_TO_U32_LE(t1, ck,  4);
-    U8_TO_U32_LE(t2, ck,  8);
-    U8_TO_U32_LE(t3, ck, 12);
+    AES_LOAD_STATE(t0,t1,t2,t3,ck);
 
     uint32_t *rkp= rk;
     uint32_t *rke= &rk[40];

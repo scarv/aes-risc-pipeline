@@ -46,10 +46,7 @@ void    aes_dec_block (
     uint32_t q0, q1, q2, q3;
     uint32_t n0, n1, n2, n3;
 
-    U8_TO_U32_LE(c0, ct,  0) 
-    U8_TO_U32_LE(c1, ct,  4) 
-    U8_TO_U32_LE(c2, ct,  8) 
-    U8_TO_U32_LE(c3, ct, 12) 
+    AES_LOAD_STATE(c0,c1,c2,c3,ct);
     
     PACK_QUAD_0(q0, c0, c1)
     PACK_QUAD_1(q1, c2, c3)

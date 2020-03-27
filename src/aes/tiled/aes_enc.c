@@ -96,10 +96,7 @@ void    aes_enc_block (
     uint32_t q0, q1, q2, q3;
     uint32_t n0, n1, n2, n3;
 
-    U8_TO_U32_LE(c0, pt, 0);
-    U8_TO_U32_LE(c1, pt, 4);
-    U8_TO_U32_LE(c2, pt, 8);
-    U8_TO_U32_LE(c3, pt,12);
+    AES_LOAD_STATE(c0,c1,c2,c3,pt);
 
     PACK_QUAD_0(q0, c0, c1)
     PACK_QUAD_1(q1, c2, c3)
@@ -157,10 +154,7 @@ void    aes_128_enc_key_schedule (
 ){
     uint32_t    t0,t1,t2,t3,tr;
 
-    U8_TO_U32_LE(t0, ck,  0);
-    U8_TO_U32_LE(t1, ck,  4);
-    U8_TO_U32_LE(t2, ck,  8);
-    U8_TO_U32_LE(t3, ck, 12);
+    AES_LOAD_STATE(t0,t1,t2,t3,ck);
 
     uint32_t *rkp= rk;
     uint32_t *rke= &rk[40];

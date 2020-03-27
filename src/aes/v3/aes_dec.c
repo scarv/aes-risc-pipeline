@@ -25,10 +25,7 @@ void aes_dec_block (
     uint32_t u0, u1, u2, u3;                //  odd round state registers
     const uint32_t *kp = &rk[4 * nr];       //  key pointer
     
-    U8_TO_U32_LE(t0, ct,  0) 
-    U8_TO_U32_LE(t1, ct,  4) 
-    U8_TO_U32_LE(t2, ct,  8) 
-    U8_TO_U32_LE(t3, ct, 12) 
+    AES_LOAD_STATE(t0,t1,t2,t3,ct);
 
     t0 ^= kp[0];
     t1 ^= kp[1];

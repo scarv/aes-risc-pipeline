@@ -19,35 +19,6 @@ extern void    aes_key_schedule (
     const int  Nr   //!< Number of rounds.
 );
 
-/*
- * Commented out since we are now using the mix columns instruction.
-//! Inverse mix columns transformation.
-static uint32_t aes_mix_column_dec(
-    uint32_t col
-){
-    uint8_t b0,b1,b2,b3;
-    uint8_t s0,s1,s2,s3;
-    
-    s0 = (col >>  0) & 0xFF;
-    s1 = (col >>  8) & 0xFF;
-    s2 = (col >> 16) & 0xFF;
-    s3 = (col >> 24) & 0xFF;
-
-    b0 = XTE(s0) ^ XTB(s1) ^ XTD(s2) ^ XT9(s3);
-    b1 = XT9(s0) ^ XTE(s1) ^ XTB(s2) ^ XTD(s3);
-    b2 = XTD(s0) ^ XT9(s1) ^ XTE(s2) ^ XTB(s3);
-    b3 = XTB(s0) ^ XTD(s1) ^ XT9(s2) ^ XTE(s3);
-
-    uint32_t tr = 
-        (((uint32_t)b3) << 24) |
-        (((uint32_t)b2) << 16) |
-        (((uint32_t)b1) <<  8) |
-        (((uint32_t)b0) <<  0) ;
-
-    return tr;
-}
-*/
-
 
 /*!
 @brief Generic single-block AES encrypt function
@@ -67,10 +38,7 @@ void    aes_dec_block (
     uint32_t n0, n1, n2, n3;
     uint32_t t0, t1, t2, t3;
 
-    U8_TO_U32_LE(t0, ct,  0) 
-    U8_TO_U32_LE(t1, ct,  4) 
-    U8_TO_U32_LE(t2, ct,  8) 
-    U8_TO_U32_LE(t3, ct, 12) 
+    AES_LOAD_STATE(t0,t1,t2,t3,ct);
 
     t0 ^= rk[4*nr + 0];
     t1 ^= rk[4*nr + 1];
@@ -161,7 +129,7 @@ void    aes_128_dec_key_schedule (
     uint32_t    rk [AES_128_RK_WORDS],
     uint8_t     ck [AES_128_CK_BYTES] 
 ){
-    aes_key_schedule(rk, ck, AES_128_NK, AES_128_NR);
+    aes_128_enc_key_schedule(rk, ck);
 }
 
 void    aes_192_dec_key_schedule (

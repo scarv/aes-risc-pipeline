@@ -30,10 +30,7 @@ void aes_enc_block (
     uint32_t u0, u1, u2, u3;                //  odd round state registers
     const uint32_t *kp = &rk[4 * nr];       //  key pointer as loop condition
 
-    U8_TO_U32_LE(t0, pt, 0);
-    U8_TO_U32_LE(t1, pt, 4);
-    U8_TO_U32_LE(t2, pt, 8);
-    U8_TO_U32_LE(t3, pt,12);
+    AES_LOAD_STATE(t0,t1,t2,t3,pt);
 
     t0 ^= rk[0];
     t1 ^= rk[1];
@@ -132,10 +129,7 @@ void aes_128_enc_key_schedule (
     const uint32_t *rke = &rk[44 - 4];      //  end pointer
     const uint8_t *rc = aes_rcon;           //  round constants
 
-    U8_TO_U32_LE(t0, ck,  0);              //  load secret key
-    U8_TO_U32_LE(t1, ck,  4);
-    U8_TO_U32_LE(t2, ck,  8);
-    U8_TO_U32_LE(t3, ck, 12);
+    AES_LOAD_STATE(t0,t1,t2,t3,ck);
 
     while (1) {
 
