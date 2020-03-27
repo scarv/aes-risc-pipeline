@@ -128,5 +128,7 @@ $(call map_test_result,${1}) : $(call map_test_output,${1})
 test-${1} : $(call map_test_program,${1}) \
             $(call map_test_output,${1}) \
             $(call map_test_result,${1})
+
+TEST_TARGETS += test-${1}
 endef
 

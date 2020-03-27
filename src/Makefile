@@ -5,6 +5,7 @@
 # as LICENSE.txt within the associated archive or repository).
 
 ALL_TARGETS =
+TEST_TARGETS=
 
 include $(REPO_HOME)/src/common.mk
 
@@ -16,3 +17,5 @@ include $(REPO_HOME)/src/aes/tiled/Makefile.in
 include $(REPO_HOME)/src/aes/rv64/Makefile.in
 
 all: $(ALL_TARGETS)
+
+test: $(TEST_TARGETS)
