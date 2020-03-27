@@ -186,7 +186,39 @@ void    aes_128_enc_key_schedule (
     uint32_t    rk [AES_128_RK_WORDS],
     uint8_t     ck [AES_128_CK_BYTES] 
 ){
-    aes_key_schedule(rk, ck, AES_128_NK, AES_128_NR);
+    uint32_t    t0,t1,t2,t3,tr;
+
+    U8_TO_U32_LE(t0, ck,  0);
+    U8_TO_U32_LE(t1, ck,  4);
+    U8_TO_U32_LE(t2, ck,  8);
+    U8_TO_U32_LE(t3, ck, 12);
+
+    uint32_t *rkp= rk;
+    uint32_t *rke= &rk[40];
+    uint8_t  *rcp= &round_const[1];
+    
+    while(1) {
+
+        rkp[0] = t0;
+        rkp[1] = t1;
+        rkp[2] = t2;
+        rkp[3] = t3;
+
+        if(rke == rkp) {
+            return;
+        }
+
+        rkp += 4;
+
+        t0 ^= (uint32_t)*rcp++;
+        tr  = ROTR32(t3, 8);
+        tr  = _saes_v1_encs(tr);
+        t0 ^= tr;
+
+        t1 ^= t0;
+        t2 ^= t1;
+        t3 ^= t2;
+    }
 }
 
 void    aes_192_enc_key_schedule (
