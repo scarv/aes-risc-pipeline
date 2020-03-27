@@ -103,8 +103,7 @@ void    aes_128_dec_key_schedule (
     uint32_t    rk [AES_128_RK_WORDS],
     uint8_t     ck [AES_128_CK_BYTES] 
 ){
-    aes_key_schedule(rk, ck, AES_128_NK, AES_128_NR);
-    aes_pack_key_schedule(rk, AES_128_NR);
+    aes_128_enc_key_schedule(rk, ck);
 }
 
 void    aes_192_dec_key_schedule (
