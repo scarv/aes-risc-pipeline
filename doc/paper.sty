@@ -8,7 +8,7 @@
 \usepackage[hidelinks]{hyperref}
 \usepackage{import}
 \usepackage{listings}
-\usepackage{siunitx}
+\usepackage[binary-units=true]{siunitx}
 \usepackage{subcaption}
 \usepackage{tikz}
 \usepackage{xargs}
@@ -17,31 +17,49 @@
 \usepackage{xcolor}
 
 % set flags to conditionally control content in the paper (in addition to document class)
-\newbool{submission} \setbool{submission}{false}
-\newbool{anonymous}  \setbool{anonymous} {false}
+\newbool{submission} \setbool{submission}{true}
+\newbool{anonymous}  \setbool{anonymous} {true}
 
 % hack-ish control of space etc.
 \captionsetup[subfigure]{justification=centering}
 \setlist{noitemsep,leftmargin=0.65\parindent,align=left,labelwidth=0.65\parindent,labelsep=2pt,topsep=2pt,partopsep=2pt,parsep=2pt}
 \setlength{\textfloatsep}{0.7\baselineskip plus 0.2\baselineskip minus 0.5\baselineskip}
 
+\newcommandx{\F}{\ensuremath{\mathbb F}}
+
 \newcommandx{\SEC}[1][1={}]{\IfEq{#1}{s}{Sections}{Section}\xspace}
 \newcommandx{\TAB}[1][1={}]{\IfEq{#1}{s}{Tables}{Table}\xspace}
 \newcommandx{\FIG}[1][1={}]{\IfEq{#1}{s}{Figures}{Figure}\xspace}
 \newcommandx{\LST}[1][1={}]{\IfEq{#1}{s}{Listings}{Listing}\xspace}
+\newcommandx{\APPX}[1][1={}]{\IfEq{#1}{s}{Appendices}{Appendix}\xspace}
 
 \newcommandx{\REFSEC}[1]{\SEC~\ref{#1}\xspace}
 \newcommandx{\REFTAB}[1]{\TAB~\ref{#1}\xspace}
 \newcommandx{\REFFIG}[1]{\FIG~\ref{#1}\xspace}
 \newcommandx{\REFLST}[1]{\LST~\ref{#1}\xspace}
+\newcommandx{\REFAPPX}[1]{\APPX~\ref{#1}\xspace}
 
 \newcommandx{\TUPLE}[1]{\ensuremath{({#1})}\xspace}
 \newcommandx{\TABLE}[1]{\ensuremath{[{#1}]}\xspace}
 \newcommandx{\LIST}[1]{\ensuremath{\langle{#1}\rangle}\xspace}
 \newcommandx{\SET}[1]{\ensuremath{\{{#1}\}}\xspace}
 
+\newcommandx{\NOT}{\ensuremath{\neg  }\xspace}
+\newcommandx{\AND}{\ensuremath{\wedge}\xspace}
+\newcommandx{\IOR}{\ensuremath{\vee  }\xspace}
+\newcommandx{\XOR}{\ensuremath{\oplus}\xspace}
+
 \newcommandx{\RADIX}[2]{\ensuremath{{#1}_{({#2})}}\xspace}
 \newcommandx{\ASN}{\ensuremath{\leftarrow}\xspace}
+\newcommandx{\ALG}[1]{\textsc{#1}}
+\newcommandx{\IND}[1]{\ensuremath{\mbox{\bf #1}}\xspace}
+
+\newcommandx{\AESRND}[2]{\ensuremath{#1}^{(#2)}}
+\newcommandx{\AESFUNC}[1]{{\tt #1}}
+\newcommandx{\AESCONST}[1]{{\tt #1}}
+\newcommandx{\AESADD}{\ensuremath{\oplus }}
+\newcommandx{\AESMUL}{\ensuremath{\otimes}}
+\newcommandx{\AESINV}{\ensuremath{\oslash}}
 
 \lstdefinestyle{inline}{
   escapechar={¬},
@@ -75,6 +93,7 @@
   frame=single,
   numbers=left
 }
+
 \newcommand{\VERB}[2][]{\mbox{\lstinline[style={inline},language={#1}]`#2`}}
 \lstnewenvironment{MKVERB}[1][]{\lstset{basicstyle=\ttfamily,#1}}{}
 \lstalias{ASM}{C}

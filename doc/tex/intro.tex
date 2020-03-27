@@ -1,0 +1,203 @@
+% =============================================================================
+
+\paragraph{Implementing the Advanced Encryption Standard (AES).}
+
+In $2001$, NIST pronounced Rijndael~\cite{DaeRij:98,DaeRij:02}, 
+a design due to Daemen and Rijmen, 
+as winner of a $5$-year standardisation process~\cite{NBBBDFR:01} instigated 
+to identify a replacement for the incumbent
+Data     Encryption Standard (DES)~\cite{FIPS:46} 
+block cipher; the resulting 
+Advanced Encryption Standard (AES)~\cite{FIPS:197} 
+was announced in $2001$.
+
+Compared to more general cases, cryptographic kernels such as AES present a
+significant challenge wrt. implementation, because they often
+a) involve computationally intensive, somewhat niche functionality,
+b) are deployed in a diverse range of contexts,
+   and
+c) form a central target in what is a complex attack surface.
+The demand for efficiency, however measured, forms an overarching example.  
+First,
+cryptography often represents an enabling technology vs. a feature: it will
+likely be viewed as overhead, therefore, when viewed from the perspective 
+of a user.  Put another way,  (even {\em perceived}) {\em in}efficiency may
+be problematic in terms of fitness for purpose.  Addressing this is further 
+complicated by any constraints associated with the context, e.g., a demand 
+for
+high-volume, 
+ low-latency, 
+high-throughput, 
+ low-footprint, 
+and/or 
+ low-power.
+Second,
+and although efficiency is a goal in and of itself therefore, it {\em also} 
+acts as an enabler for security.  This is because one cannot 
+(or at least {\em should} not) 
+compromise security to meet efficiency requirements, implying that delivery 
+of higher efficiency offers greater margin within which to deliver suitable
+countermeasures against attack.
+
+AES represents an interesting case-study wrt. techniques which attempt to 
+address the challenge of efficient, secure implementation.  For example,
+per the request for candidates announcement\footnote{%
+\url{https://www.govinfo.gov/content/pkg/FR-1997-09-12/pdf/97-24214.pdf}
+}, the AES process was instrumental in popularising a model in which
+{\em both}
+``security''
+(e.g., resilience against cryptanalytic attack)
+{\em and}
+``algorithm and implementation characteristics''
+(e.g., computational efficiency, memory requirements, suitability for different platform classes)
+form important quality metrics for the {\em design}, in order to facilitate
+techniques for higher quality {\em implementations} of it.
+In addition,
+both the design {\em and} implementations of it are long-lived.
+From a positive perspective, 
+the central importance of AES has yielded special emphasis on related
+research and development effort before, during, and, most significantly, 
+after the AES process.
+From a negative perspective, however,
+the $20+$ year period since standardisation has forced an evolution of 
+implementation technique, e.g., to match evolution of both the technology 
+and attack landscape.  For example,~\cite[Section 3.6]{NBBBDFR:01} covers
+implementation (e.g., side-channel) attacks: this field has become richer,
+and the associated threat more potent during said period.
+
+% -----------------------------------------------------------------------------
+
+\paragraph{Support via Instruction Set Extensions (ISEs).}
+
+A potentially large space of implementation techniques will often exist
+for a given cryptographic kernel.  One could classify instances as being 
+   kernel-agnostic
+   or
+   kernel-specific,
+and based on the use of   
+   only              hardware,
+   only              software,
+   or
+   both hardware and software.
+The latter class includes instances based on the concept of an
+Instruction Set Extension (ISE)~\cite{BarGioMar:09,RegIen:16}.
+The idea is to identify, e.g., through benchmarking, a set of additional 
+instructions that allow the kernel to leverage
+special-purpose, domain-specific functionality
+in the resulting ISE,
+vs. 
+general-purpose                  functionality
+in the base      ISA,
+and thereby deliver improvement wrt. pertinent quality metrics.  Various
+generations of Intel
+MultiMedia      eXtensions (MMX),
+Streaming SIMD  Extensions (SSE),
+and
+Advanced Vector Extensions (AVX)
+arguably offer the archetypal example of ISEs in practice, each of which 
+supports numerical kernels via vector (or SIMD) vs. scalar computation.
+
+Abstractly, an ISE design constitutes
+1) an {\em interface},
+   i.e., 
+   addition of instructions to some 
+   base Instruction Set Architecture (ISA) 
+   plus
+2) an {\em implementation},
+   i.e., 
+   support for execution of said instructions through changes or addition 
+   to a 
+   base micro-architecture.
+As a fundamental, long-lived computer systems interface, the design of or
+changes to an ISA demands careful consideration
+(cf.~\cite[Section 4]{Gueron:09}); this implies production of a concrete 
+ISE design is far from trivial.  
+Such a design must deliver a demonstrable improvement wrt. the kernel in 
+question, {\em as well as} considering a (non-exhaustive) list of design 
+goals such as
+
+\begin{itemize}
+\item minimal invasiveness,
+      e.g.,
+      limit the number and scope (local vs. global) of changes,
+\item minimal overhead,
+      e.g.,
+      avoid instructions that demand support via large or complex hardware components,
+\item maximal compatibility,
+      e.g.,
+      align with constraints in the base ISA, such as use of existing instruction formats,
+\item maximal       utility,
+      i.e.,
+      favour general- vs. {\em too} special-purpose functionality.
+\end{itemize}
+
+\noindent
+The Intel
+Advanced Encryption Standard New Instructions (AES-NI)~\cite{Gueron:09,DruGueKra:19}
+extension to x86 provides a pertinent case-study wrt. these guidelines: 
+it affords significant improvement wrt. latency and throughput
+(see, e.g.,~\cite{FazLopOli:18}),
+while
+a) adding just $6$ additional (vs. $1500+$ total) instructions,
+b) reducing overhead by, e.g., sharing the XMM register file,
+c) facilitating compatibility via the
+   \VERB{CPUID}~\cite[Chapter 20]{X86:1:18}
+   feature identification mechanism,
+   and
+d) offering utility beyond AES specifically:
+   it supports AES-specific functionality but is able to maximise utility 
+   through more AES-agnostic support of {\em other} kernels
+   (see, e.g., use of AES-NI within SHA3~\cite{BBGR:09} and CEASER~\cite[Section 4.1]{AnkAnk:16} candidates).
+
+% -----------------------------------------------------------------------------
+
+\paragraph{Remit.}
+
+In this paper, we address the challenge of supporting AES by designing and
+evaluating an associated ISE for RISC-V
+(see, e.g.,~\cite{riscv:1,riscv:2}).
+Note that we specifically focus on extending the scalar RISC-V instruction 
+set, thereby contrasting with work related to cryptographic support in the
+standard V (or vector) extension~\cite[Section 21]{RV:ISA:I:19}.
+
+On one hand, 
+RISC-V represents an excellent vehicle for such work:
+extensibility is a by-design feature in the ISA, whose open nature renders
+exploration of such extensions easier by virtue of the range of associated 
+(often open-source) implementations.  
+Increased commercial deployment of such implementations suggests that work 
+on RISC-V timely, and potentially of high impact.
+On the other hand, however,
+RISC-V also presents some unique challenges vs. previous work.
+For example,
+RISC-V could in fact be viewed as {\em three} related base ISAs,
+ RV32I~\cite[Section 2]{RV:ISA:I:19},
+ RV64I~\cite[Section 5]{RV:ISA:I:19},
+and
+RV128I~\cite[Section 6]{RV:ISA:I:19},
+that each support a different word size:
+designing an ISE that is applicable (or scales) across these options is a
+complicating factor, yet an important design goal.
+
+% -----------------------------------------------------------------------------
+
+\paragraph{Organisation.}
+
+% TODO
+
+\REFSEC{sec:bg}
+\REFSEC{sec:design}
+\REFSEC{sec:impl}
+\REFSEC{sec:eval}
+Finally, 
+\REFSEC{sec:outro}
+presents some conclusions and potential directions for future work.
+
+\ifbool{submission}{%
+Note that in order to satisfy the TCHES submission guidelines, we have 
+anonymised various resources and references.  We intend to open-source 
+such resources post-submission, but could provide them to reviewers, 
+if required, to facilitate the review process.
+}{}%
+
+% =============================================================================

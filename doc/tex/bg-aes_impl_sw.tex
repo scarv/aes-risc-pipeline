@@ -1,0 +1,161 @@
+% =============================================================================
+
+% TODO
+
+Note that we consider ``vanilla'' ISAs only, so exclude work related to the
+use of, e.g., vector-like extensions~\cite{Hamburg:09}.
+
+In combination,
+Bernstein and   Schwabe~\cite{BerSch:08}
+and
+Schwabe   and Stoffelen~\cite{SchSto:16}
+present and compare a range of software-based implementation and 
+optimisation techniques, across a range of platforms.
+
+% -----------------------------------------------------------------------------
+
+\paragraph{Compute-oriented.}
+
+A compute-oriented implementation of AES favours
+ online     computation, 
+thus reducing 
+memory footprint
+at the cost of increased 
+latency.
+Following~\cite[Section 4.1]{DaeRij:02}, for example, the idea is to simply
+1) adopt an
+    array-packed
+   representation of state and round key matrices,
+   then
+2) construct a round implementation by following the algorithmic description
+   of each round function in a direct manner.
+Addition in $\F_{2^8}$ can be realised using a native XOR instruction; this
+native support is seldom afforded to multiplication and inversion, however.
+As a result, it is common to pre-compute the \ALG{S-box} and \AESFUNC{xtime} 
+functions:
+doing so demands pre-computation and storage of a
+$
+\SI{256}{\byte}
+$
+look-up table per function, but significantly reduces execution latency.
+
+On platforms where $w = 32$,
+Bertoni et al.~\cite{BBFMM:02}
+further improve execution latency by exploiting the wider data-path.  Their
+idea is to
+1) adopt a 
+      row-packed
+   representation of state and round key matrices,
+2) implement
+   \AESFUNC{ShiftRows}
+   by using native rotation instructions to act on the packed
+   rows,
+3) implement
+   \AESFUNC{MixColumns}
+   by harnessing the SIMD Within A Register (SWAR) paradigm:
+   by applying
+   \AESFUNC{xtime}
+   across a packed row in parallel,
+   a carefully organised scheme for evaluating
+   \AESFUNC{MixColumns}
+   can be constructed.
+
+% -----------------------------------------------------------------------------
+
+\paragraph  {Table-oriented.}
+
+A  table-oriented implementation of AES favours
+offline pre-computation,
+thus reducing 
+latency
+at the cost of increased 
+memory footprint.
+The archetypal example of this technique is use of so-called
+T-tables~\cite[Section 4.2]{DaeRij:02}.
+In short, doing so means
+1) adopting a 
+   column-packed
+   representation of state and round key matrices,
+2) pre-computing
+   \[
+   \AESFUNC{MixColumn} \circ \AESFUNC{SubBytes}
+   \]
+   using the tables
+   \[
+   \begin{array}{cc}
+   \begin{array}{lcl}
+   T_0[x] &=& \left[\begin{array}{c}
+                    \RADIX{02}{16} \AESMUL \ALG{S-box}( x ) \\
+                    \RADIX{01}{16} \AESMUL \ALG{S-box}( x ) \\
+                    \RADIX{01}{16} \AESMUL \ALG{S-box}( x ) \\
+                    \RADIX{03}{16} \AESMUL \ALG{S-box}( x ) \\
+                    \end{array} \right]
+   \end{array}
+   &
+   \begin{array}{lcl}
+   T_1[x] &=& \left[\begin{array}{c}
+                    \RADIX{03}{16} \AESMUL \ALG{S-box}( x ) \\
+                    \RADIX{02}{16} \AESMUL \ALG{S-box}( x ) \\
+                    \RADIX{01}{16} \AESMUL \ALG{S-box}( x ) \\
+                    \RADIX{01}{16} \AESMUL \ALG{S-box}( x ) \\
+                    \end{array} \right]
+   \end{array}
+   \\\\
+   \begin{array}{lcl}
+   T_2[x] &=& \left[\begin{array}{c}
+                    \RADIX{01}{16} \AESMUL \ALG{S-box}( x ) \\
+                    \RADIX{03}{16} \AESMUL \ALG{S-box}( x ) \\
+                    \RADIX{02}{16} \AESMUL \ALG{S-box}( x ) \\
+                    \RADIX{01}{16} \AESMUL \ALG{S-box}( x ) \\
+                    \end{array} \right]                 
+   \end{array}
+   &
+   \begin{array}{lcl}
+   T_3[x] &=& \left[\begin{array}{c}
+                    \RADIX{01}{16} \AESMUL \ALG{S-box}( x ) \\
+                    \RADIX{01}{16} \AESMUL \ALG{S-box}( x ) \\
+                    \RADIX{03}{16} \AESMUL \ALG{S-box}( x ) \\
+                    \RADIX{02}{16} \AESMUL \ALG{S-box}( x ) \\
+                    \end{array} \right]
+   \end{array}
+   \end{array}
+   \]
+   for $x \in \F_{2^8}$,
+3) computing each $j$-th column of $\AESRND{s}{r+1}$ as
+   \[
+   T_0[ \AESRND{s}{r}_{i, j + 0 \pmod{4}} ] \AESADD
+   T_1[ \AESRND{s}{r}_{i, j + 1 \pmod{4}} ] \AESADD
+   T_2[ \AESRND{s}{r}_{i, j + 2 \pmod{4}} ] \AESADD
+   T_3[ \AESRND{s}{r}_{i, j + 3 \pmod{4}} ]
+   \]
+   where extraction of elements caters for \AESFUNC{ShiftRows}, then XOR'ing 
+   the $j$-th column of $\AESRND{rk}{r}$ to cater for \AESFUNC{AddRoundKey}.
+
+As such, each round amounts to a sequence of look-ups into $T_i$, plus XORs 
+to combine their result; 
+doing so demands pre-computation and storage of a
+$
+256 \cdot \SI{4}{\byte} = \SI{1}{\kilo\byte}
+$
+look-up table per $T_i$.
+However, note that the overhead related to extraction of each element from 
+packed columns representing $\AESRND{s}{r}$ 
+(to form look-table offsets) 
+is not insignificant:
+Fiskiran and Lee~\cite{FisLee:01}
+analyse the impact of different addressing modes on this issue, with
+Stoffelen~\cite[Section 3.1]{Stoffelen:19}
+concluding that RISC-V is (relatively) ill-equipped to reduce said overhead,
+due to the provision of a (relatively) sparse set of addressing modes.
+
+% -----------------------------------------------------------------------------
+
+\paragraph{Use of bit-slicing.}
+
+% TODO
+
+\cite{MatNak:07,Konighofer:08,KasSch:09}
+
+\cite{Stoffelen:19}
+
+% =============================================================================

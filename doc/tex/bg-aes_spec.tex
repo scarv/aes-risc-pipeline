@@ -1,0 +1,197 @@
+% =============================================================================
+
+FIPS-197~\cite{FIPS:197} obviously represents the definitive specification
+of AES; we note that an overview of related design rationale is offered in,
+e.g.,~\cite{DaeRij:02}.  We offer a summary in the following \SEC[s] for
+completeness, and to fix notation.
+
+\paragraph{Parameterisation.}
+
+As a block cipher, AES provides two algorithms
+\[
+\begin{array}{lcl}
+\ALG{Enc} &:& \SET{ 0, 1 }^{8 \cdot 4 \cdot Nk} \times \SET{ 0, 1 }^{8 \cdot 4 \cdot Nb} \rightarrow \SET{ 0, 1 }^{8 \cdot 4 \cdot Nb} \\
+\ALG{Dec} &:& \SET{ 0, 1 }^{8 \cdot 4 \cdot Nk} \times \SET{ 0, 1 }^{8 \cdot 4 \cdot Nb} \rightarrow \SET{ 0, 1 }^{8 \cdot 4 \cdot Nb} \\
+\end{array}
+\]
+st.
+$
+m = \ALG{Dec}( k, c = \ALG{Enc}( k, m ) ) .
+$
+That is, given a plaintext $m$ and cipher key $k$, \ALG{Enc} encrypts $m$ 
+under $k$; given the same key \ALG{Dec} will invert \ALG{Enc}, and so the
+same $m$ can be recovered from the associated ciphertext $c$.  An AES 
+parameter set~\cite[Figure 4]{FIPS:197}
+is a triple
+$
+\TUPLE{ Nk, Nb, Nr }
+$
+where 
+$Nk$ dictates the number of bits in $k$,
+$Nb$ dictates the number of bits in $m$ or $c$ (i.e., a block),
+and
+$Nr$ dictates the number of rounds.  The standard AES parameter sets are
+\[
+\begin{array}{lcl}
+\mbox{AES-128} &\mapsto& \TUPLE{ 4, 4, 10 } \\
+\mbox{AES-192} &\mapsto& \TUPLE{ 6, 4, 12 } \\
+\mbox{AES-256} &\mapsto& \TUPLE{ 8, 4, 14 } \\
+\end{array}
+\]
+noting that the number of bits in a plaintext (resp. ciphertext) block is
+fixed to $128$.  From here on, we focus wlog. on encryption using AES-128
+(other parameter sets are catered for naturally, and decryption with only
+minor differences) and so will use the term AES as a synonym for AES-128.
+
+\paragraph{Design.}
+
+AES is based on some underpinning Mathematics~\cite[Section 4]{FIPS:197},
+and, in particular, can be defined in terms of operations over the finite 
+field $\F_{2^8}$ constructed as
+\[
+\F_{2}[\IND{x}] / ( \IND{x}^8 + \IND{x}^4 + \IND{x}^3 + \IND{x} + 1 ) .
+\]
+A hexadecimal short-hand~\cite[Section 3.2]{FIPS:197} is used to represent 
+field literals, e.g.,
+\[
+\AESCONST{13} ~\mapsto~ \RADIX{13}{16} ~\equiv~ \RADIX{00010011}{2} ~\mapsto~ \IND{x}^4 + \IND{x} + 1 .
+\]
+Field 
+      addition, 
+multiplication, 
+and  
+     inversion 
+are denoted by
+$\AESADD$,
+$\AESMUL$,
+and
+$\AESINV$
+respectively,
+with the multiplication-by-$\IND{x}$ operation~\cite[Section 4.2.1]{FIPS:197} 
+denoted \AESFUNC{xtime}.
+Elements of $\F_{2^8}$ are collected into $( 4 \times 4 )$-element state
+and round-key matrices; the $i$-th row and $j$-th column of such a matrix 
+relating to round $r$ is denoted
+$\AESRND {s}{r}_{i,j}$
+and
+$\AESRND{rk}{r}_{i,j}$
+respectively, with super- and/or subscripts dropped whenever irrelevant.
+
+At a high(er) level, 
+AES is an iterative block cipher, based on a substitution-permutation network.
+This means encryption using AES can be described~\cite[Section 5.2]{FIPS:197}
+as follows:
+1)    the  input  plaintext is pre-whitened to yield
+      $\AESRND {s}{  0} = m \AESADD \AESRND{rk}{0} = m \AESADD k$,
+2)    each $r$-th round, for $1 \leq r \leq Nr$, demands computation of
+      $\AESRND {s}{r+1} = \ALG{P-layer}( \ALG{S-layer}( \AESRND{s}{r}                        ) ) \AESADD \AESRND{rk}{r}$,
+      and therefore use of round key
+      $\AESRND{rk}{r  }$
+      derived from the cipher key $k$ via the key expansion process~\cite[Section 5.2]{FIPS:197},
+3)    the output ciphertext is
+      $c = \AESRND{s}{Nr}$.
+Note that an alternative round definition, namely
+      $\AESRND {s}{r+1} = \ALG{P-layer}( \ALG{S-layer}( \AESRND{s}{r} \AESADD \AESRND{rk}{r} ) )                       $ ,
+is plausible: this shifts the 
+ pre-whitening step {\em before} 2) 
+into an analogous 
+post-whitening step {\em  after} 2)
+to yield an equivalent result.
+At a  low(er) level,
+the computation of each round is specified as the composition of four 
+round functions (each of which has an inverse, to support decryption):
+
+\begin{itemize}
+
+\item \AESFUNC{SubBytes}
+      ~\cite[Section 5.1.1]{FIPS:197}
+      operates element-wise,
+      computing
+      $\AESRND{s}{r+1}_{i,j} = \ALG{S-box}( \AESRND{s}{r}_{i,j} )$
+      via application of the S-box:
+      given an element $x$, this component can be described as
+      \[
+      \begin{array}{lcl}
+      \ALG{S-Box} &:& \left\{\begin{array}{ccc}
+                             \F_{2^8} &\rightarrow& \F_{2^8} \\
+                             x        &\mapsto    & f(g(x))  \\
+                             \end{array}
+                      \right.
+      \end{array}
+      \]
+      where 
+      $g$ is an inversion, 
+      and 
+      $f$ is a specially selected affine transformation.
+      Where appropriate,
+      we overload \AESFUNC{SubBytes} by allowing it to denote application 
+      of the S-box to {\em any} collection, e.g., a sequence, of elements.
+
+\item \AESFUNC{ShiftRows}
+      ~\cite[Section 5.1.2]{FIPS:197}
+      operates     row-wise,
+      rotating each 
+      $i$-th row 
+      of 
+      $\AESRND{s}{r  }$
+      by $i$ elements
+      to form 
+      the associated row    of
+      $\AESRND{s}{r+1}$,
+      i.e.,
+      $\AESRND{s}{r+1}_{i,j} = \AESRND{s}{r}_{i,j + i \pmod{Nb}}$.
+
+\item \AESFUNC{MixColumns}
+      ~\cite[Section 5.1.3]{FIPS:197}
+      operates  column-wise,
+      multiplying each 
+      $j$-th column
+      of 
+      $\AESRND{s}{r  }$
+      with a constant MDS matrix
+      to form 
+      the associated column of
+      $\AESRND{s}{r+1}$.
+      Where appropriate,
+      we use
+      \AESFUNC{MixColumn}
+      to denote
+      the operation applied to a single column within \AESFUNC{MixColumns},
+      i.e., multiplication of a $4$-element column vector by the constant
+      MDS matrix.
+      
+\item \AESFUNC{AddRoundKey}
+      ~\cite[Section 5.1.4]{FIPS:197}
+      operates element-wise,
+      computing
+      $\AESRND{s}{r+1}_{i,j} = \AESRND{s}{r}_{i,j} \AESADD \AESRND{rk}{r}_{i,j}$ 
+      and thereby mixing a round key into the state.
+
+\end{itemize}
+
+\noindent
+Note that
+$
+\ALG{S-layer} = \AESFUNC{SubBytes} ,
+$
+and
+\[
+\ALG{P-layer} = \left\{\begin{array}{l@{\;}c@{\;}l lr}
+                       \AESFUNC{MixColumns} &\circ& \AESFUNC{ShiftRows} & \mbox{in rounds} & 1 \leq r < Nr \\
+                                            &     & \AESFUNC{ShiftRows} & \mbox{in round } &            Nr \\
+                       \end{array}
+                \right.
+\]
+i.e., the last, $Nr$-th round differs from the initial $Nr - 1$ rounds.  As
+such, a round as defined above is constructed via
+$
+\AESFUNC{AddRoundKey} \circ \AESFUNC{MixColumns} \circ \AESFUNC{ShiftRows} \circ \AESFUNC{SubBytes} 
+$
+or
+$
+\AESFUNC{AddRoundKey} \circ                            \AESFUNC{ShiftRows} \circ \AESFUNC{SubBytes}
+$
+respectively, where, because \AESFUNC{ShiftRows} and \AESFUNC{SubBytes}
+commute, the order they are applied in can be selected to suit.
+
+% =============================================================================

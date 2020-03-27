@@ -1,0 +1,280 @@
+% =============================================================================
+
+\paragraph{Industry-specified ISEs.}
+
+\begin{itemize}
+
+\item Intel 
+      introduced support for AES in 
+      x86
+      per~\cite[Section 12.13]{X86:1:18}.
+      Instructions use a
+          destructive $2$-address ($1$ source, $1$ source/destination)  
+      or
+      non-destructive $3$-address ($2$ source, $1$        destination)
+      format
+      depending on the (e.g., XMM- vs. AVX-based) variant,
+      and operate on data housed in the pre-existing
+      vector 
+      register file:
+      this implies $w = 128$.
+      AES is implemented by
+      1) adopting a 
+          fully-packed
+         representation of state and round key matrices,
+         then
+      2) using
+             \VERB{AESENC}         ~\cite[Page 3-54]{X86:2:18}
+         to construct a round implementation as
+         \[
+         \VERB{AESENC} \mapsto \AESFUNC{AddRoundKey} \circ \AESFUNC{MixColumns} \circ \AESFUNC{SubBytes} \circ \AESFUNC{ShiftRows} ,
+         \]
+%     Note that
+%            \VERB{AESENCLAST}     ~\cite[Page 3-56]{X86:2:18}
+%     supports 
+%     the $Nr$-th round;
+%     additional instructions are provided to 
+%     support
+%     decryption
+%     (i.e., \VERB{AESDEC}         ~\cite[Page 3-50]{X86:2:18}
+%            and
+%            \VERB{AESDECLAST}     ~\cite[Page 3-52]{X86:2:18})
+%     and
+%     key expansion
+%     (i.e., \VERB{AESKEYGENASSIST}~\cite[Page 3-59]{X86:2:18}
+%            and
+%            \VERB{AESIMC}         ~\cite[Page 3-58]{X86:2:18}).
+
+\item IBM
+      introduced support for AES in 
+      POWER
+      per~\cite[Section 6.11.1]{POWER:18}.
+      Instructions use a
+      non-destructive $3$-address ($2$ source, $1$        destination)
+      format,
+      and operate on data housed in the pre-existing
+      vector 
+      register file:
+      this implies $w = 128$.
+      AES is implemented by
+      1) adopting a 
+          fully-packed
+         representation of state and round key matrices,
+         then
+      2) using
+             \VERB{vcipher}     ~\cite[Page 304]{POWER:18}
+         to construct a round implementation as
+         \[
+         \VERB{vcipher} \mapsto \AESFUNC{AddRoundKey} \circ \AESFUNC{MixColumns} \circ \AESFUNC{ShiftRows} \circ \AESFUNC{SubBytes} .
+         \]
+%     Note that
+%            \VERB{vcipherlast} ~\cite[Page 304]{POWER:18}
+%     supports 
+%     the $Nr$-th round;
+%     additional instructions are provided to 
+%     support
+%     decryption
+%     (i.e., \VERB{vncipher}    ~\cite[Page 305]{POWER:18}
+%            and
+%            \VERB{vncipherlast}~\cite[Page 305]{POWER:18})
+%     and
+%     key expansion
+%     (i.e., \VERB{vsbox}       ~\cite[Page 305]{POWER:18}).
+
+\item ARM
+      introduced support for AES in 
+      ARMv8-A
+      per~\cite[Section A2.3]{ARMv8-A:20}.
+      Instructions use a
+          destructive $2$-address ($1$ source, $1$ source/destination)  
+      format,
+      and operate on data housed in the pre-existing
+      vector 
+      register file:
+      this implies $w = 128$.
+      AES is implemented by
+      1) adopting a 
+          fully-packed
+         representation of state and round key matrices,
+         then
+      2) using
+             \VERB{AESE}  ~\cite[Section C7.2.8 ]{ARMv8-A:20}
+             and
+             \VERB{AESMC} ~\cite[Section C7.2.10]{ARMv8-A:20}
+         to construct a round implementation as
+         \[
+         \VERB{AESMC} \circ \VERB{AESE} \mapsto \AESFUNC{MixColumns} \circ ( \AESFUNC{SubBytes} \circ \AESFUNC{ShiftRows} \circ \AESFUNC{AddRoundKey} ) ,
+         \]
+         where the alternative round definition from 
+         \REFSEC{sec:bg:aes_spec} 
+         is assumed to cater for the order of application.
+%     Note that
+%     additional instructions are provided to 
+%     support
+%     decryption
+%     (i.e., \VERB{AESD}  ~\cite[Section C7.2.7 ]{ARMv8-A:20}
+%            and
+%            \VERB{AESIMC}~\cite[Section C7.2.9 ]{ARMv8-A:20}),
+%     but none are required to 
+%     support
+%     the $Nr$-th round:
+%     \VERB{AESE} obviously lacks \AESFUNC{MixColumns}, and the post-whitening 
+%     step is naturally supported via XOR. 
+
+\item Oracle
+      introduced support for AES in 
+      SPARC 
+      per~\cite[Sections 7.3+7.4]{SPARC:16}.
+      Instructions use a
+      non-destructive $4$-address ($3$ source, $1$        destination)
+      format,
+      and operate on data housed in the pre-existing
+      general-purpose
+      register file:
+      this implies $w =  64$.
+      AES is implemented by
+      1) using a 
+         column-packed
+         representation of state and round key matrices,
+         then
+      2) using
+             \VERB{AES_EROUND01}     ~\cite[Page 109]{SPARC:16}
+             and
+             \VERB{AES_EROUND23}     ~\cite[Page 109]{SPARC:16}
+         to construct a round implementation as
+         \[
+         ( \VERB{AES_EROUND01} \circ \VERB{AES_EROUND23} ) \mapsto \AESFUNC{AddRoundKey} \circ \AESFUNC{MixColumns} \circ \AESFUNC{ShiftRows} \circ \AESFUNC{SubBytes} 
+         \]
+         in two steps:
+         the first  step processes columns $0$ and $1$ via \VERB{AES_EROUND01}
+         whereas
+         the second step processes columns $2$ and $3$ via \VERB{AES_EROUND23}.
+%     Note that
+%            \VERB{AES_EROUND01_LAST}~\cite[Page 109]{SPARC:16}
+%            and
+%            \VERB{AES_EROUND23_LAST}~\cite[Page 109]{SPARC:16}
+%     support 
+%     the $Nr$-th round;
+%     additional instructions are provided to 
+%     support
+%     decryption
+%     (i.e., \VERB{AES_DROUND01}     ~\cite[Page 109]{SPARC:16},
+%            \VERB{AES_DROUND23}     ~\cite[Page 109]{SPARC:16},
+%            \VERB{AES_DROUND01_LAST}~\cite[Page 109]{SPARC:16},
+%            and
+%            \VERB{AES_DROUND23_LAST}~\cite[Page 109]{SPARC:16})
+%     and
+%     key expansion
+%     (i.e., \VERB{AES_KEXPAND0}     ~\cite[Page 112]{SPARC:16},
+%            \VERB{AES_KEXPAND1}     ~\cite[Page 109]{SPARC:16},
+%            and
+%            \VERB{AES_KEXPAND2}     ~\cite[Page 112]{SPARC:16}).
+
+\end{itemize}
+
+% -----------------------------------------------------------------------------
+
+\paragraph{Academia-specified ISEs.}
+
+\begin{itemize}
+
+% kernel-agnostic
+
+\item Burke et al.~\cite{BurMcDAus:00}
+      propose a kernel-agnostic ISE
+      based on workload characterisation.
+      Per~\cite{BurMcDAus:00}, pertinent examples
+      for AES
+      include
+      a) \VERB{ROL}
+         and
+         \VERB{ROR},
+         which perform
+         left- and right-rotate,
+      b) \VERB{SBOX},
+         which performs
+         extraction of elements to form of look-up table offsets; in one
+         configuration, the resulting memory accesses are supported by a
+         set of special-purpose ``S-box caches''.
+
+\item Fiskiran and Lee~\cite{FisLee:05}
+      propose a kernel-agnostic ISE
+      that employs a so-called
+      Parallel Table Lookup Module (PTLU).
+      For AES, 
+      this acts to accelerate implementations based on T-tables 
+      by affording an addressing mode that
+      a) integrates 
+         extraction of elements to form of look-up table offsets,
+         and
+      b) performs the associated table look-ups in parallel, supported by
+         a dedicated scratch-pad memory.
+
+% kernel-specific
+
+\item Nadehara et al.~\cite{NadIkeKur:04} 
+      propose a kernel-specific ISE
+       that could be described as 
+      ``hardware-assisted T-tables'':
+      observing that $\forall x, i \neq j$, $T_i[ x ]$ is a rotation of
+      $T_j[ x ]$, they support on-the-fly computation (vs. via look-up)
+      of T-table entries.
+      The ISE constitutes a single instruction
+      $\VERB{AESENC} \mapsto T_i$,
+      supported by a dedicated hardware module
+      (see~\cite[Figure 6]{NadIkeKur:04}):
+      instances of \VERB{AESENC}
+      1) extract an   input element from a 
+         packed  input column
+      2) use the input to compute an output element equivalent to a
+         look-up from the T-table,
+      3) store   the output element into a
+         packed output column.
+      This approach was rediscovered by Saarinen~\cite{Saarinen:20}, set 
+      within the context of RISC-V.
+
+\item Tillich et al.~\cite{TilGroSze:05}
+      propose a kernel-specific ISE
+       that could be described as 
+      ``hardware-assisted S-box''.
+      The ISE constitutes a single instruction
+      $\VERB{sbox} \mapsto \AESFUNC{SubBytes}$,
+      supported by a dedicated hardware module
+      (see~\cite[Figure 1]{TilGroSze:05}):
+      instances of \VERB{sbox}
+      1) extract an   input element from a packed  input row or column,
+      2) use the input to compute an output element equivalent to a
+         look-up from the S-box,
+      3)  insert the output element into a packed output row or column;
+         by using insert vs. overwrite semantics, allow 
+         a zero-overhead implementation of \AESFUNC{ShiftRows} to be realised.
+
+\item Bertoni et al.~\cite{BBFR:06}
+      propose a kernel-specific ISE
+       that could be described as 
+      ``hardware-assisted round functions''.
+      Per~\cite[Section 4]{BBFR:06}, the ISE includes
+      a) zero-overhead rotation (a la ARM),
+      b) byte- and word-oriented varients of
+         $\VERB{SMix} \mapsto \AESFUNC{MixColumn} \circ \AESFUNC{SubBytes}$.
+      
+\item Tillich and Gro{\ss}sch\"{a}dl~\cite{TilGro:06}
+      propose a kernel-specific ISE
+       that could be described as 
+      ``hardware-assisted round functions''.
+      Per~\cite[Section 4]{BBFR:06}, the ISE includes
+         byte- and word-oriented varients of
+         $\VERB  {sbox[4][s/r]} \mapsto \AESFUNC{SubBytes} $
+         and
+         $\VERB{mixcol[4][s]  } \mapsto \AESFUNC{MixColumn}$;
+      per~\cite[Section 4.3]{TilGro:06},
+      the most efficient varient allows
+         a zero-overhead implementation of \AESFUNC{ShiftRows} to be realised.
+
+\end{itemize}
+
+% TODO: also relavent are multi-kernel ISEs, e.g.,
+% - TilGro:04   -> ECC => AES
+% - Saarinen:20 -> AEC + SM4
+
+% =============================================================================
