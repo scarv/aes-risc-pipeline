@@ -13,6 +13,15 @@ static const uint8_t round_const[11] = {
   0x8d, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36 
 };
 
+
+//  Encrypt rounds. Implements AES-128/192/256 depending on nr = {10,12,14}
+extern void aes_enc_block (
+    uint8_t   ct[16],
+    uint8_t   pt[16],
+    uint32_t *rk,
+    int nr
+);
+
 /*!
 */
 void    aes_enc_key_schedule (

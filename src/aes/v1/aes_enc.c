@@ -52,100 +52,13 @@ void    aes_key_schedule (
 }
 
 
-/*!
-void    aes_enc_block (
-    uint8_t     ct [16],
-    uint8_t     pt [16],
-    uint32_t  * rk,
-    int         nr
-){
-    int round = 0;
-
-    uint32_t n0, n1, n2, n3;
-    uint32_t t0, t1, t2, t3;
-
-    AES_LOAD_STATE(t0,t1,t2,t3,pt);
-
-    t0 ^= rk[0];
-    t1 ^= rk[1];
-    t2 ^= rk[2];
-    t3 ^= rk[3];
-
-    for(round = 1; round < nr; round ++) {
-        
-        //
-        // Sub Bytes
-        t0 = _saes_v1_encs(t0);
-        t1 = _saes_v1_encs(t1);
-        t2 = _saes_v1_encs(t2);
-        t3 = _saes_v1_encs(t3);
-
-        //
-        // Shift Rows
-        n0 = (t0 & 0x000000FF) | (t1 & 0x0000FF00) |
-             (t2 & 0x00FF0000) | (t3 & 0xFF000000) ;
-        
-        n1 = (t1 & 0x000000FF) | (t2 & 0x0000FF00) | 
-             (t3 & 0x00FF0000) | (t0 & 0xFF000000) ;
-        
-        n2 = (t2 & 0x000000FF) | (t3 & 0x0000FF00) |
-             (t0 & 0x00FF0000) | (t1 & 0xFF000000) ;
-
-        n3 = (t3 & 0x000000FF) | (t0 & 0x0000FF00) |
-             (t1 & 0x00FF0000) | (t2 & 0xFF000000) ;
-
-        //
-        // Mix Columns
-
-        t0 = _saes_v1_encm(n0);
-        t1 = _saes_v1_encm(n1);
-        t2 = _saes_v1_encm(n2);
-        t3 = _saes_v1_encm(n3);
-        
-        //
-        // Add Round Key
-
-        t0 ^= rk[4*round + 0];
-        t1 ^= rk[4*round + 1];
-        t2 ^= rk[4*round + 2];
-        t3 ^= rk[4*round + 3];
-    }
-    //
-    // Sub Bytes
-    t0 = _saes_v1_encs(t0);
-    t1 = _saes_v1_encs(t1);
-    t2 = _saes_v1_encs(t2);
-    t3 = _saes_v1_encs(t3);
-
-    //
-    // Shift Rows
-    n0 = (t0 & 0x000000FF) | (t1 & 0x0000FF00) |
-         (t2 & 0x00FF0000) | (t3 & 0xFF000000) ;
-    
-    n1 = (t1 & 0x000000FF) | (t2 & 0x0000FF00) | 
-         (t3 & 0x00FF0000) | (t0 & 0xFF000000) ;
-    
-    n2 = (t2 & 0x000000FF) | (t3 & 0x0000FF00) |
-         (t0 & 0x00FF0000) | (t1 & 0xFF000000) ;
-
-    n3 = (t3 & 0x000000FF) | (t0 & 0x0000FF00) |
-         (t1 & 0x00FF0000) | (t2 & 0xFF000000) ;
-
-    
-    //
-    // Add Round Key
-
-    t0 = n0 ^ rk[4*round + 0];
-    t1 = n1 ^ rk[4*round + 1];
-    t2 = n2 ^ rk[4*round + 2];
-    t3 = n3 ^ rk[4*round + 3];
-        
-    U32_TO_U8_LE(ct, t0, 0);
-    U32_TO_U8_LE(ct, t1, 4);
-    U32_TO_U8_LE(ct, t2, 8);
-    U32_TO_U8_LE(ct, t3,12);
-}
-*/
+//  Encrypt rounds. Implements AES-128/192/256 depending on nr = {10,12,14}
+extern void aes_enc_block (
+    uint8_t   ct[16],
+    uint8_t   pt[16],
+    uint32_t *rk,
+    int nr
+);
 
 void    aes_192_enc_key_schedule (
     uint32_t    rk [AES_128_RK_WORDS],
