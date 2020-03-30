@@ -120,43 +120,8 @@ void aes_enc_block (
     U32_TO_U8_LE(ct , t3, 12);
 }
 
-/*
-void aes_128_enc_key_schedule (
-    uint32_t rk[44],
-    uint8_t  ck[16]
-) {
-    uint32_t t0, t1, t2, t3, tr;            //  subkey registers
-    const uint32_t *rke = &rk[44 - 4];      //  end pointer
-    const uint8_t *rc = aes_rcon;           //  round constants
-
-    AES_LOAD_STATE(t0,t1,t2,t3,ck);
-
-    while (1) {
-
-        rk[0] = t0;                         //  store subkey
-        rk[1] = t1;
-        rk[2] = t2;
-        rk[3] = t3;
-
-        if (rk == rke)                      //  end condition
-            return;
-        rk += 4;                            //  step pointer by one subkey
-
-        t0 ^= (uint32_t) *rc++;             //  round constant
-        tr = ROTL32(t3, 24);                //  rotate 8 bits (little endian!)
-        t0 = _saes_v3_encs(tr, t0, 0);   //  SubWord()
-        t0 = _saes_v3_encs(tr, t0, 1);   //
-        t0 = _saes_v3_encs(tr, t0, 2);   //
-        t0 = _saes_v3_encs(tr, t0, 3);   //
-        t1 ^= t0;
-        t2 ^= t1;
-        t3 ^= t2;
-    }
-}
-*/
 
 //  Key schedule for AES-192 encryption.
-
 void aes_192_enc_key_schedule(
     uint32_t rk[52],
     uint8_t  ck[24]
@@ -200,7 +165,6 @@ void aes_192_enc_key_schedule(
 }
 
 //  Key schedule for AES-256 encryption.
-
 void aes_256_enc_key_schedule(
     uint32_t rk[60],
     uint8_t  ck[32]
