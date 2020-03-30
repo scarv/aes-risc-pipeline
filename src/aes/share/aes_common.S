@@ -38,6 +38,8 @@
     or  \RD,  \RD , \TMP
 .endm
 
+// Performs the AES ShiftRows transoform, putting the results in T*,
+// with inputs in U*
 .macro AES_SHIFT_ROWS  T0, T1, T2, T3, U0, U1, U2, U3, X1, X2, MSK
     and     \T0, \U0, \MSK
     and     \T1, \U1, \MSK
@@ -69,6 +71,42 @@
     and     \X2, \U1, \X1
     or      \T2, \T2, \X2
     and     \X2, \U2, \X1
+    or      \T3, \T3, \X2
+.endm
+
+// Performs the Inverse AES ShiftRows transoform, putting the results in T*,
+// with inputs in U*
+.macro AES_INV_SHIFT_ROWS  T0, T1, T2, T3, U0, U1, U2, U3, X1, X2, MSK
+    and     \T0, \U0, \MSK
+    and     \T1, \U1, \MSK
+    and     \T2, \U2, \MSK
+    and     \T3, \U3, \MSK
+    slli    \X1, \MSK, 8
+    and     \X2, \U3, \X1
+    or      \T0, \T0, \X2
+    and     \X2, \U0, \X1
+    or      \T1, \T1, \X2
+    and     \X2, \U1, \X1
+    or      \T2, \T2, \X2
+    and     \X2, \U2, \X1
+    or      \T3, \T3, \X2
+    slli    \X1, \X1, 8
+    and     \X2, \U2, \X1
+    or      \T0, \T0, \X2
+    and     \X2, \U3, \X1
+    or      \T1, \T1, \X2
+    and     \X2, \U0, \X1
+    or      \T2, \T2, \X2
+    and     \X2, \U1, \X1
+    or      \T3, \T3, \X2
+    slli    \X1, \X1, 8
+    and     \X2, \U1, \X1
+    or      \T0, \T0, \X2
+    and     \X2, \U2, \X1
+    or      \T1, \T1, \X2
+    and     \X2, \U3, \X1
+    or      \T2, \T2, \X2
+    and     \X2, \U0, \X1
     or      \T3, \T3, \X2
 .endm
 

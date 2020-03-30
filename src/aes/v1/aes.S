@@ -197,3 +197,114 @@ aes_enc_block:                                  // a2 - uint32_t  * rk,
     #undef KP 
 
 .endfunc
+
+.func   aes_dec_block                           // a0 - uint8_t     pt [16],
+.global aes_dec_block                           // a1 - uint8_t     ct [16],
+aes_dec_block:                                  // a2 - uint32_t  * rk,
+                                                // a3 - int         nr
+    #define T0 a4
+    #define T1 a5
+    #define T2 a6
+    #define T3 a7
+    #define U0 t0
+    #define U1 t1
+    #define U2 t2
+    #define U3 t3
+    #define TMP t4
+    #define HM t5
+    #define MSK t6
+    #define PT a0
+    #define CT a1
+    #define RK a2
+    #define NR a3
+    #define KP a3
+
+    slli    KP, NR, 4
+    add     KP, KP, RK                          // kp = rk + 4*nr
+
+    AES_LOAD_STATE T0,T1,T2,T3,CT,U0,U1,U2,U3   // Columns in T*
+
+    lw      U0,  0(KP)                          // Load Round Key
+    lw      U1,  4(KP)
+    lw      U2,  8(KP)
+    lw      U3, 12(KP)
+
+    xor     T0, T0, U0                          // Add Round Key
+    xor     T1, T1, U1
+    xor     T2, T2, U2
+    xor     T3, T3, U3
+    
+    addi    KP, KP, -16
+    
+    li      MSK, 0xFF
+
+    .aes_dec_block_l0:
+
+        AES_INV_SHIFT_ROWS U0, U1, U2, U3, T0, T1, T2, T3, TMP, HM, MSK
+
+        saes.v1.decs T0, U0
+        saes.v1.decs T1, U1
+        saes.v1.decs T2, U2
+        saes.v1.decs T3, U3
+    
+        lw      U0,  0(KP)                      // Load Round Key
+        lw      U1,  4(KP)
+        lw      U2,  8(KP)
+        lw      U3, 12(KP)
+
+        xor     T0, T0, U0                      // Add Round Key
+        xor     T1, T1, U1
+        xor     T2, T2, U2
+        xor     T3, T3, U3
+        
+        saes.v1.decm T0, T0
+        saes.v1.decm T1, T1
+        saes.v1.decm T2, T2
+        saes.v1.decm T3, T3
+
+        addi    KP, KP, -16
+
+        bne KP, RK, .aes_dec_block_l0
+    
+    AES_INV_SHIFT_ROWS U0, U1, U2, U3, T0, T1, T2, T3, TMP, HM, MSK
+        
+    saes.v1.decs T0, U0
+    saes.v1.decs T1, U1
+    saes.v1.decs T2, U2
+    saes.v1.decs T3, U3
+        
+    lw      U0,  0(KP)                      // Load Round Key
+    lw      U1,  4(KP)
+    lw      U2,  8(KP)
+    lw      U3, 12(KP)
+
+    xor     T0, T0, U0                      // Add Round Key
+    xor     T1, T1, U1
+    xor     T2, T2, U2
+    xor     T3, T3, U3
+
+    
+    AES_DUMP_STATE T0,T1,T2,T3,PT   // Columns in T*
+
+    ret
+    
+    #undef T0 
+    #undef T1 
+    #undef T2 
+    #undef T3 
+    #undef U0 
+    #undef U1 
+    #undef U2 
+    #undef U3 
+    #undef TMP
+    #undef HM 
+    #undef MSK
+    #undef CT 
+    #undef PT 
+    #undef RK 
+    #undef NR 
+    #undef KP 
+
+.endfunc
+
+
