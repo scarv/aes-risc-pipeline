@@ -183,5 +183,22 @@ aes_enc_block:                                  // a2 - uint32_t  * rk,
     AES_DUMP_STATE  T0, T1, T2, T3, CT
 
     ret
+    
+    #undef T0 
+    #undef T1 
+    #undef T2 
+    #undef T3 
+    #undef U0 
+    #undef U1 
+    #undef U2 
+    #undef U3 
+    #undef TMP
+    #undef HM 
+    #undef MSK
+    #undef CT 
+    #undef PT 
+    #undef RK 
+    #undef NR 
+    #undef KP 
 
 .endfunc
