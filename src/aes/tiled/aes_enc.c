@@ -89,64 +89,7 @@ void    aes_enc_block (
     uint8_t     pt [16],
     uint32_t  * rk,
     int         nr
-){
-    int round = 0;
-
-    uint32_t c0, c1, c2, c3;
-    uint32_t q0, q1, q2, q3;
-    uint32_t n0, n1, n2, n3;
-
-    AES_LOAD_STATE(c0,c1,c2,c3,pt);
-
-    PACK_QUAD_0(q0, c0, c1)
-    PACK_QUAD_1(q1, c2, c3)
-    PACK_QUAD_2(q2, c0, c1)
-    PACK_QUAD_3(q3, c2, c3)
-
-    q0 ^= rk[0];
-    q1 ^= rk[1];
-    q2 ^= rk[2];
-    q3 ^= rk[3];
-
-    for(round = 1; round < nr; round ++) {
-        n0  = _saes_v5_esrsub_lo(q0, q1);
-        n1  = _saes_v5_esrsub_lo(q1, q0);
-        n2  = _saes_v5_esrsub_hi(q2, q3);
-        n3  = _saes_v5_esrsub_hi(q3, q2);
-
-        q0  = _saes_v5_emix(n0, n2);
-        q1  = _saes_v5_emix(n1, n3);
-        q2  = _saes_v5_emix(n2, n0);
-        q3  = _saes_v5_emix(n3, n1);
-
-        q0 ^= rk[4*round+0];
-        q1 ^= rk[4*round+1];
-        q2 ^= rk[4*round+2];
-        q3 ^= rk[4*round+3];
-
-    }
-        
-    n0 = _saes_v5_esrsub_lo(q0, q1);
-    n1 = _saes_v5_esrsub_lo(q1, q0);
-    n2 = _saes_v5_esrsub_hi(q2, q3);
-    n3 = _saes_v5_esrsub_hi(q3, q2);
-
-    q0 = n0 ^ rk[4*round+0];
-    q1 = n1 ^ rk[4*round+1];
-    q2 = n2 ^ rk[4*round+2];
-    q3 = n3 ^ rk[4*round+3];
-
-    UNPACK_COL_0(c0, q0, q2);
-    UNPACK_COL_1(c1, q0, q2);
-    UNPACK_COL_2(c2, q1, q3);
-    UNPACK_COL_3(c3, q1, q3);
-        
-    U32_TO_U8_LE(ct, c0, 0);
-    U32_TO_U8_LE(ct, c1, 4);
-    U32_TO_U8_LE(ct, c2, 8);
-    U32_TO_U8_LE(ct, c3,12);
-}
-
+);
 
 void    aes_192_enc_key_schedule (
     uint32_t    rk [AES_128_RK_WORDS],
