@@ -1,6 +1,6 @@
 
 BUILD_DIR = $(REPO_BUILD)/rtl
-YOSYS     = $(YOSYS_ROOT)/yosys
+YOSYS     = yosys
 
 SYNTH_TARGETS   =
 LINT_TARGETS    =
@@ -124,6 +124,12 @@ include aes/Makefile.in
 all: $(TARGETS)
 
 synth-all: $(SYNTH_TARGETS)
+	grep -Irn "Estimated" $(REPO_HOME)/build/rtl/* \
+      | sed "s/^.*\///" | sort \
+      > $(REPO_HOME)/build/synth-cells.rpt
+	grep -Irn "Longest" $(REPO_HOME)/build/rtl/* \
+      | sed "s/^.*\///"| sort \
+      > $(REPO_HOME)/build/synth-ltp.rpt
 
 sim-all: $(SIM_TARGETS)
 
