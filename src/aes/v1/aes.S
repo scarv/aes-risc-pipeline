@@ -84,3 +84,99 @@ aes_128_enc_key_schedule:       // a0 - uint32_t rk [AES_128_RK_WORDS]
 
 .endfunc
 
+
+
+.func   aes_enc_block                           // a0 - uint8_t     ct [16],
+.global aes_enc_block                           // a1 - uint8_t     pt [16],
+aes_enc_block:                                  // a2 - uint32_t  * rk,
+                                                // a3 - int         nr
+    #define T0 a4
+    #define T1 a5
+    #define T2 a6
+    #define T3 a7
+    #define U0 t0
+    #define U1 t1
+    #define U2 t2
+    #define U3 t3
+    #define TMP t4
+    #define HM t5
+    #define MSK t6
+    #define CT a0
+    #define PT a1
+    #define RK a2
+    #define NR a3
+    #define KP a3
+
+    slli    KP, NR, 4
+    add     KP, KP, RK                          // kp = rk + 4*nr
+
+    AES_LOAD_STATE T0,T1,T2,T3,PT,U0,U1,U2,U3   // Columns in T*
+
+    lw      U0,  0(RK)                          // Load Round Key
+    lw      U1,  4(RK)
+    lw      U2,  8(RK)
+    lw      U3, 12(RK)
+
+    xor     T0, T0, U0                          // Add Round Key
+    xor     T1, T1, U1
+    xor     T2, T2, U2
+    xor     T3, T3, U3
+
+    addi    RK, RK, 16                          // Move to next round key.
+
+    li      MSK, 0xFF
+    
+.aes_enc_block_l0:
+    
+        saes.v1.encs U0, T0                     // SubBytes
+        saes.v1.encs U1, T1                     //
+        saes.v1.encs U2, T2                     //
+        saes.v1.encs U3, T3                     //
+
+        AES_SHIFT_ROWS T0, T1, T2, T3, U0, U1, U2, U3, TMP, HM, MSK
+        
+        saes.v1.encm T0, T0                     // MixColumns
+        saes.v1.encm T1, T1                     //
+        saes.v1.encm T2, T2                     //
+        saes.v1.encm T3, T3                     //
+
+        lw      U0,  0(RK)                      // Load Round Key
+        lw      U1,  4(RK)
+        lw      U2,  8(RK)
+        lw      U3, 12(RK)
+
+        xor     T0, T0, U0                      // Add Round Key
+        xor     T1, T1, U1                      //
+        xor     T2, T2, U2                      //
+        xor     T3, T3, U3                      //
+    
+        addi    RK, RK, 16                      // Move to next round key.
+
+    bne RK, KP, .aes_enc_block_l0               // Repeat loop
+
+.aes_enc_block_l_finish:
+
+    saes.v1.encs U0, T0                         // SubBytes
+    saes.v1.encs U1, T1                         //
+    saes.v1.encs U2, T2                         //
+    saes.v1.encs U3, T3                         //
+
+    AES_SHIFT_ROWS T0, T1, T2, T3, U0, U1, U2, U3, TMP, HM, MSK
+
+    lw      U0,  0(RK)                          // Load Round Key
+    lw      U1,  4(RK)
+    lw      U2,  8(RK)
+    lw      U3, 12(RK)
+
+    xor     T0, T0, U0                          // Add Round Key
+    xor     T1, T1, U1                          //
+    xor     T2, T2, U2                          //
+    xor     T3, T3, U3                          //
+
+.aes_enc_block_end:
+
+    AES_DUMP_STATE  T0, T1, T2, T3, CT
+
+    ret
+
+.endfunc

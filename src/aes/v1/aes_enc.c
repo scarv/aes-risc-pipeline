@@ -53,7 +53,6 @@ void    aes_key_schedule (
 
 
 /*!
-*/
 void    aes_enc_block (
     uint8_t     ct [16],
     uint8_t     pt [16],
@@ -146,7 +145,7 @@ void    aes_enc_block (
     U32_TO_U8_LE(ct, t2, 8);
     U32_TO_U8_LE(ct, t3,12);
 }
-
+*/
 
 void    aes_192_enc_key_schedule (
     uint32_t    rk [AES_128_RK_WORDS],
