@@ -77,9 +77,9 @@ In short, doing so means
    column-packed
    representation of state and round key matrices,
 2) pre-computing
-   \[
+   $
    \AESFUNC{MixColumn} \circ \AESFUNC{SubBytes}
-   \]
+   $
    using the tables
    \[
    \begin{array}{cc}
@@ -123,10 +123,10 @@ In short, doing so means
    for $x \in \F_{2^8}$,
 3) computing each $j$-th column of $\AESRND{s}{r+1}$ as
    \[
-   T_0[ \AESRND{s}{r}_{i, j + 0 \pmod{4}} ] \AESADD
-   T_1[ \AESRND{s}{r}_{i, j + 1 \pmod{4}} ] \AESADD
-   T_2[ \AESRND{s}{r}_{i, j + 2 \pmod{4}} ] \AESADD
-   T_3[ \AESRND{s}{r}_{i, j + 3 \pmod{4}} ]
+   T_0[ \AESRND{s}{r}_{i, j + i \pmod{Nb}} ] \AESADD
+   T_1[ \AESRND{s}{r}_{i, j + i \pmod{Nb}} ] \AESADD
+   T_2[ \AESRND{s}{r}_{i, j + i \pmod{Nb}} ] \AESADD
+   T_3[ \AESRND{s}{r}_{i, j + i \pmod{Nb}} ]
    \]
    where extraction of elements caters for \AESFUNC{ShiftRows}, then XOR'ing 
    the $j$-th column of $\AESRND{rk}{r}$ to cater for \AESFUNC{AddRoundKey}.
