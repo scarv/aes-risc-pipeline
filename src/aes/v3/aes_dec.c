@@ -14,107 +14,12 @@
 #include "intrinsics.h"
 
 //  Decrypt rounds. Implements AES-128/192/256 depending on nr = {10,12,14}
-
-void aes_dec_block (
+extern void aes_dec_block (
     uint8_t    pt[16],
     uint8_t    ct[16],
     uint32_t * rk,
     int nr
-) {
-    uint32_t t0, t1, t2, t3;                //  even round state registers
-    uint32_t u0, u1, u2, u3;                //  odd round state registers
-    const uint32_t *kp = &rk[4 * nr];       //  key pointer
-    
-    AES_LOAD_STATE(t0,t1,t2,t3,ct);
-
-    t0 ^= kp[0];
-    t1 ^= kp[1];
-    t2 ^= kp[2];
-    t3 ^= kp[3];
-    
-    kp -= 8;
-
-    while (1) {
-        u0 = kp[4];                         //  fetch odd subkey
-        u1 = kp[5];
-        u2 = kp[6];
-        u3 = kp[7];
-
-        u0 = _saes_v3_decsm(t0, u0, 0); //  AES decryption round, 16 instr
-        u0 = _saes_v3_decsm(t3, u0, 1);
-        u0 = _saes_v3_decsm(t2, u0, 2);
-        u0 = _saes_v3_decsm(t1, u0, 3);
-
-        u1 = _saes_v3_decsm(t1, u1, 0);
-        u1 = _saes_v3_decsm(t0, u1, 1);
-        u1 = _saes_v3_decsm(t3, u1, 2);
-        u1 = _saes_v3_decsm(t2, u1, 3);
-
-        u2 = _saes_v3_decsm(t2, u2, 0);
-        u2 = _saes_v3_decsm(t1, u2, 1);
-        u2 = _saes_v3_decsm(t0, u2, 2);
-        u2 = _saes_v3_decsm(t3, u2, 3);
-
-        u3 = _saes_v3_decsm(t3, u3, 0);
-        u3 = _saes_v3_decsm(t2, u3, 1);
-        u3 = _saes_v3_decsm(t1, u3, 2);
-        u3 = _saes_v3_decsm(t0, u3, 3);
-
-        t0 = kp[0];                         //  fetch even subkey
-        t1 = kp[1];
-        t2 = kp[2];
-        t3 = kp[3];
-
-        if (kp == rk)                       //  final round
-            break;
-        kp -= 8;
-
-        t0 = _saes_v3_decsm(u0, t0, 0); //  AES decryption round, 16 instr
-        t0 = _saes_v3_decsm(u3, t0, 1);
-        t0 = _saes_v3_decsm(u2, t0, 2);
-        t0 = _saes_v3_decsm(u1, t0, 3);
-
-        t1 = _saes_v3_decsm(u1, t1, 0);
-        t1 = _saes_v3_decsm(u0, t1, 1);
-        t1 = _saes_v3_decsm(u3, t1, 2);
-        t1 = _saes_v3_decsm(u2, t1, 3);
-
-        t2 = _saes_v3_decsm(u2, t2, 0);
-        t2 = _saes_v3_decsm(u1, t2, 1);
-        t2 = _saes_v3_decsm(u0, t2, 2);
-        t2 = _saes_v3_decsm(u3, t2, 3);
-
-        t3 = _saes_v3_decsm(u3, t3, 0);
-        t3 = _saes_v3_decsm(u2, t3, 1);
-        t3 = _saes_v3_decsm(u1, t3, 2);
-        t3 = _saes_v3_decsm(u0, t3, 3);
-    }
-
-    t0 = _saes_v3_decs(u0, t0, 0);   //  final decryption round, 16 ins.
-    t0 = _saes_v3_decs(u3, t0, 1);
-    t0 = _saes_v3_decs(u2, t0, 2);
-    t0 = _saes_v3_decs(u1, t0, 3);
-
-    t1 = _saes_v3_decs(u1, t1, 0);
-    t1 = _saes_v3_decs(u0, t1, 1);
-    t1 = _saes_v3_decs(u3, t1, 2);
-    t1 = _saes_v3_decs(u2, t1, 3);
-
-    t2 = _saes_v3_decs(u2, t2, 0);
-    t2 = _saes_v3_decs(u1, t2, 1);
-    t2 = _saes_v3_decs(u0, t2, 2);
-    t2 = _saes_v3_decs(u3, t2, 3);
-
-    t3 = _saes_v3_decs(u3, t3, 0);
-    t3 = _saes_v3_decs(u2, t3, 1);
-    t3 = _saes_v3_decs(u1, t3, 2);
-    t3 = _saes_v3_decs(u0, t3, 3);
-
-    U32_TO_U8_LE(pt , t0,  0);                      //  write plaintext block
-    U32_TO_U8_LE(pt , t1,  4);
-    U32_TO_U8_LE(pt , t2,  8);
-    U32_TO_U8_LE(pt , t3, 12);
-}
+);
 
 
 //  Helper: apply inverse mixcolumns to a vector

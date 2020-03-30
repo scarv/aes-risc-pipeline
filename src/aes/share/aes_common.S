@@ -30,6 +30,87 @@
 .endm
 
 //
+// Pack high half of RS2 with low half of RS1
+// RD != TMP
+.macro PACKHL RD, TMP, RS1, RS2, HM, LM
+    and \TMP, \RS1, \LM
+    and \RD , \RS2, \HM
+    or  \RD,  \RD , \TMP
+.endm
+
+// Performs the AES ShiftRows transoform, putting the results in T*,
+// with inputs in U*
+.macro AES_SHIFT_ROWS  T0, T1, T2, T3, U0, U1, U2, U3, X1, X2, MSK
+    and     \T0, \U0, \MSK
+    and     \T1, \U1, \MSK
+    and     \T2, \U2, \MSK
+    and     \T3, \U3, \MSK
+    slli    \X1, \MSK, 8
+    and     \X2, \U0, \X1
+    or      \T3, \T3, \X2
+    and     \X2, \U3, \X1
+    or      \T2, \T2, \X2
+    and     \X2, \U2, \X1
+    or      \T1, \T1, \X2
+    and     \X2, \U1, \X1
+    or      \T0, \T0, \X2
+    slli    \X1, \X1, 8
+    and     \X2, \U2, \X1
+    or      \T0, \T0, \X2
+    and     \X2, \U3, \X1
+    or      \T1, \T1, \X2
+    and     \X2, \U0, \X1
+    or      \T2, \T2, \X2
+    and     \X2, \U1, \X1
+    or      \T3, \T3, \X2
+    slli    \X1, \X1, 8
+    and     \X2, \U3, \X1
+    or      \T0, \T0, \X2
+    and     \X2, \U0, \X1
+    or      \T1, \T1, \X2
+    and     \X2, \U1, \X1
+    or      \T2, \T2, \X2
+    and     \X2, \U2, \X1
+    or      \T3, \T3, \X2
+.endm
+
+// Performs the Inverse AES ShiftRows transoform, putting the results in T*,
+// with inputs in U*
+.macro AES_INV_SHIFT_ROWS  T0, T1, T2, T3, U0, U1, U2, U3, X1, X2, MSK
+    and     \T0, \U0, \MSK
+    and     \T1, \U1, \MSK
+    and     \T2, \U2, \MSK
+    and     \T3, \U3, \MSK
+    slli    \X1, \MSK, 8
+    and     \X2, \U3, \X1
+    or      \T0, \T0, \X2
+    and     \X2, \U0, \X1
+    or      \T1, \T1, \X2
+    and     \X2, \U1, \X1
+    or      \T2, \T2, \X2
+    and     \X2, \U2, \X1
+    or      \T3, \T3, \X2
+    slli    \X1, \X1, 8
+    and     \X2, \U2, \X1
+    or      \T0, \T0, \X2
+    and     \X2, \U3, \X1
+    or      \T1, \T1, \X2
+    and     \X2, \U0, \X1
+    or      \T2, \T2, \X2
+    and     \X2, \U1, \X1
+    or      \T3, \T3, \X2
+    slli    \X1, \X1, 8
+    and     \X2, \U1, \X1
+    or      \T0, \T0, \X2
+    and     \X2, \U2, \X1
+    or      \T1, \T1, \X2
+    and     \X2, \U3, \X1
+    or      \T2, \T2, \X2
+    and     \X2, \U0, \X1
+    or      \T3, \T3, \X2
+.endm
+
+//
 // Load the byte-aligned AES state from pointer in CK
 // - Each column is loaded into the T* registers.
 // - The X* registers are temps.
@@ -77,6 +158,40 @@
     or      \T2, \T2, \X2
     or      \T3, \T3, \X3
 
+.endm
+
+//
+// Dump the AES state from column-wise registers into a byte-aligned array.
+//
+.macro AES_DUMP_STATE T0, T1, T2, T3, CT
+    sb      \T0,  0(\CT)
+    sb      \T1,  4(\CT)
+    sb      \T2,  8(\CT)
+    sb      \T3, 12(\CT)
+    srli    \T0, \T0, 8
+    srli    \T1, \T1, 8
+    srli    \T2, \T2, 8
+    srli    \T3, \T3, 8
+    sb      \T0,  1(\CT)
+    sb      \T1,  5(\CT)
+    sb      \T2,  9(\CT)
+    sb      \T3, 13(\CT)
+    srli    \T0, \T0, 8
+    srli    \T1, \T1, 8
+    srli    \T2, \T2, 8
+    srli    \T3, \T3, 8
+    sb      \T0,  2(\CT)
+    sb      \T1,  6(\CT)
+    sb      \T2, 10(\CT)
+    sb      \T3, 14(\CT)
+    srli    \T0, \T0, 8
+    srli    \T1, \T1, 8
+    srli    \T2, \T2, 8
+    srli    \T3, \T3, 8
+    sb      \T0,  3(\CT)
+    sb      \T1,  7(\CT)
+    sb      \T2, 11(\CT)
+    sb      \T3, 15(\CT)
 .endm
 
 #endif

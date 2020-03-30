@@ -19,107 +19,12 @@ static const uint8_t aes_rcon[] = {
 };
 
 //  Encrypt rounds. Implements AES-128/192/256 depending on nr = {10,12,14}
-
-void aes_enc_block (
+extern void aes_enc_block (
     uint8_t   ct[16],
     uint8_t   pt[16],
     uint32_t *rk,
     int nr
-) {
-    uint32_t t0, t1, t2, t3;                //  even round state registers
-    uint32_t u0, u1, u2, u3;                //  odd round state registers
-    const uint32_t *kp = &rk[4 * nr];       //  key pointer as loop condition
-
-    AES_LOAD_STATE(t0,t1,t2,t3,pt);
-
-    t0 ^= rk[0];
-    t1 ^= rk[1];
-    t2 ^= rk[2];
-    t3 ^= rk[3];
-
-    while (1) {                             //  double round
-
-        u0 = rk[4];                         //  fetch odd subkey
-        u1 = rk[5];
-        u2 = rk[6];
-        u3 = rk[7];
-
-        u0 = _saes_v3_encsm(t0, u0, 0); //  AES round, 16 instructions
-        u0 = _saes_v3_encsm(t1, u0, 1);
-        u0 = _saes_v3_encsm(t2, u0, 2);
-        u0 = _saes_v3_encsm(t3, u0, 3);
-
-        u1 = _saes_v3_encsm(t1, u1, 0);
-        u1 = _saes_v3_encsm(t2, u1, 1);
-        u1 = _saes_v3_encsm(t3, u1, 2);
-        u1 = _saes_v3_encsm(t0, u1, 3);
-
-        u2 = _saes_v3_encsm(t2, u2, 0);
-        u2 = _saes_v3_encsm(t3, u2, 1);
-        u2 = _saes_v3_encsm(t0, u2, 2);
-        u2 = _saes_v3_encsm(t1, u2, 3);
-
-        u3 = _saes_v3_encsm(t3, u3, 0);
-        u3 = _saes_v3_encsm(t0, u3, 1);
-        u3 = _saes_v3_encsm(t1, u3, 2);
-        u3 = _saes_v3_encsm(t2, u3, 3);
-
-        t0 = rk[8];                         //  fetch even subkey
-        t1 = rk[9];
-        t2 = rk[10];
-        t3 = rk[11];
-
-        rk += 8;                            //  step key pointer
-        if (rk == kp)                       //  final round ?
-            break;
-
-        t0 = _saes_v3_encsm(u0, t0, 0); //  final encrypt round, 16 ins.
-        t0 = _saes_v3_encsm(u1, t0, 1);
-        t0 = _saes_v3_encsm(u2, t0, 2);
-        t0 = _saes_v3_encsm(u3, t0, 3);
-
-        t1 = _saes_v3_encsm(u1, t1, 0);
-        t1 = _saes_v3_encsm(u2, t1, 1);
-        t1 = _saes_v3_encsm(u3, t1, 2);
-        t1 = _saes_v3_encsm(u0, t1, 3);
-
-        t2 = _saes_v3_encsm(u2, t2, 0);
-        t2 = _saes_v3_encsm(u3, t2, 1);
-        t2 = _saes_v3_encsm(u0, t2, 2);
-        t2 = _saes_v3_encsm(u1, t2, 3);
-
-        t3 = _saes_v3_encsm(u3, t3, 0);
-        t3 = _saes_v3_encsm(u0, t3, 1);
-        t3 = _saes_v3_encsm(u1, t3, 2);
-        t3 = _saes_v3_encsm(u2, t3, 3);
-    }
-
-    t0 = _saes_v3_encs(u0, t0, 0);     //  final round is different
-    t0 = _saes_v3_encs(u1, t0, 1);
-    t0 = _saes_v3_encs(u2, t0, 2);
-    t0 = _saes_v3_encs(u3, t0, 3);
-
-    t1 = _saes_v3_encs(u1, t1, 0);
-    t1 = _saes_v3_encs(u2, t1, 1);
-    t1 = _saes_v3_encs(u3, t1, 2);
-    t1 = _saes_v3_encs(u0, t1, 3);
-
-    t2 = _saes_v3_encs(u2, t2, 0);
-    t2 = _saes_v3_encs(u3, t2, 1);
-    t2 = _saes_v3_encs(u0, t2, 2);
-    t2 = _saes_v3_encs(u1, t2, 3);
-
-    t3 = _saes_v3_encs(u3, t3, 0);
-    t3 = _saes_v3_encs(u0, t3, 1);
-    t3 = _saes_v3_encs(u1, t3, 2);
-    t3 = _saes_v3_encs(u2, t3, 3);
-
-    U32_TO_U8_LE(ct , t0,  0);                 //  write ciphertext block
-    U32_TO_U8_LE(ct , t1,  4);
-    U32_TO_U8_LE(ct , t2,  8);
-    U32_TO_U8_LE(ct , t3, 12);
-}
-
+);
 
 //  Key schedule for AES-192 encryption.
 void aes_192_enc_key_schedule(

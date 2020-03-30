@@ -34,70 +34,12 @@ extern void aes_pack_key_schedule (
 @param [in]  rk - The expanded key schedule
 @param [in]  nr - Number of decryption rounds to perform.
 */
-void    aes_dec_block (
+extern void aes_dec_block (
     uint8_t     pt [16],
     uint8_t     ct [16],
     uint32_t  * rk,
     int         nr
-){
-    
-    int      round;
-    uint32_t c0, c1, c2, c3;
-    uint32_t q0, q1, q2, q3;
-    uint32_t n0, n1, n2, n3;
-
-    AES_LOAD_STATE(c0,c1,c2,c3,ct);
-    
-    PACK_QUAD_0(q0, c0, c1)
-    PACK_QUAD_1(q1, c2, c3)
-    PACK_QUAD_2(q2, c0, c1)
-    PACK_QUAD_3(q3, c2, c3)
-
-    q0 ^= rk[4*nr + 0];
-    q1 ^= rk[4*nr + 1];
-    q2 ^= rk[4*nr + 2];
-    q3 ^= rk[4*nr + 3];
-        
-    n0  = _saes_v5_dsrsub_lo(q0, q1);
-    n1  = _saes_v5_dsrsub_lo(q1, q0);
-    n2  = _saes_v5_dsrsub_hi(q2, q3);
-    n3  = _saes_v5_dsrsub_hi(q3, q2);
-
-    for(round = nr-1; round >= 1; round --) {
-        
-        n0 ^= rk[4*round+0];
-        n1 ^= rk[4*round+1];
-        n2 ^= rk[4*round+2];
-        n3 ^= rk[4*round+3];
-
-        q0  = _saes_v5_dmix(n0, n2);
-        q1  = _saes_v5_dmix(n1, n3);
-        q2  = _saes_v5_dmix(n2, n0);
-        q3  = _saes_v5_dmix(n3, n1);
-        
-        n0  = _saes_v5_dsrsub_lo(q0, q1);
-        n1  = _saes_v5_dsrsub_lo(q1, q0);
-        n2  = _saes_v5_dsrsub_hi(q2, q3);
-        n3  = _saes_v5_dsrsub_hi(q3, q2);
-
-    }
-        
-    n0 ^= rk[0];
-    n1 ^= rk[1];
-    n2 ^= rk[2];
-    n3 ^= rk[3];
-    
-    UNPACK_COL_0(c0, n0, n2);
-    UNPACK_COL_1(c1, n0, n2);
-    UNPACK_COL_2(c2, n1, n3);
-    UNPACK_COL_3(c3, n1, n3);
-
-    
-    U32_TO_U8_LE(pt, c0, 0);
-    U32_TO_U8_LE(pt, c1, 4);
-    U32_TO_U8_LE(pt, c2, 8);
-    U32_TO_U8_LE(pt, c3,12);
-}
+);
 
 void    aes_128_dec_key_schedule (
     uint32_t    rk [AES_128_RK_WORDS],
