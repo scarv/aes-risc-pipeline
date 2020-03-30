@@ -120,7 +120,7 @@ void aes_enc_block (
     U32_TO_U8_LE(ct , t3, 12);
 }
 
-
+/*
 void aes_128_enc_key_schedule (
     uint32_t rk[44],
     uint8_t  ck[16]
@@ -153,6 +153,7 @@ void aes_128_enc_key_schedule (
         t3 ^= t2;
     }
 }
+*/
 
 //  Key schedule for AES-192 encryption.
 
