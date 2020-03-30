@@ -47,71 +47,12 @@ void    aes_dec_key_schedule (
 @param [in]  rk - The expanded key schedule
 @param [in]  nr - Number of decryption rounds to perform.
 */
-void    aes_dec_block(
+extern void    aes_dec_block(
     uint8_t     pt [16],
     uint8_t     ct [16],
     uint32_t  * rk,
     int         nr
-){
-    int round = 0;
-
-    uint32_t *kp = &rk[4*nr];
-
-    uint32_t t4, t5, t6, t7;
-    uint32_t t0, t1, t2, t3;
-
-    AES_LOAD_STATE(t0,t1,t2,t3,ct);
-
-    t0 ^= kp[0];
-    t1 ^= kp[1];
-    t2 ^= kp[2];
-    t3 ^= kp[3];
-
-    kp -= 4;
-    
-    for(round = nr - 1; round >= 1; round --) {
-        
-        t4 = _saes_v2_sub_dec(t0, t3);      // SubBytes & Partial ShiftRows
-        t5 = _saes_v2_sub_dec(t1, t0);
-        t6 = _saes_v2_sub_dec(t2, t1);
-        t7 = _saes_v2_sub_dec(t3, t2);
-
-        t0 = _saes_v2_mix_dec(t4, t6);      // Partial ShiftRows & MixColumns
-        t1 = _saes_v2_mix_dec(t5, t7);
-        t2 = _saes_v2_mix_dec(t6, t4);
-        t3 = _saes_v2_mix_dec(t7, t5);
-    
-        t0 ^= kp[0];                        // AddRoundKey
-        t1 ^= kp[1];
-        t2 ^= kp[2];
-        t3 ^= kp[3];
-    
-        kp -= 4;
-
-    }
-    
-
-    t4 = _saes_v2_sub_dec(t2, t1);          // SubBytes & Partial ShiftRows
-    t5 = _saes_v2_sub_dec(t3, t2);
-    t6 = _saes_v2_sub_dec(t0, t3);
-    t7 = _saes_v2_sub_dec(t1, t0);
-    
-    t0 = (t6 & 0x0000FFFF) | (t4 & 0xFFFF0000); // Finish shift rows
-    t1 = (t7 & 0x0000FFFF) | (t5 & 0xFFFF0000);
-    t2 = (t4 & 0x0000FFFF) | (t6 & 0xFFFF0000);
-    t3 = (t5 & 0x0000FFFF) | (t7 & 0xFFFF0000);
-
-    t0 ^= kp[0];                            // AddRoundKey
-    t1 ^= kp[1];
-    t2 ^= kp[2];
-    t3 ^= kp[3];
-
-    
-    U32_TO_U8_LE(pt , t0,  0);               // Write ciphertext block
-    U32_TO_U8_LE(pt , t1,  4);
-    U32_TO_U8_LE(pt , t2,  8);
-    U32_TO_U8_LE(pt , t3, 12);
-}
+);
 
 
 void    aes_128_dec_key_schedule (
