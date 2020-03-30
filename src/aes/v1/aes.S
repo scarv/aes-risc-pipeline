@@ -28,14 +28,11 @@ aes_128_enc_key_schedule:       // a0 - uint32_t rk [AES_128_RK_WORDS]
     #define C1  a3
     #define C2  a4
     #define C3  a5
-
     #define RK  a0
     #define CK  a1
-
     #define RKE t0
     #define RCP t1
     #define RCT t2
-
     #define T1  t3
     #define T2  t4
 
@@ -72,6 +69,18 @@ aes_128_enc_key_schedule:       // a0 - uint32_t rk [AES_128_RK_WORDS]
 
 .aes_128_enc_ks_finish:
     ret
+
+    #undef C0 
+    #undef C1 
+    #undef C2 
+    #undef C3 
+    #undef RK 
+    #undef CK 
+    #undef RKE
+    #undef RCP
+    #undef RCT
+    #undef T1 
+    #undef T2 
 
 .endfunc
 
