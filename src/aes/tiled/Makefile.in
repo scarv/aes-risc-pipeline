@@ -2,7 +2,8 @@
 VARIANT  = tiled
 
 AES_SRCS = $(REPO_HOME)/src/aes/tiled/aes_enc.c \
-           $(REPO_HOME)/src/aes/tiled/aes_dec.c
+           $(REPO_HOME)/src/aes/tiled/aes_dec.c \
+           $(REPO_HOME)/src/aes/tiled/aes.S
 
 FLAGS    = -march=rv32imac -mabi=ilp32
 

@@ -12,6 +12,24 @@
 .endm
 
 //
+// Pack low half of RS1 with low half of RS2
+// RD != TMP, LM is the low halfword mask register containing 0x0000FFFF
+.macro PACK  RD, TMP, RS1, RS2, LM
+    and     \RD , \RS1, \LM
+    slli    \TMP, \RS2, 16
+    or      \RD , \RD , \TMP
+.endm
+
+//
+// Pack high half of RS1 with high half of RS2
+// RD != TMP, HM is the High halfword mask register containing 0xFFFF0000
+.macro PACKH RD, TMP, RS1, RS2, HM
+    and     \RD , \RS1, \HM
+    srli    \TMP, \RS2, 16
+    or      \RD , \RD , \TMP
+.endm
+
+//
 // Load the byte-aligned AES state from pointer in CK
 // - Each column is loaded into the T* registers.
 // - The X* registers are temps.
