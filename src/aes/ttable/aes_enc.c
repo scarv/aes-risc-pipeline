@@ -214,13 +214,6 @@ static void    aes_enc_block(
     U32_TO_U8_LE(ct, t_3, 12 );
 }
 
-void    aes_128_enc_key_schedule (
-    uint32_t    rk [AES_128_RK_WORDS],
-    uint8_t     ck [AES_128_CK_BYTES] 
-){
-    aes_enc_key_schedule(rk, ck, AES_128_NK, AES_128_NR);
-}
-
 void    aes_192_enc_key_schedule (
     uint32_t    rk [AES_128_RK_WORDS],
     uint8_t     ck [AES_128_CK_BYTES] 
