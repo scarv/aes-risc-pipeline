@@ -2,7 +2,7 @@
 
 \subsection{Variant 1: Column wise acceleration}
 
-\begin{lstlisting}[language=pseudo]
+\begin{lstlisting}[language=pseudo,style=block]
 saes.v1.encs(rs1):
     rd.8[i] =    AESSBox(rs1.8[i]) for i=0..3
 
@@ -27,7 +27,7 @@ saes.v1.decm(rs1):
 
 \cite{TG:20}
 
-\begin{lstlisting}[language=pseudo]
+\begin{lstlisting}[language=pseudo,style=block]
 saes.v2.sub(rs1, rs2, mode):
     if(mode == enc)
         t0 =    AESSBox(rs1.8[0]), t1 =    AESSBox(rs2.8[1])
@@ -51,7 +51,7 @@ saes.v2.mix(rs1, rs2, mode):
 
 \cite{MJS:20}
 
-\begin{lstlisting}[language=pseudo]
+\begin{lstlisting}[language=pseudo,style=block]
 saes.v3.encs(rs1, rs2, bs):                 // SubBytes Only
     t0.8  = rs1.8[bs]
     x.8   = AESSBox(t0)
@@ -79,7 +79,7 @@ saes.v3.decsm(rs1, rs2, bs):                // InvSubBytes & InvMixColumns
 
 \subsection{Variant 4: 64-bit datapath utilisation}
 
-\begin{lstlisting}[language=pseudo]
+\begin{lstlisting}[language=pseudo,style=block]
 round_consts.8 = [0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36]
 
 saes64.ks1(rs1,enc_rcon):      // KeySchedule: SubBytes, Rotate, Round Const
@@ -118,7 +118,7 @@ saes64.imix(rs1):              // Inverse MixColumns
 
 \subsection{Variant 5: Tiling}
 
-\begin{lstlisting}[language=pseudo]
+\begin{lstlisting}[language=pseudo,style=block]
 saes.v5.srsub(rs1, rs2, enc, hi):
     if(enc):
         tmp.8[0] = rs2.8[2] if hi else rs1.8[2]
@@ -141,14 +141,10 @@ saes.v5.sub(rs1):
     rd.8[i] = AESSBox[rs1.8[i]] for i = 0..3
 
 saes.v5.mix(rs1, rs2, enc):
-    col0.8[3] = rs1.8[2]
-    col0.8[2] = rs1.8[3]
-    col0.8[1] = rs2.8[2]
-    col0.8[0] = rs2.8[3]
-    col1.8[3] = rs1.8[0]
-    col1.8[2] = rs1.8[1]
-    col1.8[1] = rs2.8[0]
-    col1.8[0] = rs2.8[1]
+    col0.8[3] = rs1.8[2];    col1.8[3] = rs1.8[0]
+    col0.8[2] = rs1.8[3];    col1.8[2] = rs1.8[1]
+    col0.8[1] = rs2.8[2];    col1.8[1] = rs2.8[0]
+    col0.8[0] = rs2.8[3];    col1.8[0] = rs2.8[1]
     if(enc):
         n0 =    AESMixColumn(       col0   )
         n1 =    AESMixColumn(ROTL32(col0,8))
