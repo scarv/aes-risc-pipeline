@@ -194,33 +194,13 @@ void    aes_dec_key_schedule (
 @param [in]  ct - Input cipher text
 @param [in]  rk - The expanded key schedule
 @param [in]  nr - Number of decryption rounds to perform.
-void    aes_dec_block(
+*/
+extern void aes_dec_block(
     uint8_t     pt [16],
     uint8_t     ct [16],
     uint32_t  * rk,
     int         nr
-){
-    uint32_t *rkp = ( 4 * nr) + ( uint32_t* )( rk ), t_0, t_1, t_2, t_3, t_4, t_5, t_6, t_7;
-
-    U8_TO_U32_LE(t_0, ct,  0);
-    U8_TO_U32_LE(t_1, ct,  4);
-    U8_TO_U32_LE(t_2, ct,  8);
-    U8_TO_U32_LE(t_3, ct, 12);
-
-    AES_DEC_RND_INIT();
-
-    for( int i = 1; i < nr ; i++ ) {
-      AES_DEC_RND_ITER();
-    }
-
-    AES_DEC_RND_FINI(); 
-
-    U32_TO_U8_LE(pt, t_0,  0 );
-    U32_TO_U8_LE(pt, t_1,  4 );
-    U32_TO_U8_LE(pt, t_2,  8 );
-    U32_TO_U8_LE(pt, t_3, 12 );
-}
-*/
+);
 
 void    aes_128_dec_key_schedule (
     uint32_t    rk [AES_128_RK_WORDS],
