@@ -3,16 +3,60 @@
 \begin{table}[h]
 \centering
 \begin{tabular}{lrrrr}
-Variant     & FU Size & FU LTP & \CORE{2} Size & $\%$ Overhead \\ \hline
-Baseline    & 0       & 0      & 37362         & $0\%$         \\
-V1 (Size)   & 0       & 0      &               & $0\%$         \\
-V1 (Speed)  & 0       & 0      & 41711         & $0\%$         \\
-V2 (Size)   & 0       & 0      &               & $0\%$         \\
-V2 (Speed)  & 0       & 0      & 41181         & $0\%$         \\
-V3          & 0       & 0      & 38598         & $0\%$         \\
-V5          & 0       & 0      & 42058         & $0\%$         \\
+Variant     & NAND2 Gates & LTP & \CORE{2} Size & Size Overhead \\ \hline
+Baseline    & 0           & 0   & 37362         & $0\%$         \\
+V1  Size    & 2174        & 22  & TBD           & $0\%$         \\
+V1  Speed   & 3471        & 19  & 41711         & $0\%$         \\
+V2  Size    & 1306        & 21  & TBD           & $0\%$         \\
+V2  Speed   & 3546        & 19  & 41181         & $0\%$         \\
+V3          & 1157        & 30  & 38598         & $0\%$         \\
+V5          & 4121        & 22  & 42058         & $0\%$         \\
 \end{tabular}
-\caption{Hardware implementation costs based on the \CORE{2} CPU core.}
+\caption{
+Hardware implementation costs based on the 32-bit \CORE{2} CPU core.
+Gate counts and topological path lengths are obtained using the
+Yosys\cite{yosys} tool suite.
+}
+\label{tab:eval:hw}
+\end{table}
+
+Table \ref{tab:eval:hw} shows the hardware implementation costs of the
+different variants.
+The NAND2 gates column records the size in NAND2 equivilent gates of each
+variant, instantiated independently from any wider system.
+The LTP column gives the Longest Topological Path of the synthesised
+functional unit circuit from input to combinatorial output.
+The \CORE{2} Size column gives the size in NAND2 equivilent gates of the
+\CORE{2}, with the various AES functional units integrated.
+The ``Baseline" row gives the size of the core without any of the
+ISEs integrated.
+We found that none of the proposed ISEs affected the critical
+path of the \CORE{2}.
+
+% ------------------------------------------------------------
+
+\begin{table}[]
+\begin{tabular}{l|cc|cc|cc|cc|cc}
+& \multicolumn{2}{c}{Static Size} 
+& \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}KeySchedule\\ Encrypt\end{tabular}} 
+& \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}KeySchedule\\ Decrypt\end{tabular}}
+& \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}AES 128\\ Encrypt\end{tabular}}
+& \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}AES 128\\ Decrypt\end{tabular}} \\
+Variant  & .text & .data & iret & cycles & iret & cycles & iret & cycles & iret & cycles \\ \hline
+ TTable  & 2893  & 10240 &      &        &      &        &      &        &      &        \\
+ Byte    &       &       &      &        &      &        &      &        &      &        \\
+V1 Size  & 1793  & 10    &      &        &      &        &      &        &      &        \\
+V1 Speed & 1793  & 10    & 251  & 380    & 257  & 398    & 595  & 706    & 597  & 697    \\
+V2 Size  & 1536  & 10    &      &        &      &        &      &        &      &        \\
+V2 Speed & 1536  & 10    & 251  & 367    & 388  & 679    & 298  & 394    & 301  & 396    \\
+V3       & 2382  & 10    & 271  & 387    & 721  & 1143   & 323  & 412    & 325  & 407    \\
+V5       & 1769  & 10    & 385  & 505    & 391  & 523    & 310  & 414    & 312  & 408
+\end{tabular}
+\caption{
+Software size and performance for reference and accelerated AES
+implementations.
+}
+\label{tab:eval:sw:size}
 \end{table}
 
 % =============================================================================

@@ -17,6 +17,7 @@ CC      = $(TC_INSTALL)/bin/$(RISCV_PREFIX)-gcc
 AS      = $(TC_INSTALL)/bin/$(RISCV_PREFIX)-as
 AR      = $(TC_INSTALL)/bin/$(RISCV_PREFIX)-ar
 OBJDUMP = $(TC_INSTALL)/bin/$(RISCV_PREFIX)-objdump
+OBJSIZE = $(TC_INSTALL)/bin/$(RISCV_PREFIX)-size
 SPIKE   = $(TC_INSTALL)/bin/spike
 PK32    = $(TC_INSTALL)/riscv32-unknown-elf/bin/pk
 PK64    = $(TC_INSTALL)/riscv64-unknown-elf/bin/pk
@@ -38,6 +39,10 @@ CFLAGS     += -I$(REPO_HOME)/src/aes/share
 # 2. Object files to generate a path for
 define map_object
 $(patsubst $(REPO_HOME)/src/%,$(REPO_SW_BUILD)/obj/%,${2:%.c=%.o})
+endef
+
+define map_disasm
+$(patsubst $(REPO_HOME)/src/%,$(REPO_SW_BUILD)/dis/%,${2})
 endef
 
 # 1. Name of the AES variant
@@ -68,14 +73,32 @@ endef
 
 # 1. AES variant name
 # 2. source C file
+define add_dis_target
+$(call map_disasm,${1},${2}).dis  : $(call map_object,${1},${2})
+	@mkdir -p $(dir $(call map_disasm,${1},${2}).dis)
+	$(OBJDUMP) -D $${^} > $(call map_disasm,${1},${2}).dis
+
+$(call map_disasm,${1},${2}).size : $(call map_object,${1},${2})
+	@mkdir -p $(dir $(call map_disasm,${1},${2}).size)
+	$(OBJSIZE)    $${^} > $(call map_disasm,${1},${2}).size
+
+ALL_TARGETS += $(call map_disasm,${1},${2}).size \
+               $(call map_disasm,${1},${2}).dis
+endef
+
+
+# 1. AES variant name
+# 2. source C file
 # 3. Extra C flags
 define add_obj_target
+
+$(call add_dis_target,${1},${2})
 
 $(call map_object,${1},${2}) : ${2}
 	@mkdir -p $(dir $(call map_object,${1},${2}))
 	$(CC) $(CFLAGS) ${3} -c -o $${@} $${^}
-	$(OBJDUMP) -D $${@} > $${@}.dis
 endef
+
 
 # 1. Name of the AES variant
 # 2. The source files which make it up.
