@@ -194,7 +194,6 @@ void    aes_dec_key_schedule (
 @param [in]  ct - Input cipher text
 @param [in]  rk - The expanded key schedule
 @param [in]  nr - Number of decryption rounds to perform.
-*/
 void    aes_dec_block(
     uint8_t     pt [16],
     uint8_t     ct [16],
@@ -221,6 +220,7 @@ void    aes_dec_block(
     U32_TO_U8_LE(pt, t_2,  8 );
     U32_TO_U8_LE(pt, t_3, 12 );
 }
+*/
 
 void    aes_128_dec_key_schedule (
     uint32_t    rk [AES_128_RK_WORDS],
