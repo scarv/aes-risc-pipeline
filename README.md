@@ -43,8 +43,27 @@
 - Build and run the benchmarks:
   
   ```
-  make -C src all
+  make -C ./src/ all
+  make -C ./src/ test
   ```
+
+  See `$REPO_BUILD/src/` for build artifacts, test results and
+  performance numbers.
+
+- To run the benchmarks on the cycle accurate model of the scarv-cpu
+  open a *new terminal* and:
+  ```
+  cd extern/scarv-cpu
+  source bin/conf.sh
+  ./bin/verilator-build-aes-variants.sh
+  ```
+
+  This will build the vanila scarv-cpu core, as well as several variants
+  with the different ISE implementations.
+
+  Simulation results are placed in `work/unit/aes-*`, and synthesis
+  results are placed in `work/synth-*`.
+      
 
 ## Introduction
 
