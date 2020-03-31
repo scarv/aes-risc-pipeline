@@ -202,13 +202,6 @@ extern void aes_dec_block(
     int         nr
 );
 
-void    aes_128_dec_key_schedule (
-    uint32_t    rk [AES_128_RK_WORDS],
-    uint8_t     ck [AES_128_CK_BYTES] 
-){
-    aes_dec_key_schedule(rk, ck, AES_128_NK, AES_128_NR);
-}
-
 void    aes_192_dec_key_schedule (
     uint32_t    rk [AES_128_RK_WORDS],
     uint8_t     ck [AES_128_CK_BYTES] 

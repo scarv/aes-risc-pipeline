@@ -34,7 +34,7 @@ aes_round_const:
 .func     aes_128_enc_key_schedule
 .global   aes_128_enc_key_schedule
 aes_128_enc_key_schedule:       // a0 - uint32_t rk [AES_128_RK_WORDS]
-                                // a1 - uint8_t  ck [AES_128_CK_BYTE
+                                // a1 - uint8_t  ck [AES_128_CK_BYTE]
 
     #define C0  a2
     #define C1  a3
@@ -138,6 +138,91 @@ aes_128_enc_key_schedule:       // a0 - uint32_t rk [AES_128_RK_WORDS]
     #undef T2
     #undef T3
 
+.endfunc
+
+
+.func     aes_128_dec_key_schedule
+.global   aes_128_dec_key_schedule
+aes_128_dec_key_schedule:       // a0 - uint32_t rk [AES_128_RK_WORDS]
+                                // a1 - uint8_t  ck [AES_128_CK_BYTE]
+
+    #define RKP      s0
+    #define LOOP_END t6
+    #define TB0      a2
+    #define TB1      a3
+    #define TB2      a4
+    #define TB3      a5
+    #define TB4      a6
+
+    addi    sp, sp, -16
+    sw      RKP, 0(sp)
+    sw      ra , 4(sp)
+
+    mv   RKP, a0                // Save a0 since call destroys it
+
+    call aes_128_enc_key_schedule
+
+    addi LOOP_END, RKP, 160
+    addi RKP     , RKP, 16
+
+    la     TB4, AES_ENC_TBOX_4
+    la     TB0, AES_DEC_TBOX_0
+    la     TB1, AES_DEC_TBOX_1
+    la     TB2, AES_DEC_TBOX_2
+    la     TB3, AES_DEC_TBOX_3
+
+.aes_128_dec_ks_l0:
+    lw      t0, 0(RKP)
+    
+    andi    t1, t0, 0xFF
+
+    slli    t1, t1, 2           // Word align LS byte of t0
+    srli    t2, t0, 6
+    srli    t3, t0, 14
+    srli    t4, t0, 22
+    andi    t2, t2, 0xFF << 2   // Word align bytes of t0
+    andi    t3, t3, 0xFF << 2
+    andi    t4, t4, 0xFF << 2
+
+    add     t1, t1, TB4         // Add to base adress of AES_ENC_TBOX_4
+    add     t2, t2, TB4
+    add     t3, t3, TB4
+    add     t4, t4, TB4
+
+    lbu     t1, 0(t1)           // Load entries for AES_ENC_TBOX_4
+    lbu     t2, 0(t2)
+    lbu     t3, 0(t3)
+    lbu     t4, 0(t4)
+
+    slli    t1, t1, 2           // Masked and aligned outputs from
+    slli    t2, t2, 2           // AES_ENC_TBOX_4
+    slli    t3, t3, 2
+    slli    t4, t4, 2
+
+    add     t1, t1, TB0         // Add to TBOX base addresses
+    add     t2, t2, TB1
+    add     t3, t3, TB2
+    add     t4, t4, TB3
+
+    lw      t1, 0(t1)           // Load from TBoxes
+    lw      t2, 0(t2)
+    lw      t3, 0(t3)
+    lw      t4, 0(t4)
+
+    xor     t0, t1, t2          // Accumulate
+    xor     t0, t0, t3
+    xor     t0, t0, t4
+    
+    sw      t0, 0(RKP)
+
+    addi    RKP, RKP, 4         // Increment round key pointer.
+    bne     RKP, LOOP_END, .aes_128_dec_ks_l0
+
+    lw      RKP, 0(sp)
+    lw      ra , 4(sp)
+    addi    sp, sp, 16
+
+    ret
 .endfunc
 
 
