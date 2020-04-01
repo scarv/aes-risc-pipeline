@@ -142,6 +142,9 @@ always @(posedge g_clk) begin
         // Atlease one op should be set!
         assume(|{dut_op_sb,dut_op_sbsr, dut_op_mix});
 
+        // If dut_op_sb is set, assume not decode
+        assume(!(dut_op_sb && dut_dec));
+
     end
         
     // Assume one-hotness of input op commands.

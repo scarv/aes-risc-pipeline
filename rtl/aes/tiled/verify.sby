@@ -1,9 +1,12 @@
 [tasks]
+prove_size    prove size
+cover_size    cover size
 prove_latency prove latency
 cover_latency cover latency
 
 [options]
-depth   10
+latency: depth   7
+size:    depth   14
 prove: mode bmc
 cover: mode cover
 
@@ -16,11 +19,13 @@ read -formal aes_sbox_shared.v
 read -formal tb_aes_tiled.v
 
 latency: read -formal aes_tiled.v
+size:    read -formal aes_tiled_size.v
 
 prep -top tb_aes_tiled
 
 [files]
 latency: aes/tiled/aes_tiled.v
+size:    aes/tiled/aes_tiled_size.v
 aes/share/aes_sbox_shared.v
 aes/share/aes_mixcolumn.v
 aes/share/aes_functions.vh

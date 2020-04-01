@@ -2,7 +2,7 @@
 SBOX = aes/share/aes_sbox_shared.v
 MIX  = aes/share/aes_mixcolumn.v
 
-AES_TILED_SIZE_FILES    = aes/tiled/aes_tiled.v $(SBOX) $(MIX)
+AES_TILED_SIZE_FILES    = aes/tiled/aes_tiled_size.v $(SBOX) $(MIX)
 
 AES_TILED_LATENCY_FILES = aes/tiled/aes_tiled.v $(SBOX) $(MIX)
 
