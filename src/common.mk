@@ -30,6 +30,7 @@ TEST_SRC    = $(REPO_HOME)/src/test/test_aes.c \
 CFLAGS     += -Wall -O2
 CFLAGS     += -I$(REPO_HOME)/src/aes
 CFLAGS     += -I$(REPO_HOME)/src/aes/share
+CFLAGS     += -DAES_WORD_ALIGNED=1
 
 #
 # Build Macros

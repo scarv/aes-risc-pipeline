@@ -117,6 +117,8 @@
 //
 .macro AES_LOAD_STATE T0, T1, T2, T3, CK, X0, X1, X2, X3
 
+#if ((AES_WORD_ALIGNED == 0) || (!defined(AES_WORD_ALIGNED)))
+
     lbu     \T0,  3(\CK)
     lbu     \T1,  7(\CK)
     lbu     \T2, 11(\CK)
@@ -158,12 +160,24 @@
     or      \T2, \T2, \X2
     or      \T3, \T3, \X3
 
+#else
+
+    lw      \T0, 0(\CK)
+    lw      \T1, 4(\CK)
+    lw      \T2, 8(\CK)
+    lw      \T3,12(\CK)
+
+#endif
+
 .endm
 
 //
 // Dump the AES state from column-wise registers into a byte-aligned array.
 //
 .macro AES_DUMP_STATE T0, T1, T2, T3, CT
+
+#if ((AES_WORD_ALIGNED == 0) || (!defined(AES_WORD_ALIGNED)))
+
     sb      \T0,  0(\CT)
     sb      \T1,  4(\CT)
     sb      \T2,  8(\CT)
@@ -192,7 +206,16 @@
     sb      \T1,  7(\CT)
     sb      \T2, 11(\CT)
     sb      \T3, 15(\CT)
-.endm
 
+#else
+
+    sw      \T0, 0(\CT)
+    sw      \T1, 4(\CT)
+    sw      \T2, 8(\CT)
+    sw      \T3,12(\CT)
+    
 #endif
 
+.endm
+
+#endif // __AES_COMMON_S__
