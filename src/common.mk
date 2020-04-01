@@ -27,10 +27,12 @@ REPO_SW_BUILD = $(REPO_BUILD)/src
 TEST_SRC    = $(REPO_HOME)/src/test/test_aes.c \
               $(REPO_HOME)/src/test/test_util.c
 
+AES_WORD_ALIGNED ?=1
+
 CFLAGS     += -Wall -O2
 CFLAGS     += -I$(REPO_HOME)/src/aes
 CFLAGS     += -I$(REPO_HOME)/src/aes/share
-CFLAGS     += -DAES_WORD_ALIGNED=1
+CFLAGS     += -DAES_WORD_ALIGNED=$(AES_WORD_ALIGNED)
 
 #
 # Build Macros
