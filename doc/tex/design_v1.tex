@@ -1,0 +1,33 @@
+% =============================================================================
+
+\subsubsection{ISE interface}
+
+% TODO: instruction definition(s)
+
+% -----------------------------------------------------------------------------
+
+\subsubsection{ISE implementation}
+
+\begin{lstlisting}[language=pseudo,style=block]
+saes.v1.encs(rs1):
+    rd.8[i] =    AESSBox(rs1.8[i]) for i=0..3
+
+saes.v1.decs(rs1):
+    rd.8[i] = InvAESSBox(rs1.8[i]) for i=0..3
+
+saes.v1.encm(rs1):
+    rd.8[0] =    AESMixColumn({rs1.8[0],rs1.8[1],rs1.8[2],rs1.8[3])
+    rd.8[1] =    AESMixColumn({rs1.8[0],rs1.8[1],rs1.8[2],rs1.8[3])
+    rd.8[2] =    AESMixColumn({rs1.8[0],rs1.8[1],rs1.8[2],rs1.8[3])
+    rd.8[3] =    AESMixColumn({rs1.8[0],rs1.8[1],rs1.8[2],rs1.8[3])
+
+saes.v1.decm(rs1):
+    rd.8[0] = InvAESMixColumn({rs1.8[0],rs1.8[1],rs1.8[2],rs1.8[3])
+    rd.8[1] = InvAESMixColumn({rs1.8[0],rs1.8[1],rs1.8[2],rs1.8[3])
+    rd.8[2] = InvAESMixColumn({rs1.8[0],rs1.8[1],rs1.8[2],rs1.8[3])
+    rd.8[3] = InvAESMixColumn({rs1.8[0],rs1.8[1],rs1.8[2],rs1.8[3])
+\end{lstlisting}
+
+% TODO: micro-architecture diagram
+
+% =============================================================================

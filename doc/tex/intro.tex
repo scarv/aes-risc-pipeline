@@ -75,10 +75,10 @@ for a given cryptographic kernel.  One could classify instances as being
    or
    kernel-specific,
 and based on the use of   
-   only              hardware,
-   only              software,
+   hardware              only,
+                software only,
    or
-   both hardware and software.
+   hardware and software.
 The latter class includes instances based on the concept of an
 Instruction Set Extension (ISE)~\cite{BarGioMar:09,RegIen:16}.
 The idea is to identify, e.g., through benchmarking, a set of additional 
@@ -88,14 +88,18 @@ in the resulting ISE,
 vs. 
 general-purpose                  functionality
 in the base      ISA,
-and thereby deliver improvement wrt. pertinent quality metrics.  Various
-generations of Intel
-MultiMedia      eXtensions (MMX),
-Streaming SIMD  Extensions (SSE),
+and thereby deliver improvement wrt. pertinent quality metrics.  
+Although ISEs can be an effective option for {\em both}
+high(er)-end, performance-oriented
 and
-Advanced Vector Extensions (AVX)
-arguably offer the archetypal example of ISEs in practice, each of which 
-supports numerical kernels via vector (or SIMD) vs. scalar computation.
+ low(er)-end, constrained
+platforms, 
+they are particularly effective for the latter by 
+improving footprint and latency
+vs. a software-only options
+while also
+improving area      and flexibility
+vs. a hardware-only options.
 
 Abstractly, an ISE design constitutes
 1) an {\em interface},
@@ -132,12 +136,23 @@ goals such as
 \end{itemize}
 
 \noindent
-The Intel
+By extending x86, Intel provide archetypal examples of and evidence in
+support of ISEs.
+For example, various generations of
+non-cryptographic
+MultiMedia      eXtensions (MMX),
+Streaming SIMD  Extensions (SSE),
+and
+Advanced Vector Extensions (AVX)
+ISEs
+supports numerical kernels via vector vs. scalar computation.  
+Likewise, the
+    cryptographic
 Advanced Encryption Standard New Instructions (AES-NI)~\cite{Gueron:09,DruGueKra:19}
-extension to x86 provides a pertinent case-study wrt. these guidelines: 
-it affords significant improvement wrt. latency and throughput
+ISE
+supports AES: it significant improves latency and throughput
 (see, e.g.,~\cite{FazLopOli:18}),
-while
+and represents a a pertinent case-study wrt. the guidelines above by
 a) adding just $6$ additional (vs. $1500+$ total) instructions,
 b) reducing overhead by, e.g., sharing the XMM register file,
 c) facilitating compatibility via the
