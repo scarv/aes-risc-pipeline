@@ -55,7 +55,6 @@
 \subsubsection{Software-only implementations}
 \label{sec:bg:aes_impl_sw}
 \input{tex/bg-aes_impl_sw.tex}
-
 \subsubsection{Hybrid        implementations}
 \label{sec:bg:aes_impl_ise}
 \input{tex/bg-aes_impl_ise.tex}
@@ -72,15 +71,26 @@
 
 % =============================================================================
 
-\section{Design}
+\section{Design and implementation}
 \label{sec:design}
-\input{tex/design.tex}
 
-% =============================================================================
+% TODO: intro. to core(s) the ISEs are integrated with
 
-\section{Implementation}
-\label{sec:impl}
-\input{tex/impl.tex}
+\subsection{Variant $1$: column-wise acceleration}
+\label{sec:design:v1}
+\input{tex/design_v1.tex}
+\subsection{Variant $2$: combined row/column acceleration}
+\label{sec:design:v2}
+\input{tex/design_v2.tex}
+\subsection{Variant $3$: T-tables acceleration}
+\label{sec:design:v3}
+\input{tex/design_v3.tex}
+\subsection{Variant $4$: $64$-bit}
+\label{sec:design:v4}
+\input{tex/design_v4.tex}
+\subsection{Variant $5$: tiled}
+\label{sec:design:v5}
+\input{tex/design_v5.tex}
 
 % =============================================================================
 
