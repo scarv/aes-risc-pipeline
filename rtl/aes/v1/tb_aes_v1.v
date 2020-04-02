@@ -154,7 +154,7 @@ wire [31:0] mix_enc_grm = {
 wire [31:0] mix_dec_grm = {
     mixcolumn_dec(mix_3, mix_0, mix_1, mix_2),
     mixcolumn_dec(mix_2, mix_3, mix_0, mix_1),
-    mixcolumn_dec(mix_1, mix_2, mix_0, mix_3),
+    mixcolumn_dec(mix_1, mix_2, mix_3, mix_0),
     mixcolumn_dec(mix_0, mix_1, mix_2, mix_3)
 };
 
