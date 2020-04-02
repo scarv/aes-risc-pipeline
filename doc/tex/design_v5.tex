@@ -9,43 +9,29 @@
 \subsubsection{ISE implementation}
 
 \begin{lstlisting}[language=pseudo,style=block]
-saes.v5.srsub(rs1, rs2, enc, hi):
-    if(enc):
-        tmp.8[0] = rs2.8[2] if hi else rs1.8[2]
-        tmp.8[1] = rs2.8[1] if hi else rs1.8[0]
-        tmp.8[2] = rs2.8[0] if hi else rs1.8[1]
-        tmp.8[3] = rs1.8[3] if hi else rs2.8[3]
-        tmp.8[i] =    AESSBox[tmp.8[i]] for i=0..3
-    else:
-        tmp.8[0] = rs2.8[2] if hi else rs1.8[2]
-        tmp.8[1] = rs1.8[1] if hi else rs1.8[0]
-        tmp.8[2] = rs2.8[0] if hi else rs2.8[1]
-        tmp.8[3] = rs2.8[3] if hi else rs1.8[3]
-        tmp.8[i] = InvAESSBox[tmp.8[i]] for i=0..3
-    if(hi):
-        rd.32    = {tmp.8[2],tmp.8[3],tmp.8[0],tmp.8[1]}
-    else:
-        rd.32    = {tmp.8[1],tmp.8[3],tmp.8[0],tmp.8[2]}
+saes.v5.srsub(rs1, rs2, fwd, hi):
+  if(fwd):
+    if hi: tmp.32 = {rs1.8[3], rs2.8[0], rs2.8[1], rs2.8[2]}
+    else : tmp.32 = {rs2.8[3], rs1.8[1], rs1.8[0], rs1.8[2]}
+    tmp.8[i]      =    AESSBox[tmp.8[i]] for i=0..3
+  else:
+    if hi: tmp.32 = {rs2.8[3], rs2.8[0], rs1.8[1], rs2.8[2]}
+    else : tmp.32 = {rs1.8[3], rs2.8[1], rs1.8[0], rs1.8[2]}
+    tmp.8[i]      = InvAESSBox[tmp.8[i]] for i=0..3
+  if(hi): rd.32 = {tmp.8[2],tmp.8[3],tmp.8[0],tmp.8[1]}
+  else  : rd.32 = {tmp.8[1],tmp.8[3],tmp.8[0],tmp.8[2]}
 
 saes.v5.sub(rs1):
-    rd.8[i] = AESSBox[rs1.8[i]] for i = 0..3
+  rd.8[i] = AESSBox[rs1.8[i]] for i = 0..3
 
-saes.v5.mix(rs1, rs2, enc):
-    col0.8[3] = rs1.8[2];    col1.8[3] = rs1.8[0]
-    col0.8[2] = rs1.8[3];    col1.8[2] = rs1.8[1]
-    col0.8[1] = rs2.8[2];    col1.8[1] = rs2.8[0]
-    col0.8[0] = rs2.8[3];    col1.8[0] = rs2.8[1]
-    if(enc):
-        n0 =    AESMixColumn(       col0   )
-        n1 =    AESMixColumn(ROTL32(col0,8))
-        n2 =    AESMixColumn(       col1   )
-        n3 =    AESMixColumn(ROTL32(col1,8))
-    else:
-        n0 = InvAESMixColumn(       col0   )
-        n1 = InvAESMixColumn(ROTL32(col0,8))
-        n2 = InvAESMixColumn(       col1   )
-        n3 = InvAESMixColumn(ROTL32(col1,8))
-    rd.32 = {n2, n3, n0, n1}
+saes.v5.mix(rs1, rs2, fwd):
+  col0.32 = {rs1.8[2], rs1.8[3], rs2.8[2], rs2.8[3]}
+  col1.32 = {rs1.8[0], rs1.8[1], rs2.8[0], rs2.8[1]}
+  n0.8    = MixColumn(       col0   , fwd)
+  n1.8    = MixColumn(ROTL32(col0,8), fwd)
+  n2.8    = MixColumn(       col1   , fwd)
+  n3.8    = MixColumn(ROTL32(col1,8), fwd)
+  rd.32 = {n2, n3, n0, n1}
 \end{lstlisting}
 
 % TODO: micro-architecture diagram

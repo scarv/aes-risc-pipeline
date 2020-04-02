@@ -23,11 +23,33 @@ elements of the
 RISC-V Privileged Resource Architecture (PRA)~\cite[Chapter 3]{RV:ISA:II:17}
 related to exception and interrupt handling.
 
-%TODO Explain datpath modifications and parameterisation of variants.
+To support the AES ISE variants, two modifications were made to the core:
+1) The Instruction Decode module was modifed to support identification and
+   operand selection for the new instructions. 
+2) A new ``AES" functional unit (AES FU) was added in the execute stage to
+   perform the instruction computations.
+Because all of the variants read at most two,
+and write one general purpose register, no new structural datapaths
+were needed.
+
+All of the AES variants share the same sets of inputs, so the interface
+to the AES FU is kept constant for every variant.
+A synthesis time parameter was then added to switch between different
+ISE variants.
+The following sections describe each ISE variant using pseudo-code, and
+give a simplified datapath diagram for the AES FU internals.
 
 \begin{figure}
 \centering
 \includegraphics[scale=0.5,angle=90]{diagrams/scarv-cpu-uarch.png}
 \subcaption{Core $2$: \CORE{2}.}
 \label{fig:design:cpu_block:2}
+\end{figure}
+
+% TODO move or split into pieces.
+\begin{figure}
+\centering
+\includegraphics[scale=0.5]{diagrams/ise-datapaths.png}
+\subcaption{Datapath diagrams for the four 32-bit ISE variants.}
+\label{fig:design:fu_block:2}
 \end{figure}

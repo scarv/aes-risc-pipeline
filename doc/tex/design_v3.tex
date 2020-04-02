@@ -9,29 +9,12 @@
 \subsubsection{ISE implementation}
 
 \begin{lstlisting}[language=pseudo,style=block]
-saes.v3.encs(rs1, rs2, bs):                 // SubBytes Only
-    t0.8  = rs1.8[bs]
-    x.8   = AESSBox(t0)
-    u.32  = {0, 0, 0, x}
-    rd.32 = ROTL32(u, 8*bs) ^ rs2.32
-
-saes.v3.encsm(rs1, rs2, bs):                // SubBytes & MixColumns
-    t0.8  = rs1.8[bs]
-    x.8   = AESSBox(t0)
-    u.32  = {GFMUL(x,3) , x, x, GFMUL(x,2)}
-    rd.32 = ROTL32(u, 8*bs) ^ rs2.32
-
-saes.v3.decs(rs1, rs2, bs):                 // InvSubBytes Only
-    t0.8  = rs1.8[bs]
-    x.8   = InvAESSBox(t0)
-    u.32  = {0, 0, 0, x}
-    rd.32 = ROTL32(u, 8*bs) ^ rs2.32
-
-saes.v3.decsm(rs1, rs2, bs):                // InvSubBytes & InvMixColumns
-    t0.8  = rs1.8[bs]
-    x.8   = InvAESSBox(t0)
-    u.32  = {GFMUL(x,11),GFMUL(x,13),GFMUL(9),GFMUL(14)}
-    rd.32 = ROTL32(u, 8*bs) ^ rs2.32
+saes.v3(rs1, rs2, bs, fwd, mix):
+  x     = SubByte(rs2.8[bs], fwd)
+  if   mix and  fwd: t1.32 = {GFMUL(x, 3),      x    ,      x   ,GFMUL(x, 2)}
+  elif mix and !fwd: t1.32 = {GFMUL(x,11),GFMUL(x,13),GFMUL(x,9),GFMUL(x,14)}
+  else             : t1.32 = {0, 0, 0, x}
+  rd.32 = ROTL32(t1.32, 8*bs) ^ rs1
 \end{lstlisting}
 
 % TODO: micro-architecture diagram
