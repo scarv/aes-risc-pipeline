@@ -2,15 +2,15 @@
 
 % TODO
 
-Note that we consider ``vanilla'' ISAs only, so exclude work related to the
-use of, e.g., vector-like extensions~\cite{Hamburg:09}.
-
 In combination,
 Bernstein and   Schwabe~\cite{BerSch:08}
 and
 Schwabe   and Stoffelen~\cite{SchSto:16}
 present and compare a range of software-based implementation and 
 optimisation techniques, across a range of platforms.
+
+Note that we consider use of the scalar base ISA, so exclude work related
+to the use of, e.g., vector-like extensions~\cite{Hamburg:09}.
 
 % -----------------------------------------------------------------------------
 
@@ -152,10 +152,55 @@ due to the provision of a (relatively) sparse set of addressing modes.
 
 \paragraph{Use of bit-slicing.}
 
+The term bit-slicing refers to an implementation technique due to
+Biham~\cite{Biham:97},
+which constitutes
+
+\begin{enumerate}
+\item a non-standard {\em representation}
+      of data:
+      each $w$-bit word $x$ is transformed into $\REP{x}$,
+      i.e.,
+      $w$ slices, say $\REP{x}[ i ]$ for
+      $
+      0 \leq i < w ,
+      $
+      where $\REP{x}[ i ]_j = x_i$ for some $j$,
+      and
+\item a non-standard {\em implementation}
+      of operation:
+      each operation $f$ used as
+      $
+          {r} =     {f}(     {x} )
+      $
+      must be transformed into ``software circuit'' $\REP{f}$,
+      i.e.,
+      a sequence of Boolean instructions acting on the slices st.
+      $
+      \REP{r} = \REP{f}( \REP{x} ) .
+      $
+\end{enumerate}
+
+\noindent
+Using it introduces some overhead related to conversion of $x$ into
+$\REP{x}$ and $\REP{r}$ into $r$, plus the (relative) inefficiency
+of $\REP{f}$ vs. $f$ (wrt. latency and footprint).
+Crucially, however, if each slice is itself a $w$-bit word, then it
+is possible to compute $w$ instances of $\REP{f}$ in {\em parallel}
+on suitably packed $\REP{x}$.
+A common analogy is that of bit-slicing transforming the 
+$w$-bit, $1$-way scalar processor 
+into a 
+$1$-bit, $w$-way SIMD   processor, 
+thus yielding (or recouping) upto a $w$-fold improvement in latency.
+
 % TODO
 
-\cite{MatNak:07,Konighofer:08,KasSch:09}
+As evidenced by various work
+(see, e.g., \cite{MatNak:07,Konighofer:08,KasSch:09}),
+bit-sliced implementation of AES is often very effective 
 
-\cite{Stoffelen:19}
+Stoffelen~\cite{Stoffelen:19}
+evaluates in the context of RISC-V
 
 % =============================================================================
