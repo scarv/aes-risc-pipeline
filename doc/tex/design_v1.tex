@@ -1,21 +1,12 @@
 % =============================================================================
 
-\subsubsection{ISE interface}
-
-% TODO: instruction definition(s)
-
-% -----------------------------------------------------------------------------
-
-\subsubsection{ISE implementation}
 
 \begin{lstlisting}[language=pseudo,style=block]
-saes.v1.SubBytes(rs1, fwd):
-  rd.8[i] = SubBytes(rs1.8[i], fwd) for i=0..3
-
-saes.v1.MixColumns(rs1, fwd):
-  rd.8[i] = MixColumn(ROTL32(rs1.32, 8*i)), fwd) for i=0..3
+saes.v1.encs rd, rs1 : rd.8[i] = SubBytes(rs1.8[i])                for i=0..3
+saes.v1.encm rd, rs1 : rd.8[i] = MixColumn(ROTL32(rs1.32, 8*i))    for i=0..3
+saes.v1.decs rd, rs1 : rd.8[i] = InvSubBytes(rs1.8[i])             for i=0..3
+saes.v1.decm rd, rs1 : rd.8[i] = InvMixColumn(ROTL32(rs1.32, 8*i)) for i=0..3
 \end{lstlisting}
 
-% TODO: micro-architecture diagram
 
 % =============================================================================

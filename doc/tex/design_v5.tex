@@ -1,15 +1,17 @@
 % =============================================================================
 
-\subsubsection{ISE interface}
-
-% TODO: instruction definition(s)
-
-% -----------------------------------------------------------------------------
-
-\subsubsection{ISE implementation}
+\begin{lstlisting}[language=pseudo,style=block]
+saes.v5.esrsub.lo rd, rs1, rs2 : rd = v5.SrSub(rs1, rs2, fwd=1, hi=0)
+saes.v5.esrsub.hi rd, rs1, rs2 : rd = v5.SrSub(rs1, rs2, fwd=1, hi=1)
+saes.v5.dsrsub.lo rd, rs1, rs2 : rd = v5.SrSub(rs1, rs2, fwd=0, hi=0)
+saes.v5.dsrsub.hi rd, rs1, rs2 : rd = v5.SrSub(rs1, rs2, fwd=0, hi=1)
+saes.v5.emix      rd, rs1, rs2 : rd = v5.Mix(rs1, rs2, fwd=1)
+saes.v5.dmix      rd, rs1, rs2 : rd = v5.Mix(rs1, rs2, fwd=0)
+saes.v5.sub       rd, rs1      : rd = SubBytes(rs1.8[i])         for i=0..3
+\end{lstlisting}
 
 \begin{lstlisting}[language=pseudo,style=block]
-saes.v5.srsub(rs1, rs2, fwd, hi):
+v5.SrSub(rs1, rs2, fwd, hi):
   if(fwd):
     if hi: tmp.32 = {rs1.8[3], rs2.8[0], rs2.8[1], rs2.8[2]}
     else : tmp.32 = {rs2.8[3], rs1.8[1], rs1.8[0], rs1.8[2]}
@@ -21,10 +23,7 @@ saes.v5.srsub(rs1, rs2, fwd, hi):
   if(hi): rd.32 = {tmp.8[2],tmp.8[3],tmp.8[0],tmp.8[1]}
   else  : rd.32 = {tmp.8[1],tmp.8[3],tmp.8[0],tmp.8[2]}
 
-saes.v5.sub(rs1):
-  rd.8[i] = AESSBox[rs1.8[i]] for i = 0..3
-
-saes.v5.mix(rs1, rs2, fwd):
+v5.mix(rs1, rs2, fwd):
   col0.32 = {rs1.8[2], rs1.8[3], rs2.8[2], rs2.8[3]}
   col1.32 = {rs1.8[0], rs1.8[1], rs2.8[0], rs2.8[1]}
   n0.8    = MixColumn(       col0   , fwd)
@@ -34,6 +33,5 @@ saes.v5.mix(rs1, rs2, fwd):
   rd.32 = {n2, n3, n0, n1}
 \end{lstlisting}
 
-% TODO: micro-architecture diagram
 
 % =============================================================================

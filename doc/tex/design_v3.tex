@@ -1,15 +1,16 @@
 % =============================================================================
 
-\subsubsection{ISE interface}
-
-% TODO: instruction definition(s)
-
-% -----------------------------------------------------------------------------
-
-\subsubsection{ISE implementation}
 
 \begin{lstlisting}[language=pseudo,style=block]
-saes.v3(rs1, rs2, bs, fwd, mix):
+saes.v3.encs  rd, rs1, rs2, bs : rd = v3.Proc(rs1, rs2, bs, fwd=1, mix=0)
+saes.v3.encsm rd, rs1, rs2, bs : rd = v3.Proc(rs1, rs2, bs, fwd=1, mix=1)
+saes.v3.decs  rd, rs1, rs2, bs : rd = v3.Proc(rs1, rs2, bs, fwd=0, mix=0)
+saes.v3.decsm rd, rs1, rs2, bs : rd = v3.Proc(rs1, rs2, bs, fwd=0, mix=1)
+\end{lstlisting}
+
+
+\begin{lstlisting}[language=pseudo,style=block]
+v3.Proc(rs1, rs2, bs, fwd, mix):
   x     = SubByte(rs2.8[bs], fwd)
   if   mix and  fwd: t1.32 = {GFMUL(x, 3),      x    ,      x   ,GFMUL(x, 2)}
   elif mix and !fwd: t1.32 = {GFMUL(x,11),GFMUL(x,13),GFMUL(x,9),GFMUL(x,14)}
@@ -17,6 +18,5 @@ saes.v3(rs1, rs2, bs, fwd, mix):
   rd.32 = ROTL32(t1.32, 8*bs) ^ rs1
 \end{lstlisting}
 
-% TODO: micro-architecture diagram
 
 % =============================================================================
