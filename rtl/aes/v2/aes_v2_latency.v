@@ -80,7 +80,7 @@ wire [ 7:0] mix_3    = rs2[31:24];
 //
 // Mix instruction - encrypt.
 wire [ 7:0] mix_enc_0   = mixcolumn_enc(mix_0, mix_1, mix_2, mix_3);
-wire [ 7:0] mix_enc_1   = mixcolumn_enc(mix_1, mix_2, mix_0, mix_3);
+wire [ 7:0] mix_enc_1   = mixcolumn_enc(mix_1, mix_2, mix_3, mix_0);
 wire [ 7:0] mix_enc_2   = mixcolumn_enc(mix_2, mix_3, mix_0, mix_1);
 wire [ 7:0] mix_enc_3   = mixcolumn_enc(mix_3, mix_0, mix_1, mix_2);
 

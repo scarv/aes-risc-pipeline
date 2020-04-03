@@ -19,12 +19,14 @@ read -formal tb_aes_v2.v
 
 latency: read -formal aes_v2_latency.v
 size:    read -formal aes_v2_size.v
+size:    read -formal aes_mixcolumn.v
 
 prep -top tb_aes_v2
 
 [files]
 latency: aes/v2/aes_v2_latency.v
 size:    aes/v2/aes_v2_size.v
+size:    aes/share/aes_mixcolumn.v
 aes/share/aes_sbox_latency.v
 aes/v2/tb_aes_v2.v
 

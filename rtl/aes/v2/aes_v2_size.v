@@ -56,8 +56,8 @@ function [7:0] xtN;
 endfunction
 
 wire [ 7:0] mix_0    = rs1[ 7: 0];
-wire [ 7:0] mix_1    = rs2[15: 8];
-wire [ 7:0] mix_2    = rs1[23:16];
+wire [ 7:0] mix_1    = rs1[15: 8];
+wire [ 7:0] mix_2    = rs2[23:16];
 wire [ 7:0] mix_3    = rs2[31:24];
 
 wire [ 7:0] mb0  = {8{fsm_idle}} & mix_0 |
@@ -71,21 +71,25 @@ wire [ 7:0] mb1  = {8{fsm_idle}} & mix_1 |
                    {8{fsm_s3  }} & mix_0 ;
 
 wire [ 7:0] mb2  = {8{fsm_idle}} & mix_2 |
-                   {8{fsm_s1  }} & mix_0 |
+                   {8{fsm_s1  }} & mix_3 |
                    {8{fsm_s2  }} & mix_0 |
                    {8{fsm_s3  }} & mix_1 ;
 
 wire [ 7:0] mb3  = {8{fsm_idle}} & mix_3 |
-                   {8{fsm_s1  }} & mix_3 |
+                   {8{fsm_s1  }} & mix_0 |
                    {8{fsm_s2  }} & mix_1 |
                    {8{fsm_s3  }} & mix_2 ;
 
-wire [ 7:0] mix_enc = xt2(mb0) ^ xt2(mb1) ^ mb1 ^ mb2 ^ mb3;
 
-wire [ 7:0] mix_dec = xtN(mb0,4'he) ^ xtN(mb1,4'hb) ^
-                      xtN(mb2,4'hd) ^ xtN(mb3,4'h9) ;
+wire [31:0] mix_in = {mb0, mb1, mb2, mb3};
+
+wire [ 7:0] mix_enc;
+wire [ 7:0] mix_dec;
 
 wire [ 7:0] mix_out = enc ? mix_enc : mix_dec;
+
+aes_mixcolumn_byte_enc i_mc_enc(.col_in(mix_in), .byte_out(mix_enc));
+aes_mixcolumn_byte_dec i_mc_dec(.col_in(mix_in), .byte_out(mix_dec));
 
 //
 // Temporary Storage
