@@ -1,16 +1,27 @@
 % =============================================================================
 
-% TODO
-
-In combination,
-Bernstein and   Schwabe~\cite{BerSch:08}
+In a software-only implementation,
+execution of 
+both
+AES         functionality
 and
-Schwabe   and Stoffelen~\cite{SchSto:16}
-present and compare a range of software-based implementation and 
-optimisation techniques, across a range of platforms.
+application functionality (i.e., whatever uses AES)
+is 
+performed by 
+a general-purpose processor core, using features native to and so by default available in the associated base ISA.
+Since we only consider use of the RISC-V scalar base ISA, we exclude work on
+use of, e.g., vector-like extensions~\cite{Hamburg:09}.
 
-Note that we consider use of the scalar base ISA, so exclude work related
-to the use of, e.g., vector-like extensions~\cite{Hamburg:09}.
+Although not our focus per se, associated techniques are important because, 
+e.g., many ISEs can be described as targeting specific feature(s) within a 
+baseline software-only implementation.
+Work such as that of
+Bernstein and Schwabe~\cite{BerSch:08},
+Osvik et al.~\cite{OBSC:10},
+and
+Schwabe and Stoffelen~\cite{SchSto:16}
+present and compare a range of techniques across a range of platforms, but,
+for completeness, we present a (limited) survey in what follows.
 
 % -----------------------------------------------------------------------------
 
@@ -150,7 +161,7 @@ due to the provision of a (relatively) sparse set of addressing modes.
 
 % -----------------------------------------------------------------------------
 
-\paragraph{Use of bit-slicing.}
+\paragraph{Bit-sliced.}
 
 The term bit-slicing refers to an implementation technique due to
 Biham~\cite{Biham:97},
@@ -194,13 +205,10 @@ into a
 $1$-bit, $w$-way SIMD   processor, 
 thus yielding (or recouping) upto a $w$-fold improvement in latency.
 
-% TODO
-
 As evidenced by various work
 (see, e.g., \cite{MatNak:07,Konighofer:08,KasSch:09}),
-bit-sliced implementation of AES is often very effective 
-
-Stoffelen~\cite{Stoffelen:19}
-evaluates in the context of RISC-V
+the application of bit-slicing to AES can be very effective;
+Stoffelen~\cite[Section 3.1]{Stoffelen:19}
+specifically investigates this fact within the context of RISC-V.
 
 % =============================================================================
