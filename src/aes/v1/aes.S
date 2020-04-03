@@ -156,12 +156,12 @@ aes_enc_block:                                  // a2 - uint32_t  * rk,
 
 .aes_enc_block_l_finish:
 
-    saes.v1.encs U0, T0                         // SubBytes
-    saes.v1.encs U1, T1                         //
-    saes.v1.encs U2, T2                         //
-    saes.v1.encs U3, T3                         //
+    AES_SHIFT_ROWS U0, U1, U2, U3, T0, T1, T2, T3, TMP, HM, MSK
 
-    AES_SHIFT_ROWS T0, T1, T2, T3, U0, U1, U2, U3, TMP, HM, MSK
+    saes.v1.encs T0, U0                         // SubBytes
+    saes.v1.encs T1, U1                         //
+    saes.v1.encs T2, U2                         //
+    saes.v1.encs T3, U3                         //
 
     lw      U0,  0(RK)                          // Load Round Key
     lw      U1,  4(RK)

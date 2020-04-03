@@ -155,13 +155,13 @@ aes_enc_block:                                  // a2 - uint32_t  * rk,
 
 .aes_enc_block_l_finish:
 
+    li  HM, 0xFFFF0000
+    not LM, HM
+
     saes.v2.sub.enc U0, T0, T1                  // SubBytes /
     saes.v2.sub.enc U1, T2, T3                  // partial ShiftRows
     saes.v2.sub.enc U2, T1, T2                  //
     saes.v2.sub.enc U3, T3, T0                  //
-
-    li  HM, 0xFFFF0000
-    not LM, HM
 
     PACKHL T0, TMP, U0, U1, HM, LM              // Finish shift rows.
     PACKHL T1, TMP, U2, U3, HM, LM
@@ -271,13 +271,13 @@ aes_dec_block:                                  // a2 - uint32_t  * rk,
         bne KP, RK, .aes_dec_block_l0
     
 
+    li  HM, 0xFFFF0000
+    not LM, HM
+
     saes.v2.sub.dec U0, T0, T3              // Inverse SubBytes and
     saes.v2.sub.dec U1, T1, T0              // partial inverse shift rows.
     saes.v2.sub.dec U2, T2, T1
     saes.v2.sub.dec U3, T3, T2
-
-    li  HM, 0xFFFF0000
-    not LM, HM
 
     PACKHL T0, TMP, U0, U2, HM, LM          // Finish inverse shift rows.
     PACKHL T1, TMP, U1, U3, HM, LM
