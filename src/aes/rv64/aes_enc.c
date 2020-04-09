@@ -88,8 +88,42 @@ void    aes_key_schedule (
 void    aes_128_enc_key_schedule (
     uint32_t    rk [AES_128_RK_WORDS],
     uint8_t     ck [AES_128_CK_BYTES] 
-){
-    aes_key_schedule(rk, ck, AES_128_NK, AES_128_NR);
+) {
+    uint64_t   temp     ;
+
+    uint64_t * rkp      = (uint64_t*)rk ;
+    uint64_t * ckp      = (uint64_t*)ck ;
+
+    uint64_t   rk_lo    = ckp[0];
+    uint64_t   rk_hi    = ckp[1];
+
+    rkp[0]              = rk_lo;
+    rkp[1]              = rk_hi;
+    rkp                += 2    ;
+
+    #define AES_128_KS_STEP(RCON) { \
+        temp                = _saes_v4_ks1(rk_hi, RCON ); \
+        rk_lo               = _saes_v4_ks2(temp , rk_lo); \
+        rk_hi               = _saes_v4_ks2(rk_lo, rk_hi); \
+        rkp[0]              = rk_lo; \
+        rkp[1]              = rk_hi; \
+        rkp                += 2    ; \
+    }
+
+    
+    AES_128_KS_STEP( 0)
+    AES_128_KS_STEP( 1)
+    AES_128_KS_STEP( 2)
+    AES_128_KS_STEP( 3)
+    AES_128_KS_STEP( 4)
+    AES_128_KS_STEP( 5)
+    AES_128_KS_STEP( 6)
+    AES_128_KS_STEP( 7)
+    AES_128_KS_STEP( 8)
+    AES_128_KS_STEP( 9)
+    AES_128_KS_STEP(10)
+    
+    #undef AES_128_KS_STEP
 }
 
 void    aes_192_enc_key_schedule (
