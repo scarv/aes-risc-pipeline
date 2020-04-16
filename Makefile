@@ -23,4 +23,6 @@ opcodes:
     | python3 $(REPO_HOME)/bin/parse_opcodes.py -check
 	cat $(REPO_HOME)/src/toolchain/opcodes.txt \
     | python3 $(REPO_HOME)/bin/parse_opcodes.py -c > build/opcodes-crypto.h
+	cat $(REPO_HOME)/src/toolchain/opcodes.txt \
+    | python3 $(REPO_HOME)/bin/parse_opcodes.py -verilog > build/opcodes-crypto.vh
 

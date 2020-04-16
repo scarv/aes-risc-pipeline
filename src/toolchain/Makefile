@@ -73,6 +73,16 @@ spike-build:
 #
 # Proxy Kernel
 # ------------------------------------------------------------
+	
+pk-update-patch:
+	cd $(PK_SUBMODULE) && git diff --cached > $(PK_PATCH)
+
+pk-apply-patch:
+	cd $(PK_SUBMODULE) && git apply $(PK_PATCH) && git add --all
+
+pk-revert-patch:
+	cd $(PK_SUBMODULE) && \
+    git reset HEAD && git checkout . &&  git clean -df
 
 pk32-configure    :
 	mkdir -p $(PK32_BUILD)
@@ -88,6 +98,9 @@ pk32-build:
 	export PATH=$(TC_INSTALL)/bin:$(PATH) && \
 	cd $(PK32_BUILD) && \
     make && make install
+	$(TC_INSTALL)/bin/riscv64-unknown-elf-objdump -D \
+        $(PK32_INSTALL)/riscv32-unknown-elf/bin/pk \
+        > $(PK32_INSTALL)/riscv32-unknown-elf/bin/pk.dis
 
 pk64-configure    :
 	mkdir -p $(PK64_BUILD)
@@ -103,6 +116,9 @@ pk64-build:
 	export PATH=$(TC_INSTALL)/bin:$(PATH) && \
 	cd $(PK64_BUILD) && \
     make && make install
+	$(TC_INSTALL)/bin/riscv64-unknown-elf-objdump -D \
+        $(PK64_INSTALL)/riscv64-unknown-elf/bin/pk \
+        > $(PK64_INSTALL)/riscv64-unknown-elf/bin/pk.dis
 
 pk-configure: pk32-configure pk64-configure
 pk-build    : pk32-build     pk64-build

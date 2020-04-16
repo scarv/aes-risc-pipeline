@@ -21,6 +21,7 @@ BINUTILS_SUBMODULE = $(TC_SUBMODULE)/riscv-binutils
 BINUTILS_PATCH  = $(REPO_HOME)/src/toolchain/binutils.patch
 
 PK_SUBMODULE    = $(REPO_HOME)/extern/riscv-pk
+PK_PATCH        = $(REPO_HOME)/src/toolchain/pk.patch
 PK32_BUILD      = $(REPO_BUILD)/pk32
 PK32_INSTALL    = $(TC_INSTALL)
 PK64_BUILD      = $(REPO_BUILD)/pk64
