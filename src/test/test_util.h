@@ -21,6 +21,19 @@
     ((X & 0x000000FF) << 24)  \
 )
 
+#define MEASURE_BEGIN(SI,SC) { \
+    SI = test_rdinstret(); \
+    SC = test_rdcycle(); \
+}
+
+
+#define MEASURE_END(SI,SC,I,C) { \
+    uint64_t end_instrs = test_rdinstret(); \
+    uint64_t end_cycles = test_rdcycle(); \
+    I  = end_instrs - SI; \
+    C  = end_cycles - SC; \
+}
+
 //
 // Misc
 // ----------------------------------------------------------------------

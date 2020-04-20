@@ -19,80 +19,73 @@ int main(int argc, char ** argv) {
     printf("import sys, binascii, Crypto.Cipher.AES as AES\n");
     printf("benchmark_name = 'aes'\n");
 
-    const int num_tests = 10;
+    const int num_tests = 2;
+
+    uint64_t kse_icount, kse_cycles;
+    uint64_t ksd_icount, ksd_cycles;
+    uint64_t enc_icount, enc_cycles;
+    uint64_t dec_icount, dec_cycles;
 
     uint64_t start_instrs;
+    uint64_t start_cycles;
 
     for(int i = 0; i < num_tests; i ++) {
-
-        start_instrs = test_rdinstret();
-        aes_128_enc_key_schedule(erk, key    );
-        uint64_t kse_icount   = test_rdinstret() - start_instrs;
-
-        start_instrs = test_rdinstret();
-        aes_128_enc_block       (ct , pt, erk);
-        uint64_t enc_icount   = test_rdinstret() - start_instrs;
-        
-        start_instrs = test_rdinstret();
-        aes_128_dec_key_schedule(drk, key    );
-        uint64_t ksd_icount   = test_rdinstret() - start_instrs;
-
-        start_instrs = test_rdinstret();
-        aes_128_dec_block       (pt2, ct, drk);
-        uint64_t dec_icount   = test_rdinstret() - start_instrs;
         
         printf("#\n# test %d/%d\n",i , num_tests);
 
-        printf("key             = ");
+        MEASURE_BEGIN(start_instrs, start_cycles)
+        aes_128_enc_key_schedule(erk, key    );
+        MEASURE_END(start_instrs, start_cycles, kse_icount, kse_cycles)
+
+        MEASURE_BEGIN(start_instrs, start_cycles)
+        aes_128_enc_block       (ct , pt, erk);
+        MEASURE_END(start_instrs, start_cycles, enc_icount, enc_cycles)
+        
+        MEASURE_BEGIN(start_instrs, start_cycles)
+        aes_128_dec_key_schedule(drk, key    );
+        MEASURE_END(start_instrs, start_cycles, ksd_icount, ksd_cycles)
+
+        MEASURE_BEGIN(start_instrs, start_cycles)
+        aes_128_dec_block       (pt2, ct, drk);
+        MEASURE_END(start_instrs, start_cycles, dec_icount, dec_cycles)
+
+        printf("kse_icount = 0x"); puthex64(kse_icount); printf("\n");
+        printf("ksd_icount = 0x"); puthex64(ksd_icount); printf("\n");
+        printf("enc_icount = 0x"); puthex64(enc_icount); printf("\n");
+        printf("dec_icount = 0x"); puthex64(dec_icount); printf("\n");
+        printf("kse_cycles = 0x"); puthex64(kse_cycles); printf("\n");
+        printf("ksd_cycles = 0x"); puthex64(ksd_cycles); printf("\n");
+        printf("enc_cycles = 0x"); puthex64(enc_cycles); printf("\n");
+        printf("dec_cycles = 0x"); puthex64(dec_cycles); printf("\n");
+
+        printf("key= ");
         puthex_py(key, AES_128_CK_BYTES);
         printf("\n");
         
-        printf("erk             = ");
+        printf("erk= ");
         puthex_py((uint8_t*)erk , AES_128_RK_BYTES );
         printf("\n");
 
-//#define UNPACK_COL_0(D, Q0, Q2) { D = (Q0 >>         16) | (Q2 & 0xFFFF0000);}
-//#define UNPACK_COL_1(D, Q0, Q2) { D = (Q0 &  0x0000FFFF) | (Q2 << 16       );}
-//#define UNPACK_COL_2(D, Q1, Q3) { D = (Q1 >>         16) | (Q3 & 0xFFFF0000);}
-//#define UNPACK_COL_3(D, Q1, Q3) { D = (Q1 &  0x0000FFFF) | (Q3 << 16       );}
-//
-//        for(int i = 0; i < AES_128_RK_WORDS; i += 4) {
-//            uint32_t c0,c1,c2,c3;
-//            UNPACK_COL_0(c0, erk[i+0], erk[i+2]);
-//            UNPACK_COL_1(c1, erk[i+0], erk[i+2]);
-//            UNPACK_COL_2(c2, erk[i+1], erk[i+3]);
-//            UNPACK_COL_3(c3, erk[i+1], erk[i+3]);
-//            printf("# %08X %08X\n"  , BS32(c0), BS32(erk[i+0]));
-//            printf("# %08X %08X\n"  , BS32(c1), BS32(erk[i+1]));
-//            printf("# %08X %08X\n"  , BS32(c2), BS32(erk[i+2]));
-//            printf("# %08X %08X\n\n", BS32(c3), BS32(erk[i+3]));
-//        }
-        
-        printf("drk             = ");
+        printf("drk= ");
         puthex_py((uint8_t*)drk , AES_128_RK_BYTES );
         printf("\n");
 
-        printf("pt              = ");
+        printf("pt = ");
         puthex_py(pt , 16  );
         printf("\n");
         
-        printf("pt2             = ");
+        printf("pt2= ");
         puthex_py(pt2, 16  );
         printf("\n");
 
-        printf("ct              = ");
+        printf("ct = ");
         puthex_py(ct , 16  );
         printf("\n");
 
-        printf("kse_icount      = 0x"); puthex64(kse_icount); printf("\n");
-        printf("ksd_icount      = 0x"); puthex64(ksd_icount); printf("\n");
-        printf("enc_icount      = 0x"); puthex64(enc_icount); printf("\n");
-        printf("dec_icount      = 0x"); puthex64(dec_icount); printf("\n");
+        printf("testnum = %d\n",i);
 
-        printf("testnum         = %d\n",i);
-
-        printf("ref_ct          = AES.new(key).encrypt(pt    )\n");
-        printf("ref_pt          = AES.new(key).decrypt(ref_ct)\n");
+        printf("ref_ct = AES.new(key).encrypt(pt    )\n");
+        printf("ref_pt = AES.new(key).decrypt(ref_ct)\n");
         printf("if( ref_ct     != ct        ):\n");
         printf("    print(\"Test %d encrypt failed.\")\n", i);
         printf("    print( 'key == %%s' %% ( binascii.b2a_hex( key    )))\n");
@@ -116,7 +109,7 @@ int main(int argc, char ** argv) {
         printf("    sys.stdout.write(\"kse: %%d, \" %% (kse_icount))\n");
         printf("    sys.stdout.write(\"ksd: %%d, \" %% (ksd_icount))\n");
         printf("    print(\"\")\n");
-        
+
         // New random inputs
         test_rdrandom(pt    , 16   );
         test_rdrandom(key   , AES_128_CK_BYTES );
