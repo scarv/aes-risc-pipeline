@@ -590,7 +590,7 @@ function [31:0] mixcolumn_word_enc;
     mix_0   = word[ 7: 0];
     mixcolumn_word_enc[31:24] = mixcolumn_byte_enc(mix_3, mix_0, mix_1, mix_2);
     mixcolumn_word_enc[23:16] = mixcolumn_byte_enc(mix_2, mix_3, mix_0, mix_1);
-    mixcolumn_word_enc[15: 8] = mixcolumn_byte_enc(mix_1, mix_2, mix_0, mix_3);
+    mixcolumn_word_enc[15: 8] = mixcolumn_byte_enc(mix_1, mix_2, mix_3, mix_0);
     mixcolumn_word_enc[ 7: 0] = mixcolumn_byte_enc(mix_0, mix_1, mix_2, mix_3);
 endfunction
 
@@ -607,7 +607,7 @@ function [31:0] mixcolumn_word_dec;
     mix_0   = word[ 7: 0];
     mixcolumn_word_dec[31:24] = mixcolumn_byte_dec(mix_3, mix_0, mix_1, mix_2);
     mixcolumn_word_dec[23:16] = mixcolumn_byte_dec(mix_2, mix_3, mix_0, mix_1);
-    mixcolumn_word_dec[15: 8] = mixcolumn_byte_dec(mix_1, mix_2, mix_0, mix_3);
+    mixcolumn_word_dec[15: 8] = mixcolumn_byte_dec(mix_1, mix_2, mix_3, mix_0);
     mixcolumn_word_dec[ 7: 0] = mixcolumn_byte_dec(mix_0, mix_1, mix_2, mix_3);
 endfunction
 

@@ -149,7 +149,7 @@ wire [31:0] ks1_sub    = {
     aes_sbox_fwd(ks1_rot[23:16]),
     aes_sbox_fwd(ks1_rot[15: 8]),
     aes_sbox_fwd(ks1_rot[ 7: 0])
-} ^ (ks1_dorcon ? {28'b0, rcon[enc_rcon]} : 32'b0) ;
+} ^ (ks1_dorcon ? {24'b0, rcon[enc_rcon]} : 32'b0) ;
 
 wire [63:0] result_ks1 = {ks1_sub, ks1_sub};
 
