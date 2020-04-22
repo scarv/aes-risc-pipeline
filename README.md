@@ -7,9 +7,53 @@
 
 ---
 
-1. [Quickstart](#Quickstart)
-2. [Introduction](#Introduction)
-3. [Points for the paper](#Points-for-the-paper)
+1. [Progress](#Progress)
+2. [Quickstart](#Quickstart)
+3. [Introduction](#Introduction)
+4. [Points for the paper](#Points-for-the-paper)
+
+## Progress
+
+AES Implementation  | Spike | SCARV CPU | Rocket RV32 | Rocket RV64
+--------------------|-------|-----------|-------------|----------------
+Byte-wise reference | x     | x         | x           | x
+TTable    reference | x     | x         | x           | x
+RV32 V1 Sub + Mix   | x     | x         | x           | N/A ?
+RV32 V2 (Tillich)   | x     | x         | x           | N/A ?
+RV32 V3 (HW TTable) | x     | x         | x           | N/A ?
+RV32 V3 (HW TTable) | x     | x         | x           | N/A ?
+RV32 Tiled          | x     | x         | x           | N/A ?
+RV64 (Ben's)        | x     | N/A       | N/A         | x
+
+- All implementations support AES 128 block encrypt/decrypt.
+
+- The API uses separate functions to create the encrypt/decrypt KeySchedules,
+  since some implementations use the equivilent inverse cipher construction.
+
+  - This also allows us to support on-line KeySchedules, though no
+    implementations currently do this.
+
+- We can currently measure:
+
+  - Static code size
+
+  - Instruction counts
+
+  - Cycle countes
+
+  - Hardware size in NAND2 equivalents.
+
+  - Longest HW topological path.
+
+- Will want to add measurements for:
+
+  - [ ] Dynamic data bandwidth (bytes)
+
+  - [ ] Dynamic instruction bandwidth (bytes)
+
+- Additional AES implementations to add:
+
+  - [ ] Bitslicing.
 
 ## Quickstart
 
