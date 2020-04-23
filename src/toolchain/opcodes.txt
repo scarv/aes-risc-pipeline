@@ -18,14 +18,10 @@ saes.v3.decsm     rd rs1 rs2 bs            29..25=1 14..12=0b111 6..0=0xb
 saes.v4.ks1       rd rs1 rcon    31..25=9  24=0     14..12=0b110 6..0=0xb
 saes.v4.ks2       rd rs1 rs2     31..25=10          14..12=0b111 6..0=0xb
 saes.v4.imix      rd rs1         31..25=11 24..20=0 14..12=0b110 6..0=0xb
-saes.v4.encsm.lo  rd rs1 rs2     31..25=12          14..12=0b111 6..0=0xb
-saes.v4.encsm.hi  rd rs1 rs2     31..25=13          14..12=0b111 6..0=0xb
-saes.v4.encs.lo   rd rs1 rs2     31..25=14          14..12=0b111 6..0=0xb
-saes.v4.encs.hi   rd rs1 rs2     31..25=15          14..12=0b111 6..0=0xb
-saes.v4.decsm.lo  rd rs1 rs2     31..25=16          14..12=0b111 6..0=0xb
-saes.v4.decsm.hi  rd rs1 rs2     31..25=17          14..12=0b111 6..0=0xb
-saes.v4.decs.lo   rd rs1 rs2     31..25=18          14..12=0b111 6..0=0xb
-saes.v4.decs.hi   rd rs1 rs2     31..25=19          14..12=0b111 6..0=0xb
+saes.v4.encsm     rd rs1 rs2     31..25=12          14..12=0b111 6..0=0xb
+saes.v4.encs      rd rs1 rs2     31..25=14          14..12=0b111 6..0=0xb
+saes.v4.decsm     rd rs1 rs2     31..25=16          14..12=0b111 6..0=0xb
+saes.v4.decs      rd rs1 rs2     31..25=18          14..12=0b111 6..0=0xb
 
 saes.v5.esrsub.lo rd rs1 rs2     31..25=20          14..12=0b111 6..0=0xb
 saes.v5.esrsub.hi rd rs1 rs2     31..25=21          14..12=0b111 6..0=0xb

@@ -1,8 +1,9 @@
 
 VARIANT  = rv64
 
-AES_SRCS = $(REPO_HOME)/src/aes/rv64/aes_enc.c \
-           $(REPO_HOME)/src/aes/rv64/aes_dec.c
+AES_SRCS = $(REPO_HOME)/src/aes/rv64/aes_enc.S \
+           $(REPO_HOME)/src/aes/rv64/aes_dec.S \
+           $(REPO_HOME)/src/aes/rv64/aes_128_ks.S
 
 FLAGS    = -march=rv64imac -mabi=lp64
 
