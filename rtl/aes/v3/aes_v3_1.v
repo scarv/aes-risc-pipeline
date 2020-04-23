@@ -31,10 +31,10 @@ wire [7:0] bytes_in [3:0]   ;
 // Always finish in a single cycle.
 assign     ready            = valid                     ;
 
-assign     bytes_in [  0]   =  rs1[ 7: 0]               ;
-assign     bytes_in [  1]   =  rs1[15: 8]               ;
-assign     bytes_in [  2]   =  rs1[23:16]               ;
-assign     bytes_in [  3]   =  rs1[31:24]               ;
+assign     bytes_in [  0]   =  rs2[ 7: 0]               ;
+assign     bytes_in [  1]   =  rs2[15: 8]               ;
+assign     bytes_in [  2]   =  rs2[23:16]               ;
+assign     bytes_in [  3]   =  rs2[31:24]               ;
 
 wire [7:0] sel_byte         = bytes_in[bs]              ;
 
@@ -79,7 +79,7 @@ wire [31:0] rotated     =
     {32{bs == 2'b10}} & {result[15:0], result[31:16] } |
     {32{bs == 2'b11}} & {result[ 7:0], result[31: 8] } ;
 
-assign      rd          = rotated ^ rs2;
+assign      rd          = rotated ^ rs1;
 
 //
 // Single SBOX instance

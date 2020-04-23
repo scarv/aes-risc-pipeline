@@ -1,9 +1,9 @@
 
 VARIANT  = v3
 
-AES_SRCS = $(REPO_HOME)/src/aes/v3/aes_enc.c \
-           $(REPO_HOME)/src/aes/v3/aes_dec.c \
-           $(REPO_HOME)/src/aes/v3/aes.S
+AES_SRCS = $(REPO_HOME)/src/aes/v3/aes_128_ks.S \
+           $(REPO_HOME)/src/aes/v3/aes_dec.S \
+           $(REPO_HOME)/src/aes/v3/aes_enc.S
 
 FLAGS    = -march=rv32imac -mabi=ilp32
 
