@@ -87,7 +87,7 @@ special-purpose, domain-specific functionality
 in the resulting ISE,
 vs. 
 general-purpose                  functionality
-in the base      ISA,
+in the base Instruction Set Architecture (ISA),
 and thereby deliver improvement wrt. pertinent quality metrics.  
 Although ISEs can be an effective option for {\em both}
 high(er)-end, performance-oriented
@@ -96,16 +96,16 @@ and
 platforms, 
 they are particularly effective for the latter by 
 improving footprint and latency
-vs. a software-only options
+vs. a software-only option
 while also
 improving area      and flexibility
-vs. a hardware-only options.
+vs. a hardware-only option.
 
 Abstractly, an ISE design constitutes
 1) an {\em interface},
    i.e., 
    addition of instructions to some 
-   base Instruction Set Architecture (ISA) 
+   base ISA
    plus
 2) an {\em implementation},
    i.e., 
@@ -114,8 +114,8 @@ Abstractly, an ISE design constitutes
    base micro-architecture.
 As a fundamental, long-lived computer systems interface, the design of or
 changes to an ISA demands careful consideration
-(cf.~\cite[Section 4]{Gueron:09}); this implies production of a concrete 
-ISE design is far from trivial.  
+(cf.~\cite[Section 4]{Gueron:09}); this implies that the production of a 
+concrete ISE design is far from trivial.  
 Such a design must deliver a demonstrable improvement wrt. the kernel in 
 question, {\em as well as} considering a (non-exhaustive) list of design 
 goals such as
@@ -130,6 +130,7 @@ goals such as
 \item maximal compatibility,
       e.g.,
       align with constraints in the base ISA, such as use of existing instruction formats,
+      and
 \item maximal       utility,
       i.e.,
       favour general- vs. {\em too} special-purpose functionality.
@@ -144,15 +145,14 @@ MultiMedia      eXtensions (MMX),
 Streaming SIMD  Extensions (SSE),
 and
 Advanced Vector Extensions (AVX)
-ISEs
-supports numerical kernels via vector (or SIMD) vs. scalar computation.  
+support numerical kernels via vector (or SIMD) vs. scalar computation.  
 Likewise, the
     cryptographic
 Advanced Encryption Standard New Instructions (AES-NI)~\cite{Gueron:09,DruGueKra:19}
 ISE
 supports AES: it significant improves latency and throughput
 (see, e.g.,~\cite{FazLopOli:18}),
-and represents a a pertinent case-study wrt. the guidelines above by
+and represents a pertinent case-study wrt. the guidelines above by
 a) adding just $6$ additional (vs. $1500+$ total) instructions,
 b) reducing overhead by, e.g., sharing the XMM register file,
 c) facilitating compatibility via the
