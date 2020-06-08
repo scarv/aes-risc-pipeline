@@ -5,14 +5,10 @@
 saes.v4.ks1       rd rs1 rcon : rd = v4.ks1(rs1, rcon)
 saes.v4.ks2       rd rs1 rs2  : rd = v4.ks2(rs1, rs2 )
 saes.v4.imix      rd rs1      : rd = v4.InvMix(rs1)
-saes.v4.encsm.lo  rd rs1 rs2  : rd = v4.Enc(rs1, rs2, mix=1, hi=0)
-saes.v4.encsm.hi  rd rs1 rs2  : rd = v4.Enc(rs1, rs2, mix=1, hi=1)
-saes.v4.encs.lo   rd rs1 rs2  : rd = v4.Enc(rs1, rs2, mix=0, hi=0)
-saes.v4.encs.hi   rd rs1 rs2  : rd = v4.Enc(rs1, rs2, mix=0, hi=1)
-saes.v4.decsm.lo  rd rs1 rs2  : rd = v4.Dec(rs1, rs2, mix=1, hi=0)
-saes.v4.decsm.hi  rd rs1 rs2  : rd = v4.Dec(rs1, rs2, mix=1, hi=1)
-saes.v4.decs.lo   rd rs1 rs2  : rd = v4.Dec(rs1, rs2, mix=0, hi=0)
-saes.v4.decs.hi   rd rs1 rs2  : rd = v4.Dec(rs1, rs2, mix=0, hi=1)
+saes.v4.encsm     rd rs1 rs2  : rd = v4.Enc(rs1, rs2, mix=1)
+saes.v4.encs      rd rs1 rs2  : rd = v4.Enc(rs1, rs2, mix=0)
+saes.v4.decsm     rd rs1 rs2  : rd = v4.Dec(rs1, rs2, mix=1)
+saes.v4.decs      rd rs1 rs2  : rd = v4.Dec(rs1, rs2, mix=0)
 \end{lstlisting}
 
 
@@ -31,15 +27,15 @@ v4.ks2(rs1, rs2):           // KeySchedule: XOR
     rd.32[0]  = rs1.32[1] ^ rs2.32[0]
     rd.32[1]  = rs1.32[1] ^ rs2.32[0] ^ rs2.32[1]
 
-v4.Enc(rs1, rs2, mix, hi): // SubBytes, ShiftRows, MixColumns
+v4.Enc(rs1, rs2, mix): // SubBytes, ShiftRows, MixColumns
     t1.128    = ShiftRows({rs2, rs1})
-    t2.64     = t1.64[1] if hi else t1.64[0]
+    t2.64     = t1.64[0]
     t3.8[i]   = SubByte(t2.8[i]) for i=0..7
     rd.32[i]  = MixColumn(t3.32[i]) if mix else t3.32[i] for i=0..1
 
 v4.Dec(rs1, rs2, mix, hi): // InvSubBytes, InvShiftRows, InvMixColumns
     t1.128    = InvShiftRows(rs2 || rs1)
-    t2.64     = t1.64[1] if hi else t1.64[0]
+    t2.64     = t1.64[0]
     t3.8[i]   = SBox(t2.8[i]) for i=0..7
     rd.32[i]  = InvMixColumn(t3.32[i]) if mix else t3.32[i] for i=0..1
 
