@@ -42,7 +42,7 @@ Following~\cite[Section 4.1]{DaeRij:02}, for example, the idea is to simply
    of each round function in a direct manner.
 Addition in $\F_{2^8}$ can be realised using a native XOR instruction; this
 native support is seldom afforded to multiplication and inversion, however.
-As a result, it is common to pre-compute the \ALG{S-box} and \AESFUNC{xtime} 
+As such, it is common to pre-compute the \ALG{S-box} and/or \AESFUNC{xtime} 
 functions:
 doing so demands pre-computation and storage of a
 $
@@ -67,7 +67,7 @@ idea is to
    by applying
    \AESFUNC{xtime}
    across a packed row in parallel,
-   a carefully organised scheme for evaluating
+   a carefully organised scheme for efficient evaluation of
    \AESFUNC{MixColumns}
    can be constructed.
 

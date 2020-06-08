@@ -19,9 +19,9 @@ $
 m = \ALG{Dec}( k, c = \ALG{Enc}( k, m ) ) .
 $
 That is, given a plaintext $m$ and cipher key $k$, \ALG{Enc} encrypts $m$ 
-under $k$; given the same key \ALG{Dec} will invert \ALG{Enc}, and so the
-same $m$ can be recovered from the associated ciphertext $c$.  An AES 
-parameter set~\cite[Figure 4]{FIPS:197}
+under $k$; given the same $k$, \ALG{Dec} will invert \ALG{Enc} and so the
+{\em same} $m$ can be recovered from the associated ciphertext $c$.  
+An AES parameter set~\cite[Figure 4]{FIPS:197}
 is a triple
 $
 \TUPLE{ Nk, Nb, Nr }
@@ -39,9 +39,13 @@ $Nr$ dictates the number of rounds.  The standard AES parameter sets are
 \end{array}
 \]
 noting that the number of bits in a plaintext (resp. ciphertext) block is
-fixed to $128$.  From here on, we focus wlog. on encryption using AES-128
-(other parameter sets are catered for naturally, and decryption with only
-minor differences) and so will use the term AES as a synonym for AES-128.
+fixed to 
+$
+8 \cdot Nb = 128 .
+$
+From here on, we focus wlog. on encryption using AES-128 (other parameter 
+sets are catered for naturally, and decryption with minor differences) so
+use the term AES and AES-128 synonymously.
 
 \paragraph{Design.}
 
@@ -60,7 +64,7 @@ Field
       addition, 
 multiplication, 
 and  
-     inversion 
+      division
 are denoted by
 $\AESADD$,
 $\AESMUL$,
