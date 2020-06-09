@@ -1,12 +1,34 @@
 % =============================================================================
 
-
+\begin{figure}
 \begin{lstlisting}[language=pseudo,style=block]
-saes.v1.encs rd, rs1 : rd.8[i] = SubBytes(rs1.8[i])                for i=0..3
-saes.v1.encm rd, rs1 : rd.8[i] = MixColumn(ROTL32(rs1.32, 8*i))    for i=0..3
-saes.v1.decs rd, rs1 : rd.8[i] = InvSubBytes(rs1.8[i])             for i=0..3
-saes.v1.decm rd, rs1 : rd.8[i] = InvMixColumn(ROTL32(rs1.32, 8*i)) for i=0..3
+saes.v1.encs rd, rs1 : v1.SubBytes(rd, rs1, fwd=1)
+saes.v1.decs rd, rs1 : v1.SubBytes(rd, rs1, fwd=0)
+saes.v1.encm rd, rs1 : v1.MixColumn(rd, rs1, fwd=1)
+saes.v1.decm rd, rs1 : v1.MixColumn(rd, rs1, fwd=0)
 \end{lstlisting}
+\caption{
+    Instruction mnemonics for variant 1.
+    See \REFSEC{sec:pseudo}, \REFFIG{fig:pseudo:v1} for detailed
+    descriptions of the pseudo-code functions.
+}
+\label{fig:mnemonics:v1}
+\end{figure}
 
+\REFFIG{fig:mnemonics:v1} shows the mnemonics and pseudo-code functions
+for variant 1.
+This variant is the simplest conceptual approach, and
+is also described in Section $4.2$ of \cite{TilGro:06}.
+The AES state is stored column-wise in $4$ $32$-bit words.
+Each instruction applies the forward/inverse AES SubBytes or
+MixColumn function to a single word.
+The instructions have only a single source and destination register,
+making them very compact in terms of encoding points.
+\REFFIG{fig:design:fu_block:v1} shows a block diagram of these
+instructions.
+
+The authors of \cite{TilGro:06} note that these instructions do not
+efficiently support the ShiftRows operation of AES.  We reproduce their
+optimisaiton addressing this in the variant $2$ instructions.
 
 % =============================================================================

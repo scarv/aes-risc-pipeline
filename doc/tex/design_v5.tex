@@ -1,5 +1,6 @@
 % =============================================================================
 
+\begin{figure}
 \begin{lstlisting}[language=pseudo,style=block]
 saes.v5.esrsub.lo rd, rs1, rs2 : rd = v5.SrSub(rs1, rs2, fwd=1, hi=0)
 saes.v5.esrsub.hi rd, rs1, rs2 : rd = v5.SrSub(rs1, rs2, fwd=1, hi=1)
@@ -9,29 +10,30 @@ saes.v5.emix      rd, rs1, rs2 : rd = v5.Mix(rs1, rs2, fwd=1)
 saes.v5.dmix      rd, rs1, rs2 : rd = v5.Mix(rs1, rs2, fwd=0)
 saes.v5.sub       rd, rs1      : rd = SubBytes(rs1.8[i])         for i=0..3
 \end{lstlisting}
+\caption{
+    Instruction mnemonics for variant 5.
+    See \REFSEC{sec:pseudo}, \REFFIG{fig:pseudo:v5} for detailed
+    descriptions of the pseudo-code functions.
+}
+\label{fig:mnemonics:v5}
+\end{figure}
 
-\begin{lstlisting}[language=pseudo,style=block]
-v5.SrSub(rs1, rs2, fwd, hi):
-  if(fwd):
-    if hi: tmp.32 = {rs1.8[3], rs2.8[0], rs2.8[1], rs2.8[2]}
-    else : tmp.32 = {rs2.8[3], rs1.8[1], rs1.8[0], rs1.8[2]}
-    tmp.8[i]      =    AESSBox[tmp.8[i]] for i=0..3
-  else:
-    if hi: tmp.32 = {rs2.8[3], rs2.8[0], rs1.8[1], rs2.8[2]}
-    else : tmp.32 = {rs1.8[3], rs2.8[1], rs1.8[0], rs1.8[2]}
-    tmp.8[i]      = InvAESSBox[tmp.8[i]] for i=0..3
-  if(hi): rd.32 = {tmp.8[2],tmp.8[3],tmp.8[0],tmp.8[1]}
-  else  : rd.32 = {tmp.8[1],tmp.8[3],tmp.8[0],tmp.8[2]}
+\REFFIG{fig:mnemonics:v5} shows the mnemonics and pseudo-code functions
+for variant 5.
+These instructions use a {\em tiled} approach to representing the
+AES state.
+Figure ({\bf TODO}) shows how the traditional column-wise representaiton
+of AES is changed such that each {\em quadrant} of the 16-byte state
+is kept in a single $32$-bit register.
 
-v5.mix(rs1, rs2, fwd):
-  col0.32 = {rs1.8[2], rs1.8[3], rs2.8[2], rs2.8[3]}
-  col1.32 = {rs1.8[0], rs1.8[1], rs2.8[0], rs2.8[1]}
-  n0.8    = MixColumn(       col0   , fwd)
-  n1.8    = MixColumn(ROTL32(col0,8), fwd)
-  n2.8    = MixColumn(       col1   , fwd)
-  n3.8    = MixColumn(ROTL32(col1,8), fwd)
-  rd.32 = {n2, n3, n0, n1}
-\end{lstlisting}
+We can now compute the next round state of any quadrant by sourcing
+only two other quadrants (registers) at a time, thus keeping within
+the $2$-read-$1$-write constraint.
 
+The state matrix and must be re-arranged before and after applying
+the round functions, which adds a small overhead to this variant.
+Similarly, the KeySchedule words must also be re-arranged to allow
+AddRoundKey to be performed efficiently.
+This can be done as a post-processing step in the key expansion.
 
 % =============================================================================

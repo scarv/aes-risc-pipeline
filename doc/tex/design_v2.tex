@@ -1,23 +1,33 @@
 % =============================================================================
 
-
+\begin{figure}
 \begin{lstlisting}[language=pseudo,style=block]
-saes.v2.sub.enc rd, rs1, rs2 : rd = v2.SubBytes(rs1, rs2, fwd=1)
-saes.v2.sub.dec rd, rs1, rs2 : rd = v2.SubBytes(rs1, rs2, fwd=0)
-saes.v2.mix.enc rd, rs1, rs2 : rd = v2.MixColumns(rs1, rs2, fwd=1)
-saes.v2.mix.dec rd, rs1, rs2 : rd = v2.MixColumns(rs1, rs2, fwd=0)
+saes.v2.encs rd, rs1, rs2 : v2.SubBytes(rd, rs1, rs2, fwd=1)
+saes.v2.decs rd, rs1, rs2 : v2.SubBytes(rd, rs1, rs2, fwd=0)
+saes.v2.encm rd, rs1, rs2 : v2.MixColumns(rd, rs1, rs2, fwd=1)
+saes.v2.decm rd, rs1, rs2 : v2.MixColumns(rd, rs1, rs2, fwd=0)
 \end{lstlisting}
+\caption{
+    Instruction mnemonics for variant 2.
+    See \REFSEC{sec:pseudo}, \REFFIG{fig:pseudo:v2} for detailed
+    descriptions of the pseudo-code functions.
+}
+\label{fig:mnemonics:v2}
+\end{figure}
 
-
-\begin{lstlisting}[language=pseudo,style=block]
-v2.SubBytes(rs1, rs2, fwd):
-  t1.32  = {rs1.8[0], rs2.8[1], rs1.8[2], rs2.8[3]}
-  rd.8[i]= SubBytes(t1.8[i], fwd)            for i=0..3
-
-v2.MixColumns(rs1, rs2, fwd):
-  t1.32  = {rs1.8[0], rs1.8[1], rs2.8[2], rs2.8[3]}
-  rd.8[i]= MixColumn(ROTL32(rs1.32, 8*i), fwd) for i=0..3
-\end{lstlisting}
-
+\REFFIG{fig:mnemonics:v2} shows the mnemonics and pseudo-code functions
+for variant 2.
+Here we reproduce the instructions proposed in Section $4.3$ of
+\cite{TilGro:06}.
+We continute to store the AES column-wise in $4$ $32$-bit words.
+By using two source registers however,
+the ShiftRows transformation can be implicitly performed by selecting
+appropriate bytes from each source word.
+\REFFIG{fig:design:fu_block:v2}
+shows this.
+Executing $4$  {\tt v2.encs}/{\tt v2.encm} instructions each hence
+performs the entire SubBytes, ShiftRows and MixColumns steps.
+The {\tt v2.encs} instruction can be used for the KeySchedule by
+making {\tt rs1} equal to {\tt rs2}.
 
 % =============================================================================

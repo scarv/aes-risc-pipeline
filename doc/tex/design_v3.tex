@@ -1,22 +1,41 @@
 % =============================================================================
 
-
+\begin{figure}
 \begin{lstlisting}[language=pseudo,style=block]
-saes.v3.encs  rd, rs1, rs2, bs : rd = v3.Proc(rs1, rs2, bs, fwd=1, mix=0)
-saes.v3.encsm rd, rs1, rs2, bs : rd = v3.Proc(rs1, rs2, bs, fwd=1, mix=1)
-saes.v3.decs  rd, rs1, rs2, bs : rd = v3.Proc(rs1, rs2, bs, fwd=0, mix=0)
-saes.v3.decsm rd, rs1, rs2, bs : rd = v3.Proc(rs1, rs2, bs, fwd=0, mix=1)
+saes.v3.encs  rd, rs1, rs2, bs : v3.Proc(rd, rs1, rs2, bs, fwd=1, mix=0)
+saes.v3.encsm rd, rs1, rs2, bs : v3.Proc(rd, rs1, rs2, bs, fwd=1, mix=1)
+saes.v3.decs  rd, rs1, rs2, bs : v3.Proc(rd, rs1, rs2, bs, fwd=0, mix=0)
+saes.v3.decsm rd, rs1, rs2, bs : v3.Proc(rd, rs1, rs2, bs, fwd=0, mix=1)
 \end{lstlisting}
+\caption{
+    Instruction mnemonics for variant 3.
+    See \REFSEC{sec:pseudo}, \REFFIG{fig:pseudo:v3} for detailed
+    descriptions of the pseudo-code functions.
+}
+\label{fig:mnemonics:v3}
+\end{figure}
 
+\REFFIG{fig:mnemonics:v3} shows the mnemonics and pseudo-code functions
+for variant 3.
+These instructions are based on
+\cite{BBFR:06} and \cite{Saarinen:20},
+which implement a TTables based representation of AES \cite{DaeRik:02}.
+The AES state is stored column-wise in $4$ $32$-bit words, and
+each instruction selects a single byte of {\tt rs2} to operate on
+using the $2$-bit {\tt bs} immediate.
+This byte is used as the input to a standard T-Table lookup operation,
+but the table entry is calculated in hardware.
+\REFFIG{fig:design:fu_block:v3} shows the datapath for these instructions.
+The result of the T-Table lookup is then xor'd with {\tt rs1} to
+accumulate the results of the round transformation.
 
-\begin{lstlisting}[language=pseudo,style=block]
-v3.Proc(rs1, rs2, bs, fwd, mix):
-  x     = SubByte(rs2.8[bs], fwd)
-  if   mix and  fwd: t1.32 = {GFMUL(x, 3),      x    ,      x   ,GFMUL(x, 2)}
-  elif mix and !fwd: t1.32 = {GFMUL(x,11),GFMUL(x,13),GFMUL(x,9),GFMUL(x,14)}
-  else             : t1.32 = {0, 0, 0, x}
-  rd.32 = ROTL32(t1.32, 8*bs) ^ rs1
-\end{lstlisting}
+These instructions require only one SBox implementation to be implemented,
+which is a clear advantage in resource constrained applications.
+While the previous designs could be implemented with a single SBox, they
+would not
 
+We also note that \cite{Saarinen:20} improves on \cite{BBFR:06}
+by using an extra source register and allowing the AddRoundKey step to be
+performed implicitly, thus saving four instructions per round.
 
 % =============================================================================

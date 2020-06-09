@@ -1,0 +1,146 @@
+
+%
+% V1
+% ------------------------------------------------------------
+
+\begin{figure}[!htb]
+\begin{lstlisting}[language=pseudo,style=block]
+v1.SubByte(rd, rs1, fwd):
+    rd.8[i] = AESSBox[rs1.8[i]] if fwd else AESInbSBox[rs1.8[i]] for i=0..3
+
+v1.MixColumn(rd, rs1, fwd)
+    for i=0..3:
+        tmp.32  = ROTL32(rs1.32, 8*i)
+        rd.8[i] = AESMixColumn(tmp.32) if fwd else AESInvMixColumn(tmp.32)
+\end{lstlisting}
+\caption{
+    Variant 1 psuedo code.
+    See section \REFSEC{sec:design:v1} for the instruction
+    descriptions.
+}
+\label{fig:pseudo:v1}
+\end{figure}
+
+%
+% V2
+% ------------------------------------------------------------
+
+\begin{figure}[!htb]
+\begin{lstlisting}[language=pseudo,style=block]
+v2.SubBytes(rd, rs1, rs2, fwd):
+  t1.32  = {rs1.8[0], rs2.8[1], rs1.8[2], rs2.8[3]}
+  rd.8[i]= AESSBox[t1.8[i]] if fwd else AESInvSBox[t1.8[i]] for i=0..3
+
+v2.MixColumns(rd, rs1, rs2, fwd):
+  t1.32  = {rs1.8[0], rs1.8[1], rs2.8[2], rs2.8[3]}
+  for i=0..3:
+      tmp.32 = ROTL32(rs1.32, 8*i)
+      rd.8[i]= AESMixColumn(tmp.32) if fwd else AESInvMixColumn(tmp.32)
+\end{lstlisting}
+\caption{
+    Variant 2 psuedo code.
+    See section \REFSEC{sec:design:v2} for the instruction
+    descriptions.
+}
+\label{fig:pseudo:v2}
+\end{figure}
+
+%
+% V3
+% ------------------------------------------------------------
+
+\begin{figure}[!htb]
+\begin{lstlisting}[language=pseudo,style=block]
+v3.Proc(rd, rs1, rs2, bs, fwd, mix):
+  x     = AESSBox[rs2.8[bs]] if fwd else AESInvSBox[rs2.8[bs]]
+  if   mix and  fwd: t1.32 = {GFMUL(x, 3),      x    ,      x   ,GFMUL(x, 2)}
+  elif mix and !fwd: t1.32 = {GFMUL(x,11),GFMUL(x,13),GFMUL(x,9),GFMUL(x,14)}
+  else             : t1.32 = {0, 0, 0, x}
+  rd.32 = ROTL32(t1.32, 8*bs) ^ rs1
+\end{lstlisting}
+\caption{
+    Variant 3 psuedo code.
+    See section \REFSEC{sec:design:v3} for the instruction
+    descriptions.
+}
+\label{fig:pseudo:v3}
+\end{figure}
+
+%
+% V4
+% ------------------------------------------------------------
+
+\begin{figure}[!htb]
+\begin{lstlisting}[language=pseudo,style=block]
+v4.ks1(rd, rs1, enc_rcon):     // KeySchedule: SubBytes, Rotate, Round Const
+    temp.32   = rs1.32[1]
+    rcon      = 0x0
+    if(enc_rcon != 0xA):
+        temp.32 = ROTR32(temp.32, 8)
+        rcon    = RoundConstants.8[enc_rcon]
+    temp.8[i] = AESSBox[temp.8[i]]  for i=0..3
+    temp.8[0] = temp.8[0] ^ rcon
+    rd.64     = {temp.32, temp.32}
+
+v4.ks2(rd, rs1, rs2):           // KeySchedule: XOR
+    rd.32[0]  = rs1.32[1] ^ rs2.32[0]
+    rd.32[1]  = rs1.32[1] ^ rs2.32[0] ^ rs2.32[1]
+
+v4.Enc(rd, rs1, rs2, mix): // SubBytes, ShiftRows, MixColumns
+    t1.128    = ShiftRows({rs2, rs1})
+    t2.64     = t1.64[0]
+    t3.8[i]   = AESSBox[t2.8[i]] for i=0..7
+    rd.32[i]  = AESMixColumn(t3.32[i]) if mix else t3.32[i] for i=0..1
+
+v4.Dec(rd, rs1, rs2, mix, hi): // InvSubBytes, InvShiftRows, InvMixColumns
+    t1.128    = InvShiftRows(rs2 || rs1)
+    t2.64     = t1.64[0]
+    t3.8[i]   = AESInvSBox[t2.8[i]] for i=0..7
+    rd.32[i]  = AESInvMixColumn(t3.32[i]) if mix else t3.32[i] for i=0..1
+
+v4.InvMix(rd, rs1):             // Inverse MixColumns
+    rd.32[i]  = AESInvMixColumn(rs1.32[i]) for i=0..1
+\end{lstlisting}
+\caption{
+    Variant 4 psuedo code.
+    See section \REFSEC{sec:design:v4} for the instruction
+    descriptions.
+}
+\label{fig:pseudo:v4}
+\end{figure}
+
+%
+% V5
+% ------------------------------------------------------------
+
+\begin{figure}[!htb]
+\begin{lstlisting}[language=pseudo,style=block]
+v5.SrSub(rs1, rs2, fwd, hi):
+  if(fwd):
+    if hi: tmp.32 = {rs1.8[3], rs2.8[0], rs2.8[1], rs2.8[2]}
+    else : tmp.32 = {rs2.8[3], rs1.8[1], rs1.8[0], rs1.8[2]}
+    tmp.8[i]      =    AESSBox[tmp.8[i]] for i=0..3
+  else:
+    if hi: tmp.32 = {rs2.8[3], rs2.8[0], rs1.8[1], rs2.8[2]}
+    else : tmp.32 = {rs1.8[3], rs2.8[1], rs1.8[0], rs1.8[2]}
+    tmp.8[i]      = InvAESSBox[tmp.8[i]] for i=0..3
+  if(hi): rd.32 = {tmp.8[2],tmp.8[3],tmp.8[0],tmp.8[1]}
+  else  : rd.32 = {tmp.8[1],tmp.8[3],tmp.8[0],tmp.8[2]}
+
+v5.mix(rs1, rs2, fwd):
+  col0.32 = {rs1.8[2], rs1.8[3], rs2.8[2], rs2.8[3]}
+  col1.32 = {rs1.8[0], rs1.8[1], rs2.8[0], rs2.8[1]}
+  n0.8    = AESMixColumn(       col0   ) if fwd else AESInvMixColumn(       col0   )
+  n1.8    = AESMixColumn(ROTL32(col0,8)) if fwd else AESInvMixColumn(ROTL32(col0,8))
+  n2.8    = AESMixColumn(       col1   ) if fwd else AESInvMixColumn(       col1   )
+  n3.8    = AESMixColumn(ROTL32(col1,8)) if fwd else AESInvMixColumn(ROTL32(col1,8))
+  rd.32 = {n2, n3, n0, n1}
+\end{lstlisting}
+\caption{
+    Variant 5 psuedo code.
+    See section \REFSEC{sec:design:v5} for the instruction
+    descriptions.
+}
+\label{fig:pseudo:v5}
+\end{figure}
+
