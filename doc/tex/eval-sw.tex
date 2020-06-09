@@ -19,23 +19,25 @@ or $2$ load-double instructions on the $64$-bit host cores.
 
 \begin{table}
 \centering
-\begin{tabular}{l|cc|cc|cc|cc}
- &
-\multicolumn{2}{c}{KeySchedule (Enc)} &
-\multicolumn{2}{c}{KeySchedule (Dec)} &
-\multicolumn{2}{c}{Encrypt} &
-\multicolumn{2}{c}{Decrypt}  \\
-Variant & .text & .data & .text & .data & .text & .data & .text & .data  \\ \hline
-Byte    &       &       &       &       &       &       &       &        \\
-TTable  &       &       &       &       &       &       &       &        \\
-V1      &       &       &       &       &       &       &       &        \\
-V2      &       &       &       &       &       &       &       &        \\
-V3      &       &       &       &       &       &       &       &        \\
-V4      &       &       &       &       &       &       &       &        \\
-V5      &       &       &       &       &       &       &       &        \\
+\begin{tabular}{l|c|c|c|c|c}
+Variant &
+KeySchedule Enc  &
+KeySchedule Dec  &
+Encrypt Block    &
+Decrypt Block    &
+.data   \\ \hline
+%Byte   & 312   &  -    &       &       & 522   \\
+TTable  & 154   &  174  & 804   & 804   & 5120  \\
+V1      & 68    &  -    & 424   & 424   & 10    \\
+V2      & 68    &  62*  & 234   & 238   & 10    \\
+V3      & 86    &  64   & 290   & 290   & 10    \\
+V4      & 168   &  100  & 268   & 268   &  0    \\
+V5      & 82+208&  -    & 266   & 278   & 10    \\
 \end{tabular}
 \caption{
-Static code size metrics for each variant.
+Static code size metrics for each variant, measured in bytes.
+These are measured targeting the {\tt rv32imc} base ISA for all variants,
+except for V4, which targets {\tt rv64imc}.
 }
 \label{tab:eval:sw:size}
 \end{table}
@@ -74,10 +76,10 @@ Static code size metrics for each variant.
 \begin{tabular}{l|cc|cc|cc|cc}
 & \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}KeySchedule\\ Encrypt\end{tabular}} 
 & \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}KeySchedule\\ Decrypt\end{tabular}}
-& \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}AES 128\\ Encrypt\end{tabular}}
-& \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}AES 128\\ Decrypt\end{tabular}} \\
+& \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}AES 128 Block\\ Encrypt\end{tabular}}
+& \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}AES 128 Block\\ Decrypt\end{tabular}} \\
 Variant     &  iret & cycles & iret & cycles & iret & cycles & iret & cycles \\ \hline
- Byte       & 926 & 3887 & 926 & 3886 & 4228 & 7061 & 7652 & 11587\\
+%Byte       & 926 & 3887 & 926 & 3886 & 4228 & 7061 & 7652 & 11587\\
  TTable     & 445 & 555 & 1726 & 2202 & 953 & 1078 & 953 & 1058   \\
 V1 (Latency)& 213 & 333 & 219 & 350 & 533 & 635 & 533 & 647\\
 V2 (Latency)& 213 & 344 & 350 & 656 & 236 & 343 & 237 & 343\\
@@ -85,11 +87,11 @@ V5 (Latency)& 347 & 489 & 353 & 506 & 248 & 346 & 248 & 349\\
 V1 (Size)   & 213 & 373 & 219 & 390 & 533 & 795 & 533 & 815  \\
 V2 (Size)   & 213 & 374 & 350 & 794 & 236 & 580 & 237 & 580  \\
 V3          & 233 & 352 & 683 & 1109 & 261 & 351 & 261 & 346 \\
-V4          &     &     &     &      &     &     &     &     \\
 V5 (Size)   & 347 & 519 & 353 & 536 & 248 & 598 & 248 & 590  
 \end{tabular}
 \caption{
 Performance results for the \CORE{2} core.
+Note the absence of variant 4, as it is designed for 64-bit targets only.
 }
 \label{tab:eval:sw:perf:scarv}
 \end{table}
@@ -99,11 +101,11 @@ Performance results for the \CORE{2} core.
 \begin{tabular}{l|cc|cc|cc|cc}
 & \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}KeySchedule\\ Encrypt\end{tabular}} 
 & \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}KeySchedule\\ Decrypt\end{tabular}}
-& \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}AES 128\\ Encrypt\end{tabular}}
-& \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}AES 128\\ Decrypt\end{tabular}} \\
+& \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}AES 128 Block\\ Encrypt\end{tabular}}
+& \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}AES 128 Block\\ Decrypt\end{tabular}} \\
 Variant     &  iret & cycles & iret & cycles & iret & cycles & iret & cycles\\
 \hline
- Byte       &       &        &      &        &      &        &       &      \\
+%Byte       &       &        &      &        &      &        &       &      \\
  TTable     &       &        &      &        &      &        &       &      \\
 V1 (Latency)&       &        &      &        &      &        &       &      \\
 V2 (Latency)&       &        &      &        &      &        &       &      \\
