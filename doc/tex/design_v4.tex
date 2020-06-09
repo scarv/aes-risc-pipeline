@@ -41,4 +41,12 @@ and
 $2$ {\tt saes.v4.encs[m]} instructions to compute SubBytes, ShiftRows
 and MixColumns.
 
+This proposal is similar to \cite{SPARC:16} in how it utilises
+a 64-bit datapath.
+It sources only two general purpose registers however (rather than $3$),
+making it less demanding to implement in the context of the wider
+system.
+The addition of an extra source register would save only $2$ instructions
+per cycle by allowing AddRoundKey to be included.
+
 % =============================================================================

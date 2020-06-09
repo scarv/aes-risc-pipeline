@@ -1,11 +1,44 @@
 
+\subsection{Selection Considerations}
+
+In selecting ISEs to evaluate, we were guided by the following
+considerations:
+
+\begin{itemize}
+\item The ISEs should fit with the RISC-V design principles.
+      Foremost, this meant that the instructions should adhere to
+      the $2$-read-$1$-write register file port constraints.
+\item With the exception of the Oracle SPARC
+      instructions (which read $3$ source registers),
+      all of the industry-specified ISEs described in
+      \REFSEC{sec:bg:aes_impl} operate on pre-existing vector
+      register files, which are much wider ($n\ge128$) than the
+      general purpose register file for RISC-V ($n\in\{32,64\}$).
+      Hence, we focus on evaluating ISEs suitable for {\em scalar}
+      (resp. {\em vector}) processors.
+      This is important for area-constrained embedded designs.
+      Further, RISC-V plans to support AES acceleration on top of
+      its planned vector extension, so scalar ISE support for
+      AES remains under-evaluated in the context of RISC-V.
+\item The ISEs should introduce no dedicted architectural state, or
+      rely on special micro-architectural state such as special
+      purpose caches or scratch-pad memory.
+      Again, this makes the ISEs more suitable for embedded
+      applications and supports the RISC-V design goal of being
+      a very scalable ISA.
+\item The ISEs must remove any chance of timing side-channel attacks
+      based on accesses to the SBox.
+\end{itemize}
+
+\subsection{Host Cores}
+
 The ISE designs were evaluated using two different {\em host} cores:
 
 \begin{itemize}
 \item
     The \CORE{2} core\footnote{%
   \ifbool{anonymous}{Details of this core have been anonymised to comply with the TCHES submission guidelines.}{\href{https://github.com/scarv/scarv-cpu}}
-}is a 5-stage, in-order scalar micro-controller.
+}   is a 5-stage, in-order scalar micro-controller.
     It implements the
     {\tt rv32imc}
     instruction set: 32-bit base ISA, with the Multiply and Compressed
