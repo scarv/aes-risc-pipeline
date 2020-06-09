@@ -1,5 +1,12 @@
 % =============================================================================
 
+Each ISE variant was implmented and evaluated on the host cores
+described in \REFSEC{sec:design}.
+The 32-bit designs (V1,V2,V3,V5) were implemented on both the
+\CORE{1} and \CORE{2} cores.
+The 64-bit design (v4) was only evaluated on the 64-bit configuration
+of the \CORE{2} core.
+
 Table \ref{tab:eval:hw}
 shows the hardware implementation costs, while
 Table \ref{tab:eval:sw}
@@ -27,7 +34,7 @@ path of the \CORE{2} core.
 
 % ------------------------------------------------------------
 
-\begin{table}[pt]
+\begin{table}
 \centering
 \begin{tabular}{lrrrr}
 Variant     & ISE Size & ISE LTP & \CORE{2} Size & Size Overhead \\ \hline
@@ -36,6 +43,7 @@ V1 (Latency)& 3472     & 19      & 41723         & $  \%$        \\
 V2 (Latency)& 3547     & 19      & 41199         & $  \%$        \\
 V5 (Latency)& 4121     & 22      & 42070         & $  \%$        \\
 V3          & 1157     & 30      & 38610         & $  \%$        \\
+V4          &          &         &               & $  \%$        \\
 V1 (Size)   & 2174     & 22      & 40161         & $  \%$        \\
 V2 (Size)   & 1381     & 21      & 38885         & $  \%$        \\
 V5 (Size)   & 1927     & 23      & 39251         & $  \%$        \\
@@ -48,19 +56,38 @@ Yosys\cite{yosys} tool suite.
 \label{tab:eval:hw}
 \end{table}
 
-\begin{table}[pt]
+
+To evaluate the software performance, we implemented AES 128, and
+measure the static code size, instruction execution counts and cycle
+counts of the Key Schedule, Encrypt and Decrypt functions.
+We also separate generation of the KeySchedule for Encrypt and Decrypt.
+
+\REFTAB{tab:eval:sw:size} shows the static code size for each
+function.
+We see that... ({\bf TODO}).
+
+\REFTAB{tab:eval:sw:perf} gives cycle and instruction counts for each
+variant.
+Each implementation uses word-aligned state, meaning the input blocks
+can be loaded with $4$ load-word instructions on $32$-bit host cores,
+or $2$ load-double instructions on the $64$-bit host cores.
+
+\begin{table}
 \centering
-\begin{tabular}{l|cc|cc}
+\begin{tabular}{l|cc|cc|cc|cc}
  &
-\multicolumn{2}{c}{Word Aligned State} &
-\multicolumn{2}{c}{Byte Aligned State}  \\
-Variant     & .text & .data & .text & .data  \\ \hline
-Byte        & 2581  & 522   & 2581  & 522    \\
-TTable      & 2785  & 10250 & 3337  & 10250  \\
-V1          & 1241  & 10    & 1793  & 10     \\
-V2          & 1011  & 10    & 1563  & 10     \\
-V3          & 1830  & 10    & 2382  & 10     \\
-V5          & 1225  & 10    & 1769  & 10     \\
+\multicolumn{2}{c}{Key Schedule (Enc)} &
+\multicolumn{2}{c}{Key Schedule (Dec)} &
+\multicolumn{2}{c}{Encrypt} &
+\multicolumn{2}{c}{Decrypt}  \\
+Variant & .text & .data & .text & .data & .text & .data & .text & .data  \\ \hline
+Byte    &       &       &       &       &       &       &       &        \\
+TTable  &       &       &       &       &       &       &       &        \\
+V1      &       &       &       &       &       &       &       &        \\
+V2      &       &       &       &       &       &       &       &        \\
+V3      &       &       &       &       &       &       &       &        \\
+V4      &       &       &       &       &       &       &       &        \\
+V5      &       &       &       &       &       &       &       &        \\
 \end{tabular}
 \caption{
 Static code size metrics for each variant.
@@ -68,31 +95,36 @@ Static code size metrics for each variant.
 \label{tab:eval:sw:size}
 \end{table}
 
-\begin{table}[pt]
-\centering
-\begin{tabular}{l|cc|cc|cc|cc}
-& \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}KeyExpand\\ Encrypt\end{tabular}} 
-& \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}KeyExpand\\ Decrypt\end{tabular}}
-& \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}AES 128\\ Encrypt\end{tabular}}
-& \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}AES 128\\ Decrypt\end{tabular}} \\
-Variant     &  iret & cycles & iret & cycles & iret & cycles & iret & cycles \\ \hline
- Byte       &  926  & 3887   & 926  & 3886   & 4228 & 7061   & 7652 & 11587 \\
- TTable     &  481  & 591    & 1762 & 2238   & 1013 & 1144   & 1013 & 1118  \\
-V1 (Latency)&  249  & 369    & 255  & 386    & 593  & 698    & 593  & 707   \\
-V2 (Latency)&  249  & 382    & 386  & 694    & 296  & 404    & 297  & 404   \\
-V3          &  269  & 388    & 719  & 1145   & 321  & 413    & 321  & 408   \\
-V5 (Latency)&  383  & 524    & 389  & 541    & 308  & 408    & 308  & 409   \\
-V1 (Size)   &  249  & 409    & 255  & 426    & 593  & 858    & 593  & 875   \\
-V2 (Size)   &  249  & 412    & 386  & 832    & 296  & 641    & 297  & 641   \\
-V5 (Size)   &  383  & 554    & 389  & 571    & 308  & 660    & 308  & 650   \\
-\end{tabular}
-\caption{
-Performance metrics for byte aligned state.
-}
-\label{tab:eval:sw:perf:byte}
-\end{table}
 
-\begin{table}[pt]
+%
+% Commented out this table because in the real world, you'd make sure that
+% your state is well aligned!
+%
+% \begin{table}[pt]
+% \centering
+% \begin{tabular}{l|cc|cc|cc|cc}
+% & \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}KeyExpand\\ Encrypt\end{tabular}} 
+% & \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}KeyExpand\\ Decrypt\end{tabular}}
+% & \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}AES 128\\ Encrypt\end{tabular}}
+% & \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}AES 128\\ Decrypt\end{tabular}} \\
+% Variant     &  iret & cycles & iret & cycles & iret & cycles & iret & cycles \\ \hline
+%  Byte       &  926  & 3887   & 926  & 3886   & 4228 & 7061   & 7652 & 11587 \\
+%  TTable     &  481  & 591    & 1762 & 2238   & 1013 & 1144   & 1013 & 1118  \\
+% V1 (Latency)&  249  & 369    & 255  & 386    & 593  & 698    & 593  & 707   \\
+% V2 (Latency)&  249  & 382    & 386  & 694    & 296  & 404    & 297  & 404   \\
+% V3          &  269  & 388    & 719  & 1145   & 321  & 413    & 321  & 408   \\
+% V5 (Latency)&  383  & 524    & 389  & 541    & 308  & 408    & 308  & 409   \\
+% V1 (Size)   &  249  & 409    & 255  & 426    & 593  & 858    & 593  & 875   \\
+% V2 (Size)   &  249  & 412    & 386  & 832    & 296  & 641    & 297  & 641   \\
+% V5 (Size)   &  383  & 554    & 389  & 571    & 308  & 660    & 308  & 650   \\
+% \end{tabular}
+% \caption{
+% Performance metrics for byte aligned state.
+% }
+% \label{tab:eval:sw:perf:byte}
+% \end{table}
+
+\begin{table}
 \centering
 \begin{tabular}{l|cc|cc|cc|cc}
 & \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}KeyExpand\\ Encrypt\end{tabular}} 
@@ -108,14 +140,17 @@ V5 (Latency)& 347 & 489 & 353 & 506 & 248 & 346 & 248 & 349\\
 V1 (Size)   & 213 & 373 & 219 & 390 & 533 & 795 & 533 & 815  \\
 V2 (Size)   & 213 & 374 & 350 & 794 & 236 & 580 & 237 & 580  \\
 V3          & 233 & 352 & 683 & 1109 & 261 & 351 & 261 & 346 \\
+V4          &     &     &     &      &     &     &     &     \\
 V5 (Size)   & 347 & 519 & 353 & 536 & 248 & 598 & 248 & 590  
 \end{tabular}
 \caption{
 Performance metrics for word aligned state.
 }
-\label{tab:eval:sw:perf:word}
+\label{tab:eval:sw:perf}
 \end{table}
 
 % ------------------------------------------------------------
+
+We can see from the tables that ({\bf TODO}).
 
 % =============================================================================
