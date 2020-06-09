@@ -36,4 +36,22 @@ Similarly, the KeySchedule words must also be re-arranged to allow
 AddRoundKey to be performed efficiently.
 This can be done as a post-processing step in the key expansion.
 
+A single encryption round for this variant requires
+$4$ load-word instructions to fetch the round key,
+$4$ {\tt xor} instructions to perform AddRoundKey,
+$4$ {\tt saes.v5.ersub.[lo|hi]} instructions to compute
+    SubBytes, ShiftRows for each quadrant
+and
+$4$ {\tt saes.v5.emix} instructions to compute MixColumns for each
+quadrant.
+This would make it equivilant to variant 2, however we must also
+account for the effort spent packing and un-packing the AES
+state into the quadrant representation.
+For the base ISA, this would take $12$ instructions to pack and
+$12$ instructions to unpack the state.
+We note that if the {\tt pack[h]} instructions from the draft
+Bitmanipulation extension were included, then packing and unpacking
+would be reduced to $4$ instructions.
+
 % =============================================================================
+

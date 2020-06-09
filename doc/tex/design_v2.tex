@@ -30,4 +30,18 @@ performs the entire SubBytes, ShiftRows and MixColumns steps.
 The {\tt v2.encs} instruction can be used for the KeySchedule by
 making {\tt rs1} equal to {\tt rs2}.
 
+A single encryption round using this variant requires $16$ instructions
+in total:
+$4$ {\tt saes.v2.sub.enc} instructions to perform SubBytes and part of
+shift rows,
+$4$ {\tt saes.v2.mix.enc} instructions to perform MixColumns and the
+remainder of shift rows,
+$4$ load-word instructions to fetch the round key
+and
+$4$ {\tt xor} instructions to add the round key.
+
+Because the final round does not include MixColumns, we must
+complete the final ShiftRows operation with an additonal
+$12$ {\tt and}/{\tt or} instructions.
+
 % =============================================================================

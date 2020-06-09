@@ -34,4 +34,11 @@ the nature of the ShiftRows step.
 The {\tt ks*} instructions allow the a new round key to be computed
 in $3$ instructions.
 
+A single encryption round using this variant requires
+$2$ load-double instructions to fetch the round key,
+$2$ {\tt xor} instructions to add the round key
+and
+$2$ {\tt saes.v4.encs[m]} instructions to compute SubBytes, ShiftRows
+and MixColumns.
+
 % =============================================================================

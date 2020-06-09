@@ -115,7 +115,7 @@ v4.InvMix(rd, rs1):             // Inverse MixColumns
 
 \begin{figure}[!htb]
 \begin{lstlisting}[language=pseudo,style=block]
-v5.SrSub(rs1, rs2, fwd, hi):
+v5.SrSub(rd, rs1, rs2, fwd, hi):
   if(fwd):
     if hi: tmp.32 = {rs1.8[3], rs2.8[0], rs2.8[1], rs2.8[2]}
     else : tmp.32 = {rs2.8[3], rs1.8[1], rs1.8[0], rs1.8[2]}
@@ -127,7 +127,7 @@ v5.SrSub(rs1, rs2, fwd, hi):
   if(hi): rd.32 = {tmp.8[2],tmp.8[3],tmp.8[0],tmp.8[1]}
   else  : rd.32 = {tmp.8[1],tmp.8[3],tmp.8[0],tmp.8[2]}
 
-v5.mix(rs1, rs2, fwd):
+v5.mix(rd, rs1, rs2, fwd):
   col0.32 = {rs1.8[2], rs1.8[3], rs2.8[2], rs2.8[3]}
   col1.32 = {rs1.8[0], rs1.8[1], rs2.8[0], rs2.8[1]}
   n0.8    = AESMixColumn(       col0   ) if fwd else AESInvMixColumn(       col0   )

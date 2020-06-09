@@ -38,4 +38,9 @@ We also note that \cite{Saarinen:20} improves on \cite{BBFR:06}
 by using an extra source register and allowing the AddRoundKey step to be
 performed implicitly, thus saving four instructions per round.
 
+A single encryption round using this variant requires
+$4$ load-word instructions to fetch the round key and
+$16$ {\tt saes.v3.encs[m]} instructions to perform AddRoundKey,
+SubBytes, ShiftRows and (optionally) MixColumns.
+
 % =============================================================================
