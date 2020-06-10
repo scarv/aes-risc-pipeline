@@ -107,16 +107,16 @@ Note the absence of variant 4, as it is designed for 64-bit targets only.
 \\
 Variant     &  iret & cycles & iret & cycles & iret & cycles & iret & cycles\\
 \hline
-%Byte       &       &        &      &        &      &        &       &      \\
- T-Table     &       &        &      &        &      &        &       &      \\
-V1 (Latency)&       &        &      &        &      &        &       &      \\
-V2 (Latency)&       &        &      &        &      &        &       &      \\
-V5 (Latency)&       &        &      &        &      &        &       &      \\
-V1 (Size)   &       &        &      &        &      &        &       &      \\
-V2 (Size)   &       &        &      &        &      &        &       &      \\
-V3          &       &        &      &        &      &        &       &      \\
-V4          &       &        &      &        &      &        &       &      \\
-V5 (Size)   &       &        &      &        &      &        &       &     
+%Byte       &       &        &      &        &      &        &      &      \\
+T-Table     & 948   &  1143  & 949  &  1025  & 444  & 478    & 1726 & 1977 \\
+V1 (Latency)& 528   &  685   & 529  &  680   & 212  & 341    & 214  & 290  \\
+V2 (Latency)& 231   &  359   & 233  &  368   & 212  & 315    & 350  & 508  \\
+V5 (Latency)& 243   &  414   & 244  &  319   & 346  & 427    & 348  & 424  \\
+V1 (Size)   & 528   &  804   & 529  &  744   & 212  & 357    & 214  & 335  \\
+V2 (Size)   & 231   &  511   & 233  &  520   & 212  & 345    & 350  & 646  \\
+V3          & 253   &  895   & 254  &  873   & 233  & 470    & 674  & 2425 \\
+V4          & TODO  &        &      &        &      &        &      &      \\
+V5 (Size)   & 243   &  585   & 244  &  543   & 346  & 504    & 348  & 454  \\
 \end{tabular}
 \caption{
 Performance results for the \CORE{1} core.
