@@ -1,8 +1,81 @@
 
-Many embedded implementations of AES include the possibility of
-power side-channel in their threat model.
-Having identified AES version $3$ detailed in
-\REFSEC{sec:design:v3} as the best candidate, we now show a possible
+Many embedded implementations include power side-channels in their threat
+model.
+Having identified ISE variant $3$ detailed in
+\REFSEC{sec:design:v3} as a strong candidate for embedded $32$-bit
+RISC-V cores, we now show a possible
 way of extending the ISE further to add power side-channel resistance
 with minimal area and performance overheads.
+We aim for $1$'st order side-channel security.
 
+As described in \cite{TilGro:07}, there are several broad approaches
+to adding power side-channel security to ISEs which we summarise here:
+
+1) The data path can be implemeted in a secure logic style, which always
+consumes energy at the same rate, regardless of the values being computed on.
+This comes with a significant overhead in terms of silicon area and
+gate-level performance.
+It also requires that secret values only be stored in secure logic
+elements.
+This can be undermined when loading keys from memory, since they must
+pass through any register stages in the memory hierarchy, which are
+unlikely to be implemented in a secure logic style.
+
+2) Random pre-charging involves sandwiching every instruction which
+manipulates a secret value with instructions which operate on random values.
+As the authors of \cite{TilGro:07} note, it provides only a modest
+improvemnt in security, and comes with a $100\%$ performance overhead;
+since every secret manipulating instruction must be accompanied by
+a random-precharging partner.
+
+3) The authors also describe a small ``secure zone'' within the processor,
+implemented in a secure logic style and responsible for
+mask storage, generation and all computations on secret data.
+The aim is to keep the secure zone as small and separate from the main
+processor datapath as possible.
+
+\subsection{Design Overview}
+
+We extend ISE variant $3$ to support 1'st order masking.
+To this end, the secret key is represented as two boolean masked shares.
+An implementation of the AES block encrypt/decrypt function requires
+eight registers: four for the current round state, four to load the
+next round key into and then accumulate the next round state.
+Doubling this requirement to store shares of each secret variable
+in the General Purpose Register (GPR) file is un-reasonable.
+It would require drastic modifications to the instruction definitions and
+reigster file to read four registers (two sources, of two shares each) and
+write two registers.
+
+Instead, we define a new, $8$-element ``Mask Register File'' (MRF).
+Each mask register $M_i$ is $32$-bits wide, and stores the mask for
+one of the GPRs.
+We use a fixed mapping between GPRs and mask registers;
+not all GPRs have a corresponding mask register.
+({\bf TODO:} define this mapping. E.g. \{a0..a3,t0..t4\} onto MRF \{0..7\}).
+
+Share $0$ of each secret value is loaded into the GPRs.
+We define a new Load Mask instruction {\tt lm rd, imm(rs1)} which
+loads {\em the mask for GPR {\tt rd}} from memory into the MRF.
+A corresponding Store Mask instruction {\tt sm rs2, imm(rs1)} writes
+the mask correspoding to GPR {\tt rs2} to memory.
+We reqire that the secret values be stored in shared form in memory
+(rather than splitting them into shares upon being loaded)
+to extend the SCA prottection boundary outside the CPU.
+Otherwise, the hamming weight of un-masked secret values would be
+leaked by memory-hierarchy registers outside the CPU.
+
+When an ISE instruction is executed such that any of its GPR source
+registers also map onto an MRF register, both GPR and MRF are
+read simultaneously and fed to the AES functional unit.
+If any GPR source does not map to an MRF register, we assume that
+operand is un-masked and represent the other share as $0$.
+
+Within the AES FU the instruction result is computed entired in it's
+masked representation.
+
+The result is re-masked using a randomness source.
+
+Share 0 goes to GPR, Share 1 to the MRF.
+
+If destination is not a GPR, result is written back un-masked.
