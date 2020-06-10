@@ -11,7 +11,7 @@ We aim for $1$'st order side-channel security.
 As described in \cite{TilGro:07}, there are several broad approaches
 to adding power side-channel security to ISEs which we summarise here:
 
-1) The data path can be implemeted in a secure logic style, which always
+1) The data path can be implemented in a secure logic style, which always
 consumes energy at the same rate, regardless of the values being computed on.
 This comes with a significant overhead in terms of silicon area and
 gate-level performance.
@@ -24,15 +24,15 @@ unlikely to be implemented in a secure logic style.
 2) Random pre-charging involves sandwiching every instruction which
 manipulates a secret value with instructions which operate on random values.
 As the authors of \cite{TilGro:07} note, it provides only a modest
-improvemnt in security, and comes with a $100\%$ performance overhead;
+improvement in security, and comes with a $100\%$ performance overhead;
 since every secret manipulating instruction must be accompanied by
-a random-precharging partner.
+a random-pre-charging partner.
 
 3) The authors also describe a small ``secure zone'' within the processor,
 implemented in a secure logic style and responsible for
 mask storage, generation and all computations on secret data.
 The aim is to keep the secure zone as small and separate from the main
-processor datapath as possible.
+processor data-path as possible.
 
 \subsection{Design Overview}
 
@@ -44,7 +44,7 @@ next round key into and then accumulate the next round state.
 Doubling this requirement to store shares of each secret variable
 in the General Purpose Register (GPR) file is un-reasonable.
 It would require drastic modifications to the instruction definitions and
-reigster file to read four registers (two sources, of two shares each) and
+register file to read four registers (two sources, of two shares each) and
 write two registers.
 
 Instead, we define a new, $8$-element ``Mask Register File'' (MRF).
@@ -58,10 +58,10 @@ Share $0$ of each secret value is loaded into the GPRs.
 We define a new Load Mask instruction {\tt lm rd, imm(rs1)} which
 loads {\em the mask for GPR {\tt rd}} from memory into the MRF.
 A corresponding Store Mask instruction {\tt sm rs2, imm(rs1)} writes
-the mask correspoding to GPR {\tt rs2} to memory.
-We reqire that the secret values be stored in shared form in memory
+the mask corresponding to GPR {\tt rs2} to memory.
+We require that the secret values be stored in shared form in memory
 (rather than splitting them into shares upon being loaded)
-to extend the SCA prottection boundary outside the CPU.
+to extend the SCA protection boundary outside the CPU.
 Otherwise, the hamming weight of un-masked secret values would be
 leaked by memory-hierarchy registers outside the CPU.
 
@@ -71,7 +71,7 @@ read simultaneously and fed to the AES functional unit.
 If any GPR source does not map to an MRF register, we assume that
 operand is un-masked and represent the other share as $0$.
 
-Within the AES FU the instruction result is computed entired in it's
+Within the AES FU the instruction result is computed entirely in it's
 masked representation.
 
 The result is re-masked using a randomness source.

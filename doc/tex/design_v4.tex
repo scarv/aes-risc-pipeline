@@ -21,7 +21,7 @@ saes.v4.decs      rd rs1 rs2  : v4.Dec(rd, rs1, rs2, mix=0)
 \REFFIG{fig:mnemonics:v4} shows the mnemonics and pseudo-code functions
 for variant 4.
 These instructions are designed to take advantage of a 64-bit
-datapath.
+data-path.
 The AES State is stored in $2$ $64$-bit words: column $0$ in the
 lower word of {\tt rs1}, and column $3$ in the upper word of {\tt rs2}.
 Hence, the entire AES state can be passed to an instruction, but only
@@ -42,7 +42,7 @@ $2$ {\tt saes.v4.encs[m]} instructions to compute SubBytes, ShiftRows
 and MixColumns.
 
 This proposal is similar to \cite{SPARC:16} in how it utilises
-a 64-bit datapath.
+a 64-bit data-path.
 It sources only two general purpose registers however (rather than $3$),
 making it less demanding to implement in the context of the wider
 system.

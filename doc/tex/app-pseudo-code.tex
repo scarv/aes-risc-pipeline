@@ -14,7 +14,7 @@ v1.MixColumn(rd, rs1, fwd)
         rd.8[i] = AESMixColumn(tmp.32) if fwd else AESInvMixColumn(tmp.32)
 \end{lstlisting}
 \caption{
-    Variant 1 psuedo code.
+    Variant 1 pseudo code.
     See section \REFSEC{sec:design:v1} for the instruction
     descriptions.
 }
@@ -38,7 +38,7 @@ v2.MixColumns(rd, rs1, rs2, fwd):
       rd.8[i]= AESMixColumn(tmp.32) if fwd else AESInvMixColumn(tmp.32)
 \end{lstlisting}
 \caption{
-    Variant 2 psuedo code.
+    Variant 2 pseudo code.
     See section \REFSEC{sec:design:v2} for the instruction
     descriptions.
 }
@@ -59,7 +59,7 @@ v3.Proc(rd, rs1, rs2, bs, fwd, mix):
   rd.32 = ROTL32(t1.32, 8*bs) ^ rs1
 \end{lstlisting}
 \caption{
-    Variant 3 psuedo code.
+    Variant 3 pseudo code.
     See section \REFSEC{sec:design:v3} for the instruction
     descriptions.
 }
@@ -102,7 +102,7 @@ v4.InvMix(rd, rs1):             // Inverse MixColumns
     rd.32[i]  = AESInvMixColumn(rs1.32[i]) for i=0..1
 \end{lstlisting}
 \caption{
-    Variant 4 psuedo code.
+    Variant 4 pseudo code.
     See section \REFSEC{sec:design:v4} for the instruction
     descriptions.
 }
@@ -137,7 +137,7 @@ v5.mix(rd, rs1, rs2, fwd):
   rd.32 = {n2, n3, n0, n1}
 \end{lstlisting}
 \caption{
-    Variant 5 psuedo code.
+    Variant 5 pseudo code.
     See section \REFSEC{sec:design:v5} for the instruction
     descriptions.
 }

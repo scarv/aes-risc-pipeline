@@ -34,7 +34,7 @@ The ISE designs were evaluated using two different {\em host} cores:
 \end{itemize}
 
 Two modifications were made to the host cores to support the ISE variants:
-1) The Instruction Decode module was modifed to support identification and
+1) The Instruction Decode module was modified to support identification and
    operand selection for the new instructions. 
 2) A new ``AES" functional unit (AES FU) was added to perform the instruction
    computations.
@@ -43,10 +43,10 @@ pipeline.
 For the \CORE{1}, we used the Rocket Custom Coprocessor (RoCC)
 interface.
 Because all of the ISE variants read at most two,
-and write one general purpose register, no new structural datapaths
+and write one general purpose register, no new structural data-paths
 were needed.
 This was an important design consideration, as RISC-V tries to
-aggressivley follow this pattern.
+aggressively follow this pattern.
 
 All of the AES variants share the same sets of inputs, so the interface
 to the AES FU is kept constant for every variant.

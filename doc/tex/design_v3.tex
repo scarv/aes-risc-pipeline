@@ -19,13 +19,13 @@ saes.v3.decsm rd, rs1, rs2, bs : v3.Proc(rd, rs1, rs2, bs, fwd=0, mix=1)
 for variant 3.
 These instructions are based on
 \cite{NadIkeKur:04,BBFR:06} and \cite{Saarinen:20},
-which implement a TTables based representation of AES \cite{DaeRij:02}.
+which implement a T-Tables based representation of AES \cite{DaeRij:02}.
 The AES state is stored column-wise in $4$ $32$-bit words, and
 each instruction selects a single byte of {\tt rs2} to operate on
 using the $2$-bit {\tt bs} immediate.
 This byte is used as the input to a standard T-Table lookup operation,
 but the table entry is calculated in hardware.
-\REFFIG{fig:design:fu_block:v3} shows the datapath for these instructions.
+\REFFIG{fig:design:fu_block:v3} shows the data-path for these instructions.
 The result of the T-Table lookup is then xor'd with {\tt rs1} to
 accumulate the results of the round transformation.
 

@@ -27,7 +27,7 @@ Encrypt Block    &
 Decrypt Block    &
 .data   \\ \hline
 %Byte   & 312   &  -    &       &       & 522   \\
-TTable  & 154   &  174  & 804   & 804   & 5120  \\
+T-Table  & 154   &  174  & 804   & 804   & 5120  \\
 V1      & 68    &  -    & 424   & 424   & 10    \\
 V2      & 68    &  62*  & 234   & 238   & 10    \\
 V3      & 86    &  64   & 290   & 290   & 10    \\
@@ -56,7 +56,7 @@ except for V4, which targets {\tt rv64imc}.
 % & \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}AES 128\\ Decrypt\end{tabular}} \\
 % Variant     &  iret & cycles & iret & cycles & iret & cycles & iret & cycles \\ \hline
 %  Byte       &  926  & 3887   & 926  & 3886   & 4228 & 7061   & 7652 & 11587 \\
-%  TTable     &  481  & 591    & 1762 & 2238   & 1013 & 1144   & 1013 & 1118  \\
+%  T-Table     &  481  & 591    & 1762 & 2238   & 1013 & 1144   & 1013 & 1118  \\
 % V1 (Latency)&  249  & 369    & 255  & 386    & 593  & 698    & 593  & 707   \\
 % V2 (Latency)&  249  & 382    & 386  & 694    & 296  & 404    & 297  & 404   \\
 % V3          &  269  & 388    & 719  & 1145   & 321  & 413    & 321  & 408   \\
@@ -81,7 +81,7 @@ except for V4, which targets {\tt rv64imc}.
 \\
 Variant     &  iret & cycles & iret & cycles & iret & cycles & iret & cycles \\ \hline
 %Byte       & 4228 & 7061 & 7652 & 11587& 926 & 3887 & 926 & 3886   \\
- TTable     & 953  & 1078 & 953  & 1058 & 445 & 555 & 1726 & 2202    \\
+ T-Table     & 953  & 1078 & 953  & 1058 & 445 & 555 & 1726 & 2202    \\
 V1 (Latency)& 533  & 635  & 533  & 647  & 213 & 333 & 219  & 350     \\
 V2 (Latency)& 236  & 343  & 237  & 343  & 213 & 344 & 350  & 656     \\
 V5 (Latency)& 248  & 346  & 248  & 349  & 347 & 489 & 353  & 506     \\
@@ -108,7 +108,7 @@ Note the absence of variant 4, as it is designed for 64-bit targets only.
 Variant     &  iret & cycles & iret & cycles & iret & cycles & iret & cycles\\
 \hline
 %Byte       &       &        &      &        &      &        &       &      \\
- TTable     &       &        &      &        &      &        &       &      \\
+ T-Table     &       &        &      &        &      &        &       &      \\
 V1 (Latency)&       &        &      &        &      &        &       &      \\
 V2 (Latency)&       &        &      &        &      &        &       &      \\
 V5 (Latency)&       &        &      &        &      &        &       &      \\

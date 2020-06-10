@@ -22,7 +22,7 @@ saes.v5.sub       rd, rs1      : rd = SubBytes(rs1.8[i])         for i=0..3
 for variant 5.
 These instructions use a {\em tiled} approach to representing the
 AES state.
-Figure ({\bf TODO}) shows how the traditional column-wise representaiton
+Figure ({\bf TODO}) shows how the traditional column-wise representation
 of AES is changed such that each {\em quadrant} of the 16-byte state
 is kept in a single $32$-bit register.
 
@@ -44,13 +44,13 @@ $4$ {\tt saes.v5.ersub.[lo|hi]} instructions to compute
 and
 $4$ {\tt saes.v5.emix} instructions to compute MixColumns for each
 quadrant.
-This would make it equivilant to variant 2, however we must also
+This would make it equivalent to variant 2, however we must also
 account for the effort spent packing and un-packing the AES
 state into the quadrant representation.
 For the base ISA, this would take $12$ instructions to pack and
 $12$ instructions to unpack the state.
 We note that if the {\tt pack[h]} instructions from the draft
-Bitmanipulation extension were included, then packing and unpacking
+Bit-manipulation extension were included, then packing and unpacking
 would be reduced to $4$ instructions.
 
 % =============================================================================
