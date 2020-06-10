@@ -19,7 +19,7 @@ int main(int argc, char ** argv) {
     printf("import sys, binascii, Crypto.Cipher.AES as AES\n");
     printf("benchmark_name = 'aes'\n");
 
-    const int num_tests = 2;
+    const int num_tests = 10;
 
     uint64_t kse_icount, kse_cycles;
     uint64_t ksd_icount, ksd_cycles;
@@ -105,9 +105,13 @@ int main(int argc, char ** argv) {
         printf("else:\n");
         printf("    sys.stdout.write(\"aes Test passed.\")\n");
         printf("    sys.stdout.write(\"enc: %%d, \" %% (enc_icount))\n");
+        printf("    sys.stdout.write(\"     %%d, \" %% (enc_cycles))\n");
         printf("    sys.stdout.write(\"dec: %%d, \" %% (dec_icount))\n");
+        printf("    sys.stdout.write(\"     %%d, \" %% (dec_cycles))\n");
         printf("    sys.stdout.write(\"kse: %%d, \" %% (kse_icount))\n");
+        printf("    sys.stdout.write(\"     %%d, \" %% (kse_cycles))\n");
         printf("    sys.stdout.write(\"ksd: %%d, \" %% (ksd_icount))\n");
+        printf("    sys.stdout.write(\"     %%d, \" %% (ksd_cycles))\n");
         printf("    print(\"\")\n");
 
         // New random inputs
