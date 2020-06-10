@@ -56,9 +56,15 @@ not all GPRs have a corresponding mask register.
 
 Share $0$ of each secret value is loaded into the GPRs.
 We define a new Load Mask instruction {\tt lm rd, imm(rs1)} which
-loads {\em the mask for GPR {\tt rd}} from memory into the MRF.
+loads {\em the mask for GPR {\tt rd}} from memory into the corresponding
+MRF entry.
 A corresponding Store Mask instruction {\tt sm rs2, imm(rs1)} writes
 the mask corresponding to GPR {\tt rs2} to memory.
+The {\tt sm} instruction is only used for context switches, and
+destructivley reads the MRF register value to prevent it being
+leaked to other applications running on the same core\footnote{
+    In this case, destructive could mean set to zero (which could
+    leak the hamming weight of the mask) or randomising it's value.}.
 We require that the secret values be stored in shared form in memory
 (rather than splitting them into shares upon being loaded)
 to extend the SCA protection boundary outside the CPU.
@@ -73,9 +79,36 @@ operand is un-masked and represent the other share as $0$.
 
 Within the AES FU the instruction result is computed entirely in it's
 masked representation.
+The result shares are then re-masked before being written back to the
+GPRs and MRF.
+This is nessesary, because the ISE variant $3$ instructions are designed
+such that {\tt rs1=rd} for all use cases.
+Without re-masking, overwriting a source with the result could cause 
+$1$'st order leakage.
 
-The result is re-masked using a randomness source.
-
-Share 0 goes to GPR, Share 1 to the MRF.
-
+If the destination register is in the set which has a corresponding
+mask register, share $0$ is stored in the GPRs, share $1$ in the MRF.
 If destination is not a GPR, result is written back un-masked.
+This means that in the final encrypt/decrypt round, we can obtain
+the un-masked results without having to store the shares to memory,
+load them back and un-mask them.
+
+\subsection{Implementation}
+
+We use the \CORE{2} core as the basis for our side-channel secure
+implementation of ISE variant $3$.
+\REFFIG{fig:sca:uarch} shows a block diagram of the modifications
+made to the core, and which datapaths carry masked data.
+
+\begin{figure}
+\caption{Block diagram of the modifications to the \CORE{2} core,
+supporting an extended version of ISE variant $3$ for side-channel
+security.}
+\label{fig:sca:uarch}
+\end{figure}
+
+
+\subsection{Evaluation}
+
+Lorem ipsum doler set amet...
+
