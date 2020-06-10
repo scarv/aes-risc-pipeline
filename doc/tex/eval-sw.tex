@@ -74,20 +74,21 @@ except for V4, which targets {\tt rv64imc}.
 \begin{table}
 \centering
 \begin{tabular}{l|cc|cc|cc|cc}
+& \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}AES 128 Block\\ Encrypt\end{tabular}}
+& \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}AES 128 Block\\ Decrypt\end{tabular}}
 & \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}KeySchedule\\ Encrypt\end{tabular}} 
 & \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}KeySchedule\\ Decrypt\end{tabular}}
-& \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}AES 128 Block\\ Encrypt\end{tabular}}
-& \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}AES 128 Block\\ Decrypt\end{tabular}} \\
+\\
 Variant     &  iret & cycles & iret & cycles & iret & cycles & iret & cycles \\ \hline
-%Byte       & 926 & 3887 & 926 & 3886 & 4228 & 7061 & 7652 & 11587\\
- TTable     & 445 & 555 & 1726 & 2202 & 953 & 1078 & 953 & 1058   \\
-V1 (Latency)& 213 & 333 & 219 & 350 & 533 & 635 & 533 & 647\\
-V2 (Latency)& 213 & 344 & 350 & 656 & 236 & 343 & 237 & 343\\
-V5 (Latency)& 347 & 489 & 353 & 506 & 248 & 346 & 248 & 349\\
-V1 (Size)   & 213 & 373 & 219 & 390 & 533 & 795 & 533 & 815  \\
-V2 (Size)   & 213 & 374 & 350 & 794 & 236 & 580 & 237 & 580  \\
-V3          & 233 & 352 & 683 & 1109 & 261 & 351 & 261 & 346 \\
-V5 (Size)   & 347 & 519 & 353 & 536 & 248 & 598 & 248 & 590  
+%Byte       & 4228 & 7061 & 7652 & 11587& 926 & 3887 & 926 & 3886   \\
+ TTable     & 953  & 1078 & 953  & 1058 & 445 & 555 & 1726 & 2202    \\
+V1 (Latency)& 533  & 635  & 533  & 647  & 213 & 333 & 219  & 350     \\
+V2 (Latency)& 236  & 343  & 237  & 343  & 213 & 344 & 350  & 656     \\
+V5 (Latency)& 248  & 346  & 248  & 349  & 347 & 489 & 353  & 506     \\
+V1 (Size)   & 533  & 795  & 533  & 815  & 213 & 373 & 219  & 390     \\
+V2 (Size)   & 236  & 580  & 237  & 580  & 213 & 374 & 350  & 794     \\
+V3          & 261  & 351  & 261  & 346  & 233 & 352 & 683  & 1109    \\
+V5 (Size)   & 248  & 598  & 248  & 590  & 347 & 519 & 353  & 536  
 \end{tabular}
 \caption{
 Performance results for the \CORE{2} core.
@@ -99,10 +100,11 @@ Note the absence of variant 4, as it is designed for 64-bit targets only.
 \begin{table}
 \centering
 \begin{tabular}{l|cc|cc|cc|cc}
+& \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}AES 128 Block\\ Encrypt\end{tabular}}
+& \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}AES 128 Block\\ Decrypt\end{tabular}}
 & \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}KeySchedule\\ Encrypt\end{tabular}} 
 & \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}KeySchedule\\ Decrypt\end{tabular}}
-& \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}AES 128 Block\\ Encrypt\end{tabular}}
-& \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}AES 128 Block\\ Decrypt\end{tabular}} \\
+\\
 Variant     &  iret & cycles & iret & cycles & iret & cycles & iret & cycles\\
 \hline
 %Byte       &       &        &      &        &      &        &       &      \\
