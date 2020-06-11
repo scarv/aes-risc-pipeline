@@ -11,13 +11,41 @@ is used as a performance baseline.
 
 \REFTAB{tab:eval:sw:size} shows the static code size for each
 function.
-We see that... ({\bf TODO}).
+For the Encrypt and Decrypt functions, all versions are very similar
+in terms of code size.
+The 32-bit variants (V1,V2,V3,V5) all use loop-based implementations.
+V1, V2, V5 implement one round per loop iteration. V3 implements two
+rounds per loop iteration to avoid needless register move operations.
+The 64-bit variant (V4) uses a completely un-rolled implementation.
 
-\REFTAB{tab:eval:sw:perf} gives cycle and instruction counts for each
-variant.
+\REFTAB{tab:eval:sw:perf:scarv}
+and
+\REFTAB{tab:eval:sw:perf:rocket}
+give cycle and instruction counts for each
+variant under the \CORE{2} and \CORE{1} cores respectively.
 Each implementation uses word-aligned state, meaning the input blocks
 can be loaded with $4$ load-word instructions on $32$-bit host cores,
 or $2$ load-double instructions on the $64$-bit host cores.
+For the Encrypt/Decrypt columns, we show instruction execution counts
+and processor clock cycle measurements for a single block
+encryption of AES-128.
+Likewise, the KeySchedule columns are for a single AES-128 KeySchedule
+operation.
+
+% ------------------------------------------------------------
+
+We can see from the tables that ({\bf TODO}).
+
+% ------------------------------------------------------------
+
+{\bf TODO:} Table of per round instruction counts, split by
+compute / load / store / loop management?
+
+% ------------------------------------------------------------
+
+%
+% Static Code Size Results
+%
 
 \begin{table}
 \centering
@@ -28,22 +56,33 @@ KeySchedule Dec  &
 Encrypt Block    &
 Decrypt Block    &
 .data   \\ \hline
-%Byte   & 312   &  -    &       &       & 522   \\
-T-table  & 154   &  174  & 804   & 804   & 5120  \\
-V1      & 68    &  -    & 424   & 424   & 10    \\
-V2      & 68    &  62*  & 234   & 238   & 10    \\
-V3      & 86    &  64   & 290   & 290   & 10    \\
-V4      & 168   &  100  & 268   & 268   &  0    \\
-V5      & 82+208&  -    & 266   & 278   & 10    \\
+%Byte   & 312     &  -        &       &       & 522   \\
+T-table & 154     & $174\star$& 804   & 804   & 5120  \\
+V1      & 68      &  -        & 424   & 424   & 10    \\
+V2      & 68      & $62\star$ & 234   & 238   & 10    \\
+V3      & 86      & $64\star$ & 290   & 290   & 10    \\
+V4      & 168     & $100\star$& 268   & 268   &  0    \\
+V5      &$82+208 $&  -        & 266   & 278   & 10    \\
 \end{tabular}
 \caption{
 Static code size metrics for each variant, measured in bytes.
 These are measured targeting the {\tt rv32imc} base ISA for all variants,
 except for V4, which targets {\tt rv64imc}.
+Decryption KeySchedule entries with a $\star$ indicate that the
+implementation uses the Equivalent Inverse Cipher construction
+\cite[Section 5.3.5, Page 23]{FIPS:197}, meaning that the
+Decrypt KeySchedule calls the Encrypt KeySchedule, then performs some
+additional post processing. The code size listed is for the post processing.
+The V5 Encrypt Key Schedule is split into the basic KeySchedule
+operation, plus a re-arrangment of the bytes in each word to make
+KeyAddition more efficient in subsequent encrypt/decrypt operations.
 }
 \label{tab:eval:sw:size}
 \end{table}
 
+%
+% SCARV CPU Performance Results
+%
 
 \begin{table}
 \centering
@@ -71,6 +110,10 @@ Note the absence of variant 4, as it is designed for 64-bit targets only.
 \label{tab:eval:sw:perf:scarv}
 \end{table}
 
+%
+% Rocket Core Performance Results
+%
+
 \begin{table}
 \centering
 \begin{tabular}{l|cc|cc|cc|cc}
@@ -88,18 +131,14 @@ V2 (Latency)& 231   &  359   & 233  &  368   & 212  & 315    & 350  & 508  \\
 V5 (Latency)& 243   &  414   & 244  &  319   & 346  & 427    & 348  & 424  \\
 V1 (Size)   & 528   &  804   & 529  &  744   & 212  & 357    & 214  & 335  \\
 V2 (Size)   & 231   &  511   & 233  &  520   & 212  & 345    & 350  & 646  \\
-V3          & 253   &  895   & 254  &  873   & 233  & 470    & 674  & 2425 \\
+V3          & 253   &  445   & 254  &  445   & 233  & 470    & 674  & 2425 \\
 V4          & TODO  &        &      &        &      &        &      &      \\
 V5 (Size)   & 243   &  585   & 244  &  543   & 346  & 504    & 348  & 454  \\
 \end{tabular}
 \caption{
 Performance results for the \CORE{1} core.
 }
-\label{tab:eval:sw:perf:scarv}
+\label{tab:eval:sw:perf:rocket}
 \end{table}
-
-% ------------------------------------------------------------
-
-We can see from the tables that ({\bf TODO}).
 
 % =============================================================================

@@ -2,6 +2,36 @@
 \subsection{Evaluation Discussion}
 \label{sec:eval:results}
 
+\begin{table}[]
+\centering
+\begin{tabular}{l|cc|cc|cc|cc}
+& \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}AES 128 Block\\ Encrypt\end{tabular}}
+& \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}AES 128 Block\\ Decrypt\end{tabular}}
+& \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}KeySchedule\\ Encrypt\end{tabular}} 
+& \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}KeySchedule\\ Decrypt\end{tabular}}
+\\
+Variant     &  iret & cycles & iret & cycles & iret & cycles & iret & cycles\\
+\hline
+V1 (Latency)&       &        &      &        &      &        &      &      \\
+V2 (Latency)&       &        &      &        &      &        &      &      \\
+V5 (Latency)&       &        &      &        &      &        &      &      \\
+V1 (Size)   &       &        &      &        &      &        &      &      \\
+V2 (Size)   &       &        &      &        &      &        &      &      \\
+V3          &       &        &      &        &      &        &      &      \\
+V4          &       &        &      &        &      &        &      &      \\
+V5 (Size)   &       &        &      &        &      &        &      &      \\
+\end{tabular}
+\caption{Comparison of performance improvement unit-area for each
+variant. Obtained by dividing the speedup in terms of instructions
+executed (relative to the baseline T-table implementation) by the
+normalised size of the dedicated ISE logic, as shown in
+\REFTAB{tab:eval:hw}.
+We deliberately omit the size of the host core from our calculation,
+as this dominates the total size of the system and detracts from
+the comparison.
+}
+\end{table}
+
 {\bf TODO:}
 Note performance / unit area.
 V3/ttable is the best candidate. Only one SBox, very fast per gate etc.
