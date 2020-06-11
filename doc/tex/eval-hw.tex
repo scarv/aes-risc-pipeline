@@ -9,12 +9,7 @@ The 32-bit designs (V1,V2,V3,V5) were implemented on both the
 \CORE{1} and \CORE{2} cores.
 The 64-bit design (v4) was only evaluated on the 64-bit configuration
 of the \CORE{2} core.
-
-Table \ref{tab:eval:hw}
-shows the hardware implementation costs, while
-Table \ref{tab:eval:sw}
-shows performance and code size results for
-each ISE, with software only versions of AES used as a baseline.
+Table \ref{tab:eval:hw} shows the hardware implementation costs.
 
 For variants 1, 2 and 5, two implementations are evaluated.
 The ``Size" optimised implementations instantiate only a single
@@ -23,8 +18,8 @@ to produce a result.
 The ``Latency" optimised implementations instantiate $4$ SBox and
 MixColumn circuits to produce their results in a single processor cycle.
 
-The ISE Size column of Table \ref{tab:eval:hw} 
-records the size in NAND2 equivalent gates of each variant,
+The {\em Size} columns of Table \ref{tab:eval:hw} 
+record the number of NAND2 equivalent gates of each variant,
 instantiated independently from any wider system.
 The LTP column gives the Longest Topological Path of the synthesised
 functional unit circuit from input to combinatorial output.
@@ -40,19 +35,23 @@ path of the \CORE{2} core.
 \begin{table}
 \centering
 \begin{tabular}{lrrrr}
-Variant     & ISE Size & ISE LTP & \CORE{2} Size & Size Overhead \\ \hline
-Baseline    & -        & -       & 37375         & -             \\
-V1 (Latency)& 3472     & 19      & 41723         & $  \%$        \\
-V2 (Latency)& 3547     & 19      & 41199         & $  \%$        \\
-V5 (Latency)& 4121     & 22      & 42070         & $  \%$        \\
-V3          & 1157     & 30      & 38610         & $  \%$        \\
-V4          &          &         &               & $  \%$        \\
-V1 (Size)   & 2174     & 22      & 40161         & $  \%$        \\
-V2 (Size)   & 1381     & 21      & 38885         & $  \%$        \\
-V5 (Size)   & 1927     & 23      & 39251         & $  \%$        \\
+Variant     & ISE Size & ISE LTP & \CORE{2} Size & \CORE{1} Size \\ \hline
+Baseline    & -        & -       & 37375         &               \\
+V1 (Latency)& 3472     & 19      & 41723         &               \\
+V2 (Latency)& 3547     & 19      & 41199         &               \\
+V5 (Latency)& 4121     & 22      & 42070         &               \\
+V3          & 1157     & 30      & 38610         &               \\
+V4          &          &         & N/A           & {\bf TODO}    \\
+V1 (Size)   & 2174     & 22      & 40161         &               \\
+V2 (Size)   & 1381     & 21      & 38885         &               \\
+V5 (Size)   & 1927     & 23      & 39251         &               \\
 \end{tabular}
 \caption{
-Hardware implementation costs based on the 32-bit \CORE{2} CPU core.
+Hardware implementation costs of each ISE.
+The ISE columns list the size and depth of the ISE verilog hardware
+descriptions when instantiated in isolation.
+The \CORE{2} and \CORE{1} columns give the size (in NAND2 equivalent gates)
+of the ISEs when integrated into each core.
 Gate counts and topological path lengths are obtained using the
 Yosys\cite{yosys} tool suite.
 }

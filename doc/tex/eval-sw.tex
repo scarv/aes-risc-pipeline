@@ -6,6 +6,8 @@ To evaluate the software performance, we implemented AES 128, and
 measure the static code size, instruction execution counts and cycle
 counts of the Key Schedule, Encrypt and Decrypt functions.
 We also separate generation of the KeySchedule for Encrypt and Decrypt.
+A T-table implementation of AES (See \REFSEC{sec:bg:aes_impl_sw})
+is used as a performance baseline.
 
 \REFTAB{tab:eval:sw:size} shows the static code size for each
 function.
@@ -27,7 +29,7 @@ Encrypt Block    &
 Decrypt Block    &
 .data   \\ \hline
 %Byte   & 312   &  -    &       &       & 522   \\
-T-Table  & 154   &  174  & 804   & 804   & 5120  \\
+T-table  & 154   &  174  & 804   & 804   & 5120  \\
 V1      & 68    &  -    & 424   & 424   & 10    \\
 V2      & 68    &  62*  & 234   & 238   & 10    \\
 V3      & 86    &  64   & 290   & 290   & 10    \\
@@ -53,7 +55,7 @@ except for V4, which targets {\tt rv64imc}.
 \\
 Variant     &  iret & cycles & iret & cycles & iret & cycles & iret & cycles \\ \hline
 %Byte       & 4228 & 7061 & 7652 & 11587& 926 & 3887 & 926 & 3886   \\
- T-Table     & 953  & 1078 & 953  & 1058 & 445 & 555 & 1726 & 2202    \\
+ T-table     & 953  & 1078 & 953  & 1058 & 445 & 555 & 1726 & 2202    \\
 V1 (Latency)& 533  & 635  & 533  & 647  & 213 & 333 & 219  & 350     \\
 V2 (Latency)& 236  & 343  & 237  & 343  & 213 & 344 & 350  & 656     \\
 V5 (Latency)& 248  & 346  & 248  & 349  & 347 & 489 & 353  & 506     \\
@@ -80,7 +82,7 @@ Note the absence of variant 4, as it is designed for 64-bit targets only.
 Variant     &  iret & cycles & iret & cycles & iret & cycles & iret & cycles\\
 \hline
 %Byte       &       &        &      &        &      &        &      &      \\
-T-Table     & 948   &  1143  & 949  &  1025  & 444  & 478    & 1726 & 1977 \\
+T-table     & 948   &  1143  & 949  &  1025  & 444  & 478    & 1726 & 1977 \\
 V1 (Latency)& 528   &  685   & 529  &  680   & 212  & 341    & 214  & 290  \\
 V2 (Latency)& 231   &  359   & 233  &  368   & 212  & 315    & 350  & 508  \\
 V5 (Latency)& 243   &  414   & 244  &  319   & 346  & 427    & 348  & 424  \\

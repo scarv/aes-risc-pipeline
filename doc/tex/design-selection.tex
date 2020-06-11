@@ -28,8 +28,16 @@ following considerations:
       a very scalable ISA.
 \item The ISEs must remove any chance of timing side-channel attacks
       based on accesses to the SBox.
+\item The ISEs must be efficient in terms of performance gain per
+      unit of hardware resource required to implement them.
+      An ISE which is very performant, but too large or complex to implement
+      in practice will not be adopted widely by industry.
 \end{itemize}
 
+The following sections give high level descriptions of the
+instructions and their salient differences,
+We list complete pseudo-code descriptions for each instruction
+in the Appendix \REFSEC{sec:pseudo}.
 
 \begin{figure}
 \centering

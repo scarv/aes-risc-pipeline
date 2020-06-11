@@ -1,6 +1,7 @@
 % =============================================================================
 
 \begin{figure}
+\begin{subfigure}{\textwidth}
 \begin{lstlisting}[language=pseudo,style=block]
 saes.v4.ks1       rd rs1 rcon : v4.ks1(rd, rs1, rcon)
 saes.v4.ks2       rd rs1 rs2  : v4.ks2(rd, rs1, rs2 )
@@ -11,11 +12,28 @@ saes.v4.decsm     rd rs1 rs2  : v4.Dec(rd, rs1, rs2, mix=1)
 saes.v4.decs      rd rs1 rs2  : v4.Dec(rd, rs1, rs2, mix=0)
 \end{lstlisting}
 \caption{
-    Instruction mnemonics for variant 4.
+}
+\label{fig:mnemonics:v4}
+\end{subfigure}
+\begin{subfigure}{\textwidth}
+\begin{lstlisting}[language=pseudo,style=block]
+ld              a0, 0(a4)  // Load round key as double words.
+ld              a1, 8(a4)
+xor             t0, t0, a0 // Add round key for 2 columns at a time.
+xor             t1, t1, a1
+aes.v5.encsm    t2, t0, t1 // Next round state: columns 0, 1
+aes.v5.encsm    t3, t1, t0 // columns 2, 3 - Note swapped rs1/rs2
+\end{lstlisting}
+\caption{
+}
+\label{fig:round:v4}
+\end{subfigure}
+\caption{
+    Menmonics, pseudo code mappings and example encryption
+    round function for variant 4.
     See \REFSEC{sec:pseudo}, \REFFIG{fig:pseudo:v4} for detailed
     descriptions of the pseudo-code functions.
 }
-\label{fig:mnemonics:v4}
 \end{figure}
 
 \REFFIG{fig:mnemonics:v4} shows the mnemonics and pseudo-code functions
@@ -27,12 +45,35 @@ lower word of {\tt rs1}, and column $3$ in the upper word of {\tt rs2}.
 Hence, the entire AES state can be passed to an instruction, but only
 half of the next round state can be written back owing to the
 $2$-read-$1$-write constraint of RISC-V.
-We note however that by swapping the order of {\tt rs1} and {\tt rs2}
+
+This is the approach taken by the Oracle SPARC \cite[Page 109]{SPARC:16}
+instructions, which use dedicated instructions to compute
+columns $0$ and $1$ ({\tt AES\_EROUND01}) followed by
+columns $2$ and $3$ ({\tt AES\_EROUND23}).
+
+We improve upon this by utilising the Equivalent Inverse Cipher
+construction of AES \cite[Section 5.4.4, Page 27]{FIPS:197} within
+the instructions.
+Specifically, the SubBytes and ShiftRows steps commute, allowing
+the encrypt and decrypt round functions to apply (inverse)
+ShiftRows, SubBytes and MixColumns all in the same order.
+The nature of ShiftRows then means that by
+swapping the order of {\tt rs1} and {\tt rs2}
 for the {\tt enc*} and {\tt dec*} instructions, we can compute {\em either}
-columns $1$ and $2$ or $3$ and $4$ of the next round state, owing to
-the nature of the ShiftRows step.
+columns $1$ and $2$ or columns $3$ and $4$ of the next round state with the
+same instruction.
+Thus, our solution requires half of the instruction encoding points
+for the encrypt/decrypt round functions: $4$ v.s. $8$.
+
 The {\tt ks*} instructions allow the a new round key to be computed
 in $3$ instructions.
+Again, we improve upon the SPARC solution by requiring only two,
+$2$-operand instruction encodings.
+This is done by allowing the {\tt saes.v4.ks1} instruction
+to optionally apply the round constant based on the value of
+it's {\tt rcon} immediate.
+See \REFFIG{fig:pseudo:v4} for the pseudo-code of this
+operation.
 
 A single encryption round using this variant requires
 $2$ load-double instructions to fetch the round key,
@@ -40,13 +81,16 @@ $2$ {\tt xor} instructions to add the round key
 and
 $2$ {\tt saes.v4.encs[m]} instructions to compute SubBytes, ShiftRows
 and MixColumns.
+\REFFIG{fig:round:v4} shows an example AES encrypt round function
+using this variant.
 
 This proposal is similar to \cite{SPARC:16} in how it utilises
 a 64-bit data-path.
 It sources only two general purpose registers however (rather than $3$),
 making it less demanding to implement in the context of the wider
 system.
-The addition of an extra source register would save only $2$ instructions
-per cycle by allowing AddRoundKey to be included.
+The addition of an extra source register would save $2$ instructions
+per round by allowing AddRoundKey to be included, at the expense
+of breaking the RISC-V design principles.
 
 % =============================================================================

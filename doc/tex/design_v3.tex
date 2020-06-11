@@ -1,6 +1,7 @@
 % =============================================================================
 
 \begin{figure}
+\begin{subfigure}{\textwidth}
 \begin{lstlisting}[language=pseudo,style=block]
 saes.v3.encs  rd, rs1, rs2, bs : v3.Proc(rd, rs1, rs2, bs, fwd=1, mix=0)
 saes.v3.encsm rd, rs1, rs2, bs : v3.Proc(rd, rs1, rs2, bs, fwd=1, mix=1)
@@ -8,25 +9,56 @@ saes.v3.decs  rd, rs1, rs2, bs : v3.Proc(rd, rs1, rs2, bs, fwd=0, mix=0)
 saes.v3.decsm rd, rs1, rs2, bs : v3.Proc(rd, rs1, rs2, bs, fwd=0, mix=1)
 \end{lstlisting}
 \caption{
-    Instruction mnemonics for variant 3.
+}
+\label{fig:mnemonics:v3}
+\end{subfigure}
+\begin{subfigure}{\textwidth}
+\begin{lstlisting}[language=pseudo,style=block]
+lw              a0, 16(RK)      // Load Round Key
+lw              a1, 20(RK)
+lw              a2, 24(RK)
+lw              a3, 28(RK)      // t0,t1,t2,t3 contains current round state.
+saes.v3.encsm   a0, a0, t0, 0   // Next state for column 0.
+saes.v3.encsm   a0, a0, t1, 1   // Current column 0 in t0.
+saes.v3.encsm   a0, a0, t2, 2   // Next column 0 accumulates in a0
+saes.v3.encsm   a0, a0, t3, 3
+saes.v3.encsm   a1, a1, t1, 0   // Next state for column 1.
+saes.v3.encsm   a1, a1, t2, 1
+saes.v3.encsm   a1, a1, t3, 2
+saes.v3.encsm   a1, a1, t0, 3
+saes.v3.encsm   a2, a2, t2, 0   // Next state for column 2.
+saes.v3.encsm   a2, a2, t3, 1
+saes.v3.encsm   a2, a2, t0, 2
+saes.v3.encsm   a2, a2, t1, 3
+saes.v3.encsm   a3, a3, t3, 0   // Next state for column 3.
+saes.v3.encsm   a3, a3, t0, 1
+saes.v3.encsm   a3, a3, t1, 2
+saes.v3.encsm   a3, a3, t2, 3   // a0,a1,a2,a3 contains new round state
+\end{lstlisting}
+\caption{
+}
+\label{fig:round:v3}
+\end{subfigure}
+\caption{
+    Menmonics, pseudo code mappings and example encryption
+    round function for variant 3.
     See \REFSEC{sec:pseudo}, \REFFIG{fig:pseudo:v3} for detailed
     descriptions of the pseudo-code functions.
 }
-\label{fig:mnemonics:v3}
 \end{figure}
 
 \REFFIG{fig:mnemonics:v3} shows the mnemonics and pseudo-code functions
 for variant 3.
 These instructions are based on
 \cite{NadIkeKur:04,BBFR:06} and \cite{Saarinen:20},
-which implement a T-Tables based representation of AES \cite{DaeRij:02}.
+which implement a T-tables based representation of AES \cite{DaeRij:02}.
 The AES state is stored column-wise in $4$ $32$-bit words, and
 each instruction selects a single byte of {\tt rs2} to operate on
 using the $2$-bit {\tt bs} immediate.
-This byte is used as the input to a standard T-Table lookup operation,
+This byte is used as the input to a standard T-table lookup operation,
 but the table entry is calculated in hardware.
 \REFFIG{fig:design:fu_block:v3} shows the data-path for these instructions.
-The result of the T-Table lookup is then xor'd with {\tt rs1} to
+The result of the T-table lookup is then xor'd with {\tt rs1} to
 accumulate the results of the round transformation.
 
 These instructions require only one SBox implementation to be implemented,
@@ -42,5 +74,7 @@ A single encryption round using this variant requires
 $4$ load-word instructions to fetch the round key and
 $16$ {\tt saes.v3.encs[m]} instructions to perform AddRoundKey,
 SubBytes, ShiftRows and (optionally) MixColumns.
+\REFFIG{fig:round:v3} shows an example AES encrypt round function
+using this variant.
 
 % =============================================================================

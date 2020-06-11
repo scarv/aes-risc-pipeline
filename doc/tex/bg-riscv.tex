@@ -1,5 +1,27 @@
 % =============================================================================
 
-{\bf TODO.}
+RISC-V is a (relatively) new ISA, with its origins at UC Berkley
+\cite{riscv:1}.
+The core ISA is extremely simple, consisting of only $50$ instructions.
+The ISA defines $32$ general purpose registers, with register $0$ always
+tied to the value $0$.
+The base ISA comes in $32$, $64$ and $128$-bit wide variants.
+For this work, we focus on the $32$ and $64$ bit variants, since these
+are the more mature and commercially relevant ones at present.
+
+Various optional extensions are used to support more complex and specialised
+functionality (e.g. the Floating point {\tt F} extension),
+or to optimise for certain goals (e.g. code density and size
+with the Compressed {\tt C} extension).
+This work is aimed at informing work on the forthcoming Cryptographic
+standard extensions for the ISA.
+
+Further, RISC-V is a free to use, open standard managed by the independent
+RISC-V Foundation.
+This is in opposition to existing architectures such as ARM, which required
+significant license fees to use.
+This extensibility and openness makes RISC-V an excellent target for
+computer architecture research.
+
 
 % =============================================================================

@@ -151,7 +151,7 @@ Likewise, the
     cryptographic
 Advanced Encryption Standard New Instructions (AES-NI)~\cite{Gueron:09,DruGueKra:19}
 ISE
-supports AES: it significant improves latency and throughput
+supports AES: it significantly improves latency and throughput
 (see, e.g.,~\cite{FazLopOli:18}),
 and represents a pertinent case-study wrt. the guidelines above by
 a) adding just $6$ additional (vs. $1500+$ total) instructions,
@@ -203,9 +203,15 @@ complicating factor, yet an important design goal.
 
 % TODO
 
-\REFSEC{sec:bg}
-\REFSEC{sec:design}
-\REFSEC{sec:eval}
+\REFSEC{sec:bg} describes the AES cipher, existing implementation stratagies
+and prior commercial and academic ISE designs.
+\REFSEC{sec:design} details $5$ different candidate ISEs and the criteria
+used to select and design them.
+\REFSEC{sec:eval} gives evaulation results in terms of hardware cost
+and software performance.
+\REFSEC{sec:psca} shows how our ISE recommendation for highly resource
+constrained devices can be further extended to give power side-channel
+resistance.
 Finally, 
 \REFSEC{sec:outro}
 presents some conclusions and potential directions for future work.

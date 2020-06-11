@@ -27,7 +27,7 @@ The ISE designs were evaluated using two different {\em host} cores:
     is a 5-stage, in-order pipeline with a configurable cache hierarchy and
     branch predictor.
     We used both 32-bit and 64-bit variants of \CORE{1} as bases for our work.
-    We configured both base designs to have a single ``big" core, with
+    We configured both base designs to have a single ``big'' core, with
     no floating point support.
     ({\bf TODO:} List exactly how this configured Rocket)
 
@@ -36,7 +36,7 @@ The ISE designs were evaluated using two different {\em host} cores:
 Two modifications were made to the host cores to support the ISE variants:
 1) The Instruction Decode module was modified to support identification and
    operand selection for the new instructions. 
-2) A new ``AES" functional unit (AES FU) was added to perform the instruction
+2) A new ``AES'' functional unit (AES FU) was added to perform the instruction
    computations.
 In the \CORE{2} core, the new block was built directly into the execution
 pipeline.
@@ -52,11 +52,6 @@ All of the AES variants share the same sets of inputs, so the interface
 to the AES FU is kept constant for every variant.
 A synthesis time parameter was then added to switch between different
 ISE variants for each host core.
-
-The following sections give high level descriptions of the
-instructions and their salient differences,
-We list complete pseudo-code descriptions for each instruction
-in the Appendix \REFSEC{sec:pseudo}.
 
 \begin{figure}
 \centering
