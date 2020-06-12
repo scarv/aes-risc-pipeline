@@ -61,7 +61,7 @@ MRF entry.
 A corresponding Store Mask instruction {\tt sm rs2, imm(rs1)} writes
 the mask corresponding to GPR {\tt rs2} to memory.
 The {\tt sm} instruction is only used for context switches, and
-destructivley reads the MRF register value to prevent it being
+destructively reads the MRF register value to prevent it being
 leaked to other applications running on the same core\footnote{
     In this case, destructive could mean set to zero (which could
     leak the hamming weight of the mask) or randomising it's value.}.
@@ -81,7 +81,7 @@ Within the AES FU the instruction result is computed entirely in it's
 masked representation.
 The result shares are then re-masked before being written back to the
 GPRs and MRF.
-This is nessesary, because \ISE{3} instructions are designed
+This is necessary, because \ISE{3} instructions are designed
 such that {\tt rs1=rd} for all use cases.
 Without re-masking, overwriting a source with the result could cause 
 $1$'st order leakage.
@@ -98,7 +98,7 @@ load them back and un-mask them.
 We use the \CORE{2} core as the basis for our side-channel secure
 implementation of \ISE{3}.
 \REFFIG{fig:sca:uarch} shows a block diagram of the modifications
-made to the core, and which datapaths carry masked data.
+made to the core, and which data-paths carry masked data.
 
 \begin{figure}
 \caption{Block diagram of the modifications to the \CORE{2} core,

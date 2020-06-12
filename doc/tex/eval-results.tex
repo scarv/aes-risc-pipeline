@@ -54,7 +54,7 @@ implementation uses the Equivalent Inverse Cipher construction
 Decrypt KeySchedule calls the Encrypt KeySchedule, then performs some
 additional post processing. The code size listed is for the post processing.
 The V5 Encrypt Key Schedule is split into the basic KeySchedule
-operation, plus a re-arrangment of the bytes in each word to make
+operation, plus a re-arrangement of the bytes in each word to make
 KeyAddition more efficient in subsequent encrypt/decrypt operations.
 
 For the Encrypt and Decrypt functions, all versions are very similar
@@ -101,7 +101,7 @@ V5 (Size)   &     1927     &     23      & 39251 ($1.05$x) &               \\
 \end{tabular}
 \caption{
 Hardware implementation costs of each ISE.
-The ISE columns list the size and depth of the ISE verilog hardware
+The ISE columns list the size and depth of the ISE Verilog hardware
 descriptions when instantiated in isolation.
 The \CORE{2} and \CORE{1} columns give the size (in NAND2 equivalent gates)
 of the ISEs when integrated into each core.
@@ -236,7 +236,7 @@ our primary metric is
 performance/area efficiency, since these ISEs must be sensible to
 implement in small, embedded class cores.
 To this, end we calculate an efficiency score by calculating the speedup
-of each variant relative to the T-table basline, and dividing it
+of each variant relative to the T-table baseline, and dividing it
 by the normalised size of each variant
 (see ``ISE Size'' column of \REFTAB{tab:eval:hw}).
 \REFTAB{tab:eval:results} shows the performance / area efficiency results.
@@ -247,7 +247,7 @@ We deliberately omit the size of the host core from our calculation,
 as this dominates the total size of the system and detracts from
 the comparison.
 
-Qualitativley, we place more weight on the block encrypt/decrypt results
+Qualitatively, we place more weight on the block encrypt/decrypt results
 than the KeySchedule results, as one typically performs many more
 block operations than KeySchedules.
 In almost all cases, we find that \ISE{3} is clearly much more
@@ -262,5 +262,5 @@ Based on these results, we believe that for $32$-bit RISC-V cores,
 ISE \ISE{3} makes the best candidate for standardisation,
 based on its efficiency, raw performance and simplicity to implement.
 For the $64$-bit case, \ISE{4} is a fairly obvious design utilising
-the $64$-bit datapath.
+the $64$-bit data-path.
 
