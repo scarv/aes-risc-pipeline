@@ -9,8 +9,17 @@
 \author{}
 \institute{}
 }{%
-\author{Ben Marshall \and Dan Page}
-\institute{Department of Computer Science, University of Bristol, \\ Merchant Venturers Building, Woodland Road, \\ Bristol, BS8 1UB, United Kingdom. \\ \email{{ben.marshall,daniel.page}@bristol.ac.uk}}
+\author{
+Ben Marshall\inst{1}                \and
+Markku-Juhani O. Saarinen\inst{2}   \and
+Dan Page\inst{1}                    \and
+(Andy/ Richard / Barry / Claire?)
+}
+\institute{
+    Department of Computer Science, University of Bristol \\ \email{{ben.marshall,daniel.page}@bristol.ac.uk}
+    \and
+    PQShield, Oxford \\ \email{mjos@pqshield.com}
+}
 }%
 
 \begin{document}
@@ -87,23 +96,23 @@ ISEs for RISC-V.
 
 \input{tex/design-selection.tex}
 
-\subsection{Variant $1$: column-wise acceleration}
+\subsection{Variant 1 (\ISE{1}): column-wise acceleration}
 \label{sec:design:v1}
 \input{tex/design_v1.tex}
 
-\subsection{Variant $2$: combined row/column acceleration}
+\subsection{Variant 2 (\ISE{2}): combined row/column acceleration}
 \label{sec:design:v2}
 \input{tex/design_v2.tex}
 
-\subsection{Variant $3$: T-tables acceleration}
+\subsection{Variant 3 (\ISE{3}): T-tables acceleration}
 \label{sec:design:v3}
 \input{tex/design_v3.tex}
 
-\subsection{Variant $4$: $64$-bit}
+\subsection{Variant 4 (\ISE{4}): $64$-bit}
 \label{sec:design:v4}
 \input{tex/design_v4.tex}
 
-\subsection{Variant $5$: tiled}
+\subsection{Variant 5 (\ISE{5}): tiled}
 \label{sec:design:v5}
 \input{tex/design_v5.tex}
 
@@ -112,8 +121,6 @@ ISEs for RISC-V.
 \section{Evaluation}
 \label{sec:eval}
 \input{tex/eval-hosts.tex}
-\input{tex/eval-hw.tex}
-\input{tex/eval-sw.tex}
 \input{tex/eval-results.tex}
 
 % =============================================================================
@@ -148,9 +155,29 @@ under the RISE (\url{http://www.ukrise.org}) programme.
 
 \appendix
 
-\section{ISE Instruction Pseudo Code}
-\label{sec:pseudo}
-\input{tex/app-pseudo-code.tex}
+\section{\ISE{1} Mnemonics and pseudo-code}
+\label{sec:pseudo:v1}
+\input{tex/app-design_v1.tex}
+
+\newpage
+\section{\ISE{2} Mnemonics and pseudo-code}
+\label{sec:pseudo:v2}
+\input{tex/app-design_v2.tex}
+
+\newpage
+\section{\ISE{3} Mnemonics and pseudo-code}
+\label{sec:pseudo:v3}
+\input{tex/app-design_v3.tex}
+
+\newpage
+\section{\ISE{4} Mnemonics and pseudo-code}
+\label{sec:pseudo:v4}
+\input{tex/app-design_v4.tex}
+
+\newpage
+\section{\ISE{5} Mnemonics and pseudo-code}
+\label{sec:pseudo:v5}
+\input{tex/app-design_v5.tex}
 
 % =============================================================================
 

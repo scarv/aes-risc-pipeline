@@ -1,7 +1,7 @@
 
 Many embedded implementations include power side-channels in their threat
 model.
-Having identified ISE variant $3$ detailed in
+Having identified ISE \ISE{3} detailed in
 \REFSEC{sec:design:v3} as a strong candidate for embedded $32$-bit
 RISC-V cores, we now show a possible
 way of extending the ISE further to add power side-channel resistance
@@ -36,7 +36,7 @@ processor data-path as possible.
 
 \subsection{Design Overview}
 
-We extend ISE variant $3$ to support 1'st order masking.
+We extend ISE \ISE{3} to support 1'st order masking.
 To this end, the secret key is represented as two boolean masked shares.
 An implementation of the AES block encrypt/decrypt function requires
 eight registers: four for the current round state, four to load the
@@ -81,7 +81,7 @@ Within the AES FU the instruction result is computed entirely in it's
 masked representation.
 The result shares are then re-masked before being written back to the
 GPRs and MRF.
-This is nessesary, because the ISE variant $3$ instructions are designed
+This is nessesary, because \ISE{3} instructions are designed
 such that {\tt rs1=rd} for all use cases.
 Without re-masking, overwriting a source with the result could cause 
 $1$'st order leakage.
@@ -96,13 +96,13 @@ load them back and un-mask them.
 \subsection{Implementation}
 
 We use the \CORE{2} core as the basis for our side-channel secure
-implementation of ISE variant $3$.
+implementation of \ISE{3}.
 \REFFIG{fig:sca:uarch} shows a block diagram of the modifications
 made to the core, and which datapaths carry masked data.
 
 \begin{figure}
 \caption{Block diagram of the modifications to the \CORE{2} core,
-supporting an extended version of ISE variant $3$ for side-channel
+supporting an extended version of ISE \ISE{3} for side-channel
 security. {\bf TODO}}
 \label{fig:sca:uarch}
 \end{figure}

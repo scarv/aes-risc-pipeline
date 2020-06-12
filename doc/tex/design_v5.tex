@@ -1,50 +1,7 @@
 % =============================================================================
-\begin{figure}
-\begin{subfigure}{\textwidth}
-\begin{lstlisting}[language=pseudo,style=block]
-saes.v5.esrsub.lo rd, rs1, rs2 : rd = v5.SrSub(rs1, rs2, fwd=1, hi=0)
-saes.v5.esrsub.hi rd, rs1, rs2 : rd = v5.SrSub(rs1, rs2, fwd=1, hi=1)
-saes.v5.dsrsub.lo rd, rs1, rs2 : rd = v5.SrSub(rs1, rs2, fwd=0, hi=0)
-saes.v5.dsrsub.hi rd, rs1, rs2 : rd = v5.SrSub(rs1, rs2, fwd=0, hi=1)
-saes.v5.emix      rd, rs1, rs2 : rd = v5.Mix(rs1, rs2, fwd=1)
-saes.v5.dmix      rd, rs1, rs2 : rd = v5.Mix(rs1, rs2, fwd=0)
-saes.v5.sub       rd, rs1      : rd = SubBytes(rs1.8[i])         for i=0..3
-\end{lstlisting}
-\caption{}
-\label{fig:mnemonics:v5}
-\end{subfigure}
-\begin{subfigure}{\textwidth}
-\begin{lstlisting}[language=pseudo,style=block]
-lw                a0,  0(a4)   // Load Round Key
-lw                a1,  4(a4)
-lw                a2,  8(a4)
-lw                a3, 12(a4)
-xor               t0, t0, a0   // Add Round Key
-xor               t1, t1, a1
-xor               t2, t2, a2
-xor               t3, t3, a3
-saes.v5.esrsub.lo a0, t0, t1   // Quad 0: SubBytes / ShiftRows
-saes.v5.esrsub.lo a1, t1, t0   // Quad 1
-saes.v5.esrsub.hi a2, t2, t3   // Quad 2
-saes.v5.esrsub.hi a3, t3, t2   // Quad 3
-saes.v5.emix      t0, a0, a2   // Quad 0: ShiftRows / MixColumns
-saes.v5.emix      t1, a1, a3   // Quad 1
-saes.v5.emix      t2, a2, a0   // Quad 2
-saes.v5.emix      t3, a3, a1   // Quad 3
-\end{lstlisting}
-\caption{}
-\label{fig:round:v5}
-\end{subfigure}
-\caption{
-    Menmonics, pseudo code mappings and example encryption
-    round function for variant 5.
-    See \REFSEC{sec:pseudo}, \REFFIG{fig:pseudo:v5} for detailed
-    descriptions of the pseudo-code functions.
-}
-\end{figure}
 
-\REFFIG{fig:mnemonics:v5} shows the mnemonics and pseudo-code functions
-for variant 5.
+\REFSEC{sec:pseudo:v5} shows the mnemonics and pseudo-code functions
+for variant \ISE{5}.
 These instructions use a {\em tiled} approach to representing the
 AES state.
 Figure ({\bf TODO}) shows how the traditional column-wise representation

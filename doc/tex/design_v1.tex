@@ -1,52 +1,7 @@
 % =============================================================================
 
-\begin{figure}
-\begin{subfigure}{\textwidth}
-\begin{lstlisting}[language=pseudo,style=block]
-saes.v1.encs rd, rs1 : v1.SubBytes(rd, rs1, fwd=1)
-saes.v1.decs rd, rs1 : v1.SubBytes(rd, rs1, fwd=0)
-saes.v1.encm rd, rs1 : v1.MixColumn(rd, rs1, fwd=1)
-saes.v1.decm rd, rs1 : v1.MixColumn(rd, rs1, fwd=0)
-\end{lstlisting}
-\caption{
-}
-\label{fig:mnemonics:v1}
-\end{subfigure}
-\begin{subfigure}{\textwidth}
-\begin{lstlisting}[language=pseudo,style=block]
-lw           a0,  0(a4)       // Load Round Key
-lw           a1,  4(a4)
-lw           a2,  8(a4)
-lw           a3, 12(a4)
-xor          t0, t0, a0       // Add Round Key
-xor          t1, t1, a1
-xor          t2, t2, a2
-xor          t3, t3, a3
-saes.v1.encs a0, t0           // SubBytes
-saes.v1.encs a1, t1
-saes.v1.encs a2, t2
-saes.v1.encs a3, t3
-// Shift rows omitted - 31 Base ISE shift / or instructions.
-saes.v1.encm t0, t0           // MixColumns
-saes.v1.encm t1, t1
-saes.v1.encm t2, t2
-saes.v1.encm t3, t3
-\end{lstlisting}
-\caption{
-}
-\label{fig:round:v1}
-\end{subfigure}
-\caption{
-    Menmonics, pseudo code mappings and example encryption
-    round function for variant 1.
-    See \REFSEC{sec:pseudo}, \REFFIG{fig:pseudo:v1} for detailed
-    descriptions of the pseudo-code functions.
-}
-\end{figure}
-
-
-\REFFIG{fig:mnemonics:v1} shows the mnemonics and pseudo-code functions
-for variant 1.
+\REFSEC{sec:pseudo:v1} shows the mnemonics and pseudo-code functions
+for \ISE{1}.
 This variant is the simplest conceptual approach, and
 is also described in Section $4.2$ of \cite{TilGro:06}.
 The AES state is stored column-wise in $4$ $32$-bit words.

@@ -1,3 +1,206 @@
+% =============================================================================
+
+\subsection{Hardware Evaluation}
+\label{sec:eval:sw}
+
+Each ISE variant was evaluated on the host cores
+described in \REFSEC{sec:design}.
+The 32-bit designs (V1,V2,V3,V5) were implemented on both the
+\CORE{1} and \CORE{2} cores.
+The 64-bit design (v4) was only evaluated on the 64-bit configuration
+of the \CORE{1} core.
+Table \ref{tab:eval:hw} shows the hardware implementation costs.
+
+For variants 1, 2 and 5, two implementations are evaluated.
+The {\em Size} optimised implementations instantiate only a single
+Forward/Inverse SBox and MixColumns circuit and take multiple cycles
+to produce a result.
+The {\em Latency} optimised implementations instantiate $4$ SBox and
+MixColumn circuits to produce their results in a single processor 
+clock cycle.
+
+The {\em Size} columns of Table \ref{tab:eval:hw} 
+record the number of NAND2 equivalent gates of each variant,
+instantiated independently from any wider system.
+The LTP column gives the Longest Topological Path of the synthesised
+functional unit circuit from input to combinatorial output.
+The \CORE{2} Size column gives the size in NAND2 equivalent gates of the
+\CORE{2}, with the various AES functional units integrated.
+The ``Baseline" row gives the size of the core without any of the
+ISEs integrated.
+We found that none of the proposed ISEs affected the critical
+path of the \CORE{2} core.
+
+
+% =============================================================================
+
+\subsection{Software Evaluation}
+\label{sec:eval:sw}
+
+To evaluate the software performance, we implemented AES 128, and
+measure the static code size, instruction execution counts and cycle
+counts of the Key Schedule, Encrypt and Decrypt functions.
+We also separate generation of the KeySchedule for Encrypt and Decrypt.
+A T-table implementation of AES (See \REFSEC{sec:bg:aes_impl_sw})
+is used as a performance baseline.
+
+\REFTAB{tab:eval:sw:size} shows the static code size for each
+function.
+These are measured targeting the {\tt rv32imc} base ISA for all variants,
+except for V4, which targets {\tt rv64imc}.
+Decryption KeySchedule entries with a $\star$ indicate that the
+implementation uses the Equivalent Inverse Cipher construction
+\cite[Section 5.3.5, Page 23]{FIPS:197}, meaning that the
+Decrypt KeySchedule calls the Encrypt KeySchedule, then performs some
+additional post processing. The code size listed is for the post processing.
+The V5 Encrypt Key Schedule is split into the basic KeySchedule
+operation, plus a re-arrangment of the bytes in each word to make
+KeyAddition more efficient in subsequent encrypt/decrypt operations.
+
+For the Encrypt and Decrypt functions, all versions are very similar
+in terms of code size.
+The 32-bit variants (V1,V2,V3,V5) all use loop-based implementations.
+V1, V2, V5 implement one round per loop iteration. V3 implements two
+rounds per loop iteration to avoid needless register move operations.
+The 64-bit variant (V4) uses a completely un-rolled implementation.
+
+\REFTAB{tab:eval:sw:perf:scarv}
+and
+\REFTAB{tab:eval:sw:perf:rocket}
+give cycle and instruction counts for each
+variant under the \CORE{2} and \CORE{1} cores respectively.
+Each implementation uses word-aligned state, meaning the input blocks
+can be loaded with $4$ load-word instructions on $32$-bit host cores,
+or $2$ load-double instructions on the $64$-bit host cores.
+For the Encrypt/Decrypt columns, we show instruction execution counts
+and processor clock cycle measurements for a single block
+encryption of AES-128.
+Likewise, the KeySchedule columns are for a single AES-128 KeySchedule
+operation.
+
+% ------------------------------------------------------------
+
+%
+% Hardware evaluation results.
+%
+
+\begin{table}
+\centering
+\begin{tabular}{lrrrr}
+Variant     &     ISE Size &     ISE LTP & \CORE{2} Size   & \CORE{1} Size \\
+\hline
+Baseline    &     -        &     -       & 37375 ($1.00$x) &               \\
+V1 (Latency)&     3472     &{\bf 19}     & 41723 ($1.12$x) &               \\
+V2 (Latency)&     3547     &{\bf 19}     & 41199 ($1.10$x) &               \\
+V5 (Latency)&     4121     &     22      & 42070 ($1.13$x) &               \\
+V3          &{\bf 1157}    &     30      & 38610 ($1.03$x) &               \\
+V4          &              &             & N/A             & {\bf TODO}    \\
+V1 (Size)   &     2174     &     22      & 40161 ($1.07$x) &               \\
+V2 (Size)   &     1381     &     21      & 38885 ($1.04$x) &               \\
+V5 (Size)   &     1927     &     23      & 39251 ($1.05$x) &               \\
+\end{tabular}
+\caption{
+Hardware implementation costs of each ISE.
+The ISE columns list the size and depth of the ISE verilog hardware
+descriptions when instantiated in isolation.
+The \CORE{2} and \CORE{1} columns give the size (in NAND2 equivalent gates)
+of the ISEs when integrated into each core.
+Gate counts and topological path lengths are obtained using the
+Yosys\cite{yosys} tool suite.
+}
+\label{tab:eval:hw}
+\end{table}
+
+%
+% Static Code Size Results
+%
+
+\begin{table}
+\centering
+\begin{tabular}{l|r|r|r|r|r}
+Variant &
+{\begin{tabular}[c]{@{}c@{}}AES 128 Block\\ Encrypt\end{tabular}} &
+{\begin{tabular}[c]{@{}c@{}}AES 128 Block\\ Decrypt\end{tabular}} &
+{\begin{tabular}[c]{@{}c@{}}KeySchedule\\ Encrypt\end{tabular}}   &
+{\begin{tabular}[c]{@{}c@{}}KeySchedule\\ Decrypt\end{tabular}}   &
+.data   \\ \hline
+%Byte   &           &          &     312     &  -         & 522   \\
+T-table &     804   &     804  &     154     & $174\star$ & 5120  \\
+V1      &     424   &     424  &{\bf 68     }&  -         & 10    \\
+V2      &{\bf 234 } &{\bf 238 }&{\bf 68     }& $62\star$  & 10    \\
+V3      &     290   &     290  &     86      & $64\star$  & 10    \\
+V4      &     268   &     268  &     168     & $100\star$ &  0    \\
+V5      &     266   &     278  &    $82+208 $&  -         & 10    \\
+\end{tabular}
+\caption{
+Static code size metrics for each variant, measured in bytes.
+}
+\label{tab:eval:sw:size}
+\end{table}
+
+%
+% SCARV CPU Performance Results
+%
+
+\begin{table}
+\centering
+\begin{tabular}{l|rr|rr|rr|rr}
+& \multicolumn{2}{c|}{\begin{tabular}[c]{@{}c@{}}AES 128 Block\\ Encrypt\end{tabular}}
+& \multicolumn{2}{c|}{\begin{tabular}[c]{@{}c@{}}AES 128 Block\\ Decrypt\end{tabular}}
+& \multicolumn{2}{c|}{\begin{tabular}[c]{@{}c@{}}KeySchedule\\ Encrypt\end{tabular}} 
+& \multicolumn{2}{c }{\begin{tabular}[c]{@{}c@{}}KeySchedule\\ Decrypt\end{tabular}}
+\\
+Variant     &     iret &     cycles &     iret &     cycles &     iret &     cycles &     iret &     cycles \\ \hline
+ T-table    &     953  &     1078   &     953  &     1058   &     445  &     555    &     1726 &     2202    \\
+V1 (Latency)&     533  &     635    &     533  &     647    &{\bf 213} &{\bf 333}   &{\bf 219} &{\bf 350}    \\
+V2 (Latency)&{\bf 236} &{\bf 343}   &{\bf 237} &{\bf 343}   &{\bf 213} &     344    &     350  &     656     \\
+V5 (Latency)&     248  &     346    &     248  &     349    &     347  &     489    &     353  &     506     \\
+V3          &     261  &     351    &     261  &     346    &     233  &     352    &     683  &     1109    \\
+                                                                                                    
+V1 (Size)   &     533  &     795    &     533  &     815    &{\bf 213} &     373    &     219  &     390     \\
+V2 (Size)   &{\bf 236} &     580    &     237  &     580    &{\bf 213} &     374    &     350  &     794     \\
+V5 (Size)   &     248  &     598    &     248  &     590    &     347  &     519    &     353  &     536  
+\end{tabular}                
+\caption{                    
+Performance results for the \CORE{2} core.
+Note the $64$-bit \ISE{4} is absent.
+}
+\label{tab:eval:sw:perf:scarv}
+\end{table}
+
+%
+% Rocket Core Performance Results
+%
+
+\begin{table}
+\centering
+\begin{tabular}{l|rr|rr|rr|rr}
+& \multicolumn{2}{c|}{\begin{tabular}[c]{@{}c@{}}AES 128 Block\\ Encrypt\end{tabular}}
+& \multicolumn{2}{c|}{\begin{tabular}[c]{@{}c@{}}AES 128 Block\\ Decrypt\end{tabular}}
+& \multicolumn{2}{c|}{\begin{tabular}[c]{@{}c@{}}KeySchedule\\ Encrypt\end{tabular}} 
+& \multicolumn{2}{c }{\begin{tabular}[c]{@{}c@{}}KeySchedule\\ Decrypt\end{tabular}}
+\\
+Variant     &      iret &     cycles &     iret &      cycles &    iret &     cycles &     iret &     cycles\\
+\hline
+%Byte       &           &            &          &             &         &            &          &          \\
+T-table     &     948   &      1143  &     949  &       1025  &     444  &     478    &     1726 &     1977 \\
+V1 (Latency)&     528   &      685   &     529  &       680   &{\bf 212} &     341    &{\bf 214} &{\bf 290} \\
+V2 (Latency)&{\bf 231}  &{\bf  359}  &{\bf 233} &       368   &{\bf 212} &{\bf 315}   &     350  &     508  \\
+V5 (Latency)&     243   &      414   &     244  &{\bf   319}  &     346  &     427    &     348  &     424  \\
+V3          &     253   &      445   &     254  &       445   &     233  &     470    &     674  &     2425 \\
+V4          &     TODO  &            &          &             &          &            &          &          \\
+V1 (Size)   &     528   &      804   &     529  &       744   &     212  &     357    &     214  &     335  \\
+V2 (Size)   &{\bf 231}  &      511   &{\bf 233} &       520   &     212  &     345    &     350  &     646  \\
+V5 (Size)   &     243   &      585   &     244  &       543   &     346  &     504    &     348  &     454  \\
+\end{tabular}
+\caption{
+Performance results for the \CORE{1} core.
+}
+\label{tab:eval:sw:perf:rocket}
+\end{table}
+
+
+% =============================================================================
 
 \subsection{Evaluation Discussion}
 \label{sec:eval:results}
@@ -10,33 +213,26 @@
 & \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}KeySchedule\\ Encrypt\end{tabular}} 
 & \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}KeySchedule\\ Decrypt\end{tabular}}
 \\
-Variant      & iret  & cycles & iret  & cycles & iret & cycles & iret  & cycles   \\
-\hline       
-V1 (Latency) &  2.12 &  2.01  &  2.12 &  1.94  & 2.48 & 1.98   &  9.35 &  7.47    \\
-V2 (Latency) &  4.69 &  3.65  &  4.67 &  3.58  & 2.43 & 1.87   &  5.73 &  3.90    \\
-V5 (Latency) &  3.84 &  3.12  &  3.84 &  3.03  & 1.28 & 1.13   &  4.89 &  4.35    \\
-V3           & {\bf 13.01} & {\bf 10.94}  & {\bf 13.01} & {\bf 10.89}  & {\bf 6.80} & {\bf 5.62}   &  9.00 &  7.07    \\
-V4           & TODO  &        &       &        &      &        &       &          \\
-V1 (Size)    &  3.39 &  2.57  &  3.39 &  2.46  & 3.96 & 2.82   & {\bf 14.94} &  {\bf 10.70}   \\
-V2 (Size)    & 12.05 &  5.55  & 12.00 &  5.44  & 6.23 & 4.43   & 14.72 &  8.28    \\
-V5 (Size)    &  8.22 &  3.86  &  8.22 &  3.83  & 2.74 & 2.29   & 10.46 &  8.79
+Variant      &       iret   &       cycle &       iret  &       cycles &       iret &     cycles &       iret  & cycles   \\
+\hline                                                                                                   
+V1 (Latency) &        2.12  &        2.01 &        2.12 &        1.94  &       2.48 &     1.98   &        9.35 &  7.47    \\
+V2 (Latency) &        4.69  &        3.65 &        4.67 &        3.58  &       2.43 &     1.87   &        5.73 &  3.90    \\
+V5 (Latency) &        3.84  &        3.12 &        3.84 &        3.03  &       1.28 &     1.13   &        4.89 &  4.35    \\
+V3           & {\bf 13.01}  & {\bf 10.94} & {\bf 13.01} & {\bf 10.89}  & {\bf 6.80} & {\bf 5.62} &  9.00       &  7.07    \\
+V4           &        TODO  &             &             &              &            &            &             &          \\
+V1 (Size)    &         3.39 &        2.57 &        3.39 &         2.46 &       3.96 &      2.82  & {\bf 14.94} &  {\bf 10.70}   \\
+V2 (Size)    &        12.05 &        5.55 &       12.00 &         5.44 &       6.23 &      4.43  & 14.72       &  8.28    \\
+V5 (Size)    &         8.22 &        3.86 &        8.22 &         3.83 &       2.74 &      2.29  & 10.46       &  8.79
 \end{tabular}
 \caption{Comparison of performance improvement unit-area for each
-variant. Obtained by dividing the speedup in terms of instructions
-executed relative to the baseline T-table implementation
-(See \REFTAB{tab:eval:sw:perf:scarv}) by the
-normalised size of the dedicated ISE logic, as shown in
-\REFTAB{tab:eval:hw}.
-We deliberately omit the size of the host core from our calculation,
-as this dominates the total size of the system and detracts from
-the comparison.
-The \CORE{2} core results were used for these numbers, but the
-same conclusions may be drawn from hte \CORE{1} results.
+variant. 
 }
 \label{tab:eval:results}
 \end{table}
 
-For the $32$-bit variants (V1,V2,V3,V5) our primary metric is
+For the $32$-bit ISEs 
+(\ISE{1},\ISE{2},\ISE{3},\ISE{5})
+our primary metric is
 performance/area efficiency, since these ISEs must be sensible to
 implement in small, embedded class cores.
 To this, end we calculate an efficiency score by calculating the speedup
@@ -44,20 +240,27 @@ of each variant relative to the T-table basline, and dividing it
 by the normalised size of each variant
 (see ``ISE Size'' column of \REFTAB{tab:eval:hw}).
 \REFTAB{tab:eval:results} shows the performance / area efficiency results.
+The \CORE{2} core results were used for these numbers, but the
+same conclusions may be drawn from the \CORE{1} results.
+
+We deliberately omit the size of the host core from our calculation,
+as this dominates the total size of the system and detracts from
+the comparison.
 
 Qualitativley, we place more weight on the block encrypt/decrypt results
 than the KeySchedule results, as one typically performs many more
 block operations than KeySchedules.
-In almost all cases, we find that Variant $3$ is clearly much more
+In almost all cases, we find that \ISE{3} is clearly much more
 efficient in terms of performance per unit area.
-The size optimised version of Variant $2$ performs almost on par with
-Variant $3$ when looking at performance/area efficiency in terms of
+The size optimised version of \ISE{2} performs almost on par with
+\ISE{3} when looking at performance/area efficiency in terms of
 instructions retired.
 When looking at actual execution times in terms of cycles however,
-it is slower than Variant $3$ in all cases.
+it is slower than \ISE{3} in all cases.
 
 Based on these results, we believe that for $32$-bit RISC-V cores,
-ISE Variant $3$ makes the best candidate for standardisation,
+ISE \ISE{3} makes the best candidate for standardisation,
 based on its efficiency, raw performance and simplicity to implement.
+For the $64$-bit case, \ISE{4} is a fairly obvious design utilising
+the $64$-bit datapath.
 
-For the $64$-bit case, we see that ({\bf TODO}...)
