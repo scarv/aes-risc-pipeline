@@ -81,21 +81,21 @@ KeyAddition more efficient in subsequent encrypt/decrypt operations.
 
 \begin{table}
 \centering
-\begin{tabular}{l|cc|cc|cc|cc}
+\begin{tabular}{l|rr|rr|rr|rr}
 & \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}AES 128 Block\\ Encrypt\end{tabular}}
 & \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}AES 128 Block\\ Decrypt\end{tabular}}
 & \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}KeySchedule\\ Encrypt\end{tabular}} 
 & \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}KeySchedule\\ Decrypt\end{tabular}}
 \\
 Variant     &  iret & cycles & iret & cycles & iret & cycles & iret & cycles \\ \hline
-%Byte       & 4228 & 7061 & 7652 & 11587& 926 & 3887 & 926 & 3886   \\
- T-table     & 953  & 1078 & 953  & 1058 & 445 & 555 & 1726 & 2202    \\
+ T-table    & 953  & 1078 & 953  & 1058 & 445 & 555 & 1726 & 2202    \\
 V1 (Latency)& 533  & 635  & 533  & 647  & 213 & 333 & 219  & 350     \\
 V2 (Latency)& 236  & 343  & 237  & 343  & 213 & 344 & 350  & 656     \\
 V5 (Latency)& 248  & 346  & 248  & 349  & 347 & 489 & 353  & 506     \\
+V3          & 261  & 351  & 261  & 346  & 233 & 352 & 683  & 1109    \\
+
 V1 (Size)   & 533  & 795  & 533  & 815  & 213 & 373 & 219  & 390     \\
 V2 (Size)   & 236  & 580  & 237  & 580  & 213 & 374 & 350  & 794     \\
-V3          & 261  & 351  & 261  & 346  & 233 & 352 & 683  & 1109    \\
 V5 (Size)   & 248  & 598  & 248  & 590  & 347 & 519 & 353  & 536  
 \end{tabular}
 \caption{
@@ -111,7 +111,7 @@ Note the absence of variant 4, as it is designed for 64-bit targets only.
 
 \begin{table}
 \centering
-\begin{tabular}{l|cc|cc|cc|cc}
+\begin{tabular}{l|rr|rr|rr|rr}
 & \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}AES 128 Block\\ Encrypt\end{tabular}}
 & \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}AES 128 Block\\ Decrypt\end{tabular}}
 & \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}KeySchedule\\ Encrypt\end{tabular}} 
@@ -124,10 +124,10 @@ T-table     & 948   &  1143  & 949  &  1025  & 444  & 478    & 1726 & 1977 \\
 V1 (Latency)& 528   &  685   & 529  &  680   & 212  & 341    & 214  & 290  \\
 V2 (Latency)& 231   &  359   & 233  &  368   & 212  & 315    & 350  & 508  \\
 V5 (Latency)& 243   &  414   & 244  &  319   & 346  & 427    & 348  & 424  \\
-V1 (Size)   & 528   &  804   & 529  &  744   & 212  & 357    & 214  & 335  \\
-V2 (Size)   & 231   &  511   & 233  &  520   & 212  & 345    & 350  & 646  \\
 V3          & 253   &  445   & 254  &  445   & 233  & 470    & 674  & 2425 \\
 V4          & TODO  &        &      &        &      &        &      &      \\
+V1 (Size)   & 528   &  804   & 529  &  744   & 212  & 357    & 214  & 335  \\
+V2 (Size)   & 231   &  511   & 233  &  520   & 212  & 345    & 350  & 646  \\
 V5 (Size)   & 243   &  585   & 244  &  543   & 346  & 504    & 348  & 454  \\
 \end{tabular}
 \caption{
