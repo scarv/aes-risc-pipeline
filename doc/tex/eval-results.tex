@@ -13,9 +13,9 @@ Table \ref{tab:eval:hw} shows the hardware implementation costs.
 
 For variants 1, 2 and 5, two implementations are evaluated.
 The {\em Size} optimised implementations instantiate only a single
-Forward/Inverse SBox and MixColumns circuit and take multiple cycles
+Forward/Inverse SBox circuit and take multiple cycles
 to produce a result.
-The {\em Latency} optimised implementations instantiate $4$ SBox and
+The {\em Latency} optimised implementations instantiate $4$ SBox
 MixColumn circuits to produce their results in a single processor 
 clock cycle.
 
@@ -26,10 +26,10 @@ The LTP column gives the Longest Topological Path of the synthesised
 functional unit circuit from input to combinatorial output.
 The \CORE{2} Size column gives the size in NAND2 equivalent gates of the
 \CORE{2}, with the various AES functional units integrated.
-The ``Baseline" row gives the size of the core without any of the
+The ``Baseline'' row gives the size of the core without any of the
 ISEs integrated.
 We found that none of the proposed ISEs affected the critical
-path of the \CORE{2} core.
+path of the \CORE{2} or \CORE{1} cores.
 
 
 % =============================================================================
@@ -261,6 +261,6 @@ it is slower than \ISE{3} in all cases.
 Based on these results, we believe that for $32$-bit RISC-V cores,
 ISE \ISE{3} makes the best candidate for standardisation,
 based on its efficiency, raw performance and simplicity to implement.
-For the $64$-bit case, \ISE{4} is a fairly obvious design utilising
-the $64$-bit data-path.
+For the $64$-bit case, \ISE{4} is a fairly obvious choice for making
+sensible use of the wider data-path.
 

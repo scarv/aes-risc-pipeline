@@ -4,7 +4,7 @@
 for \ISE{1}.
 This variant is the simplest conceptual approach, and
 is also described in Section $4.2$ of \cite{TilGro:06}.
-The AES state is stored column-wise in $4$ $32$-bit words.
+The AES state is stored column-wise in four $32$-bit words.
 Each instruction applies the forward/inverse AES SubBytes or
 MixColumn function to a single word.
 The instructions have only a single source and destination register,
@@ -14,15 +14,15 @@ instructions.
 
 The authors of \cite{TilGro:06} note that these instructions do not
 efficiently support the ShiftRows operation of AES.  We reproduce their
-optimisation addressing this in the variant $2$ instructions.
+optimisation addressing this in the \ISE{2} instructions.
 
 A single encryption round using this variant requires
-$4$ {\tt saes.v1.encs} instructions to perform SubBytes,
-$4$ {\tt saes.v1.encm} instructions to perform MixColumns,
-$4$ load-word instructions to fetch the round key
+four {\tt saes.v1.encs} instructions to perform SubBytes,
+four {\tt saes.v1.encm} instructions to perform MixColumns,
+four load-word instructions to fetch the round key
 and
-$4$ {\tt xor} instructions to add the round key.
-As noted, the key inefficiency of these instructions is the
+four {\tt xor} instructions to add the round key.
+As noted, the inefficiency of these instructions is the
 lack of ShiftRows support, which takes $31$ instructions using the
 base {\tt rv32i} ISA.
 \REFFIG{fig:round:v1} shows an example AES encrypt round function

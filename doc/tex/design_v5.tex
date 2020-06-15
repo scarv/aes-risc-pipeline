@@ -19,21 +19,22 @@ AddRoundKey to be performed efficiently.
 This can be done as a post-processing step in the key expansion.
 
 A single encryption round for this variant requires
-$4$ load-word instructions to fetch the round key,
-$4$ {\tt xor} instructions to perform AddRoundKey,
-$4$ {\tt saes.v5.ersub.[lo|hi]} instructions to compute
+four load-word instructions to fetch the round key,
+four {\tt xor} instructions to perform AddRoundKey,
+four {\tt saes.v5.ersub.[lo|hi]} instructions to compute
     SubBytes, ShiftRows for each quadrant
 and
-$4$ {\tt saes.v5.emix} instructions to compute MixColumns for each
+four {\tt saes.v5.emix} instructions to compute MixColumns for each
 quadrant.
 This would make it equivalent to variant 2, however we must also
 account for the effort spent packing and un-packing the AES
 state into the quadrant representation.
-For the base ISA, this would take $12$ instructions to pack and
-$12$ instructions to unpack the state.
+For the base ISA, this would take $12$ instructions to (un-)pack the state.
 We note that if the {\tt pack[h]} instructions from the draft
 Bit-manipulation extension were included, then packing and unpacking
-would be reduced to $4$ instructions.
+would be reduced to four instructions.
+All packing and un-packing occurs outside the performance critical
+loop sections.
 \REFFIG{fig:round:v5} shows an example AES encrypt round function
 using this variant.
 

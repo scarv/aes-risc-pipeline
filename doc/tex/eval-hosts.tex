@@ -29,7 +29,8 @@ The ISE designs were evaluated using two different {\em host} cores:
     We used both 32-bit and 64-bit variants of \CORE{1} as bases for our work.
     We configured both base designs to have a single ``big'' core, with
     no floating point support.
-    ({\bf TODO:} List exactly how this configured Rocket)
+    ({\bf TODO:} List exactly how this configured Rocket, or just
+     reproduce the chissel config code?)
 
 \end{itemize}
 
@@ -42,16 +43,14 @@ In the \CORE{2} core, the new block was built directly into the execution
 pipeline.
 For the \CORE{1}, we used the Rocket Custom Coprocessor (RoCC)
 interface.
+A synthesis time parameter was then added to switch between different
+ISE variants for each host core.
+
 Because all of the ISE variants read at most two,
 and write one general purpose register, no new structural data-paths
 were needed.
 This was an important design consideration, as RISC-V tries to
 aggressively follow this pattern.
-
-All of the AES variants share the same sets of inputs, so the interface
-to the AES FU is kept constant for every variant.
-A synthesis time parameter was then added to switch between different
-ISE variants for each host core.
 
 \begin{figure}
 \centering
