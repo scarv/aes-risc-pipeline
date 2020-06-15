@@ -17,6 +17,7 @@ input  wire         op_dec  , // Decrypt
 input  wire         op_imix , // Inverse MixColumn transformation (if set)
 input  wire         op_ks1  , // KeySchedule 1
 input  wire         op_ks2  , // KeySchedule 2
+input  wire [  3:0] enc_rcon, // Encoded round constant for op_ks1
 
 input  wire [ 63:0] rs1     , // Source register 1
 input  wire [ 63:0] rs2     , // Source register 2
@@ -33,14 +34,22 @@ assign     ready            = valid              ;
 
 // AES Round Constants
 wire [ 7:0] rcon [0:15];
-assign rcon[ 0] = 8'h01; assign rcon[ 8] = 8'h1b;
-assign rcon[ 1] = 8'h02; assign rcon[ 9] = 8'h36;
-assign rcon[ 2] = 8'h04; assign rcon[10] = 8'h00;
-assign rcon[ 3] = 8'h08; assign rcon[11] = 8'h00;
-assign rcon[ 4] = 8'h10; assign rcon[12] = 8'h00;
-assign rcon[ 5] = 8'h20; assign rcon[13] = 8'h00;
-assign rcon[ 6] = 8'h40; assign rcon[14] = 8'h00;
-assign rcon[ 7] = 8'h80; assign rcon[15] = 8'h00;
+assign rcon[ 0] = 8'h01;
+assign rcon[ 1] = 8'h02;
+assign rcon[ 2] = 8'h04;
+assign rcon[ 3] = 8'h08;
+assign rcon[ 4] = 8'h10;
+assign rcon[ 5] = 8'h20;
+assign rcon[ 6] = 8'h40;
+assign rcon[ 7] = 8'h80;
+assign rcon[ 8] = 8'h1b;
+assign rcon[ 9] = 8'h36;
+assign rcon[10] = 8'h00;
+assign rcon[11] = 8'h00;
+assign rcon[12] = 8'h00;
+assign rcon[13] = 8'h00;
+assign rcon[14] = 8'h00;
+assign rcon[15] = 8'h00;
 
 
 //
@@ -87,13 +96,13 @@ wire [ 7:0] sb_inv_out_4, sb_inv_out_5, sb_inv_out_6, sb_inv_out_7;
 
 //
 // KeySchedule 1 SBox input selection
-wire        rcon_rot    = rs2[3:0] != 4'hA;
-wire [ 7:0] rconst      = rcon_rot ? rcon[rs2[3:0]] : 8'b0;
+wire        rcon_rot    = enc_rcon != 4'hA;
+wire [ 7:0] rconst      = rcon_rot ? rcon[enc_rcon] : 8'b0;
 
-wire [ 7:0] ks1_sb3     = rcon_rot ? rs1[55:48] : rs1[63:56];
-wire [ 7:0] ks1_sb2     = rcon_rot ? rs1[47:40] : rs1[55:48];
-wire [ 7:0] ks1_sb1     = rcon_rot ? rs1[39:32] : rs1[47:40];
-wire [ 7:0] ks1_sb0     = rcon_rot ? rs1[63:56] : rs1[39:32];
+wire [ 7:0] ks1_sb3     = rcon_rot ? rs1[39:32] : rs1[63:56];
+wire [ 7:0] ks1_sb2     = rcon_rot ? rs1[63:56] : rs1[55:48];
+wire [ 7:0] ks1_sb1     = rcon_rot ? rs1[55:48] : rs1[47:40];
+wire [ 7:0] ks1_sb0     = rcon_rot ? rs1[47:40] : rs1[39:32];
 
 wire [31:0] ks1_sbout   = e_sbout[31:0] ^ {24'b0, rconst};
 
@@ -152,7 +161,7 @@ wire [63:0] result_ks1  = {ks1_sbout, ks1_sbout};
 
 wire [63:0] result_ks2  = {
     rs1[63:32] ^ rs2[63:32] ^ rs2[31:0] ,
-    rs1[63:32] ^ rs2[63:32]
+    rs1[63:32] ^ rs2[31: 0]
 };
 
 wire [63:0] result_enc  = mix ? {mce_o1, mce_o0} : e_sbout;
