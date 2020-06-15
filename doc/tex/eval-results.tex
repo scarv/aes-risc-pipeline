@@ -1,7 +1,7 @@
 % =============================================================================
 
 \subsection{Hardware Evaluation}
-\label{sec:eval:sw}
+\label{sec:eval:hw}
 
 Each ISE variant was evaluated on the host cores
 described in \REFSEC{sec:design}.
@@ -94,7 +94,7 @@ V1 (Latency)&     3472     &{\bf 19}     & 41723 ($1.12$x) &               \\
 V2 (Latency)&     3547     &{\bf 19}     & 41199 ($1.10$x) &               \\
 V5 (Latency)&     4121     &     22      & 42070 ($1.13$x) &               \\
 V3          &{\bf 1157}    &     30      & 38610 ($1.03$x) &               \\
-V4          &              &             & N/A             & {\bf TODO}    \\
+V4          &     8312     &     27      & N/A             & {\bf TODO}    \\
 V1 (Size)   &     2174     &     22      & 40161 ($1.07$x) &               \\
 V2 (Size)   &     1381     &     21      & 38885 ($1.04$x) &               \\
 V5 (Size)   &     1927     &     23      & 39251 ($1.05$x) &               \\
@@ -126,8 +126,9 @@ Variant &
 .data   \\ \hline
 %Byte   &           &          &     312     &  -         & 522   \\
 T-table &     804   &     804  &     154     & $174\star$ & 5120  \\
+\hline
 V1      &     424   &     424  &{\bf 68     }&  -         & 10    \\
-V2      &{\bf 234 } &{\bf 238 }&{\bf 68     }& $62\star$  & 10    \\
+V2      &{\bf 234}  &{\bf 238} &{\bf 68     }& $62\star$  & 10    \\
 V3      &     290   &     290  &     86      & $64\star$  & 10    \\
 V4      &     268   &     268  &     168     & $100\star$ &  0    \\
 V5      &     266   &     278  &    $82+208 $&  -         & 10    \\
@@ -152,11 +153,11 @@ Static code size metrics for each variant, measured in bytes.
 \\
 Variant     &     iret &     cycles &     iret &     cycles &     iret &     cycles &     iret &     cycles \\ \hline
  T-table    &     953  &     1078   &     953  &     1058   &     445  &     555    &     1726 &     2202    \\
+\hline
 V1 (Latency)&     533  &     635    &     533  &     647    &{\bf 213} &{\bf 333}   &{\bf 219} &{\bf 350}    \\
 V2 (Latency)&{\bf 236} &{\bf 343}   &{\bf 237} &{\bf 343}   &{\bf 213} &     344    &     350  &     656     \\
 V5 (Latency)&     248  &     346    &     248  &     349    &     347  &     489    &     353  &     506     \\
 V3          &     261  &     351    &     261  &     346    &     233  &     352    &     683  &     1109    \\
-                                                                                                    
 V1 (Size)   &     533  &     795    &     533  &     815    &{\bf 213} &     373    &     219  &     390     \\
 V2 (Size)   &{\bf 236} &     580    &     237  &     580    &{\bf 213} &     374    &     350  &     794     \\
 V5 (Size)   &     248  &     598    &     248  &     590    &     347  &     519    &     353  &     536  
@@ -183,18 +184,21 @@ Note the $64$-bit \ISE{4} is absent.
 Variant     &      iret &     cycles &     iret &      cycles &    iret &     cycles &     iret &     cycles\\
 \hline
 %Byte       &           &            &          &             &         &            &          &          \\
-T-table     &     948   &      1143  &     949  &       1025  &     444  &     478    &     1726 &     1977 \\
+T-table     &     948   &      1143  &     949  &       1025  &     444  &     478    &     1726 &    1977  \\
+\hline
 V1 (Latency)&     528   &      685   &     529  &       680   &{\bf 212} &     341    &{\bf 214} &{\bf 290} \\
 V2 (Latency)&{\bf 231}  &{\bf  359}  &{\bf 233} &       368   &{\bf 212} &{\bf 315}   &     350  &     508  \\
 V5 (Latency)&     243   &      414   &     244  &{\bf   319}  &     346  &     427    &     348  &     424  \\
-V3          &     253   &      445   &     254  &       445   &     233  &     470    &     674  &     2425 \\
-V4          &     TODO  &            &          &             &          &            &          &          \\
+V3          &     253   &      445   &     254  &       445   &     233  &     470    &     674  &    2425  \\
 V1 (Size)   &     528   &      804   &     529  &       744   &     212  &     357    &     214  &     335  \\
 V2 (Size)   &{\bf 231}  &      511   &{\bf 233} &       520   &     212  &     345    &     350  &     646  \\
 V5 (Size)   &     243   &      585   &     244  &       543   &     346  &     504    &     348  &     454  \\
+\hline
+V4          &     81    &      119   &      82  &       125   &      66  &     204    &     136  &     306  \\
 \end{tabular}
 \caption{
 Performance results for the \CORE{1} core.
+Note that \ISE{4} uses the 64-bit base core, all others use the 32-bit base.
 }
 \label{tab:eval:sw:perf:rocket}
 \end{table}
@@ -219,10 +223,12 @@ V1 (Latency) &        2.12  &        2.01 &        2.12 &        1.94  &       2
 V2 (Latency) &        4.69  &        3.65 &        4.67 &        3.58  &       2.43 &     1.87   &        5.73 &  3.90    \\
 V5 (Latency) &        3.84  &        3.12 &        3.84 &        3.03  &       1.28 &     1.13   &        4.89 &  4.35    \\
 V3           & {\bf 13.01}  & {\bf 10.94} & {\bf 13.01} & {\bf 10.89}  & {\bf 6.80} & {\bf 5.62} &  9.00       &  7.07    \\
-V4           &        TODO  &             &             &              &            &            &             &          \\
 V1 (Size)    &         3.39 &        2.57 &        3.39 &         2.46 &       3.96 &      2.82  & {\bf 14.94} &  {\bf 10.70}   \\
 V2 (Size)    &        12.05 &        5.55 &       12.00 &         5.44 &       6.23 &      4.43  & 14.72       &  8.28    \\
-V5 (Size)    &         8.22 &        3.86 &        8.22 &         3.83 &       2.74 &      2.29  & 10.46       &  8.79
+V5 (Size)    &         8.22 &        3.86 &        8.22 &         3.83 &       2.74 &      2.29  & 10.46       &  8.79    \\
+\hline
+V4           &        11.77 &        9.06 &       11.62 &         8.46 &       6.74 &      2.72  &  12.69      & 7.20
+
 \end{tabular}
 \caption{Comparison of performance improvement unit-area for each
 variant. 
@@ -239,10 +245,12 @@ To this, end we calculate an efficiency score by calculating the speedup
 of each variant relative to the T-table baseline, and dividing it
 by the normalised size of each variant
 (see ``ISE Size'' column of \REFTAB{tab:eval:hw}).
+This is done separately for the $32$-bit and $64$-bit variants so as
+to compare like with like.
+
 \REFTAB{tab:eval:results} shows the performance / area efficiency results.
 The \CORE{2} core results were used for these numbers, but the
 same conclusions may be drawn from the \CORE{1} results.
-
 We deliberately omit the size of the host core from our calculation,
 as this dominates the total size of the system and detracts from
 the comparison.
@@ -261,6 +269,13 @@ it is slower than \ISE{3} in all cases.
 Based on these results, we believe that for $32$-bit RISC-V cores,
 ISE \ISE{3} makes the best candidate for standardisation,
 based on its efficiency, raw performance and simplicity to implement.
+
 For the $64$-bit case, \ISE{4} is a fairly obvious choice for making
-sensible use of the wider data-path.
+sensible use of the wider data-path within the constraints of RISC-V.
+We not the relativley poor performance of \ISE{4} in terms of cycles
+per instruction executed - a $50\%$ overhead for Encrypt/Decrypt.
+This is attributed to the forwarding behaviour of the \CORE{1}:
+ROCC instruction results are not
+forwarded to subsequent instructions as quickly as core ISA
+instructions.
 
