@@ -110,5 +110,97 @@ security. {\bf TODO}}
 
 \subsection{Evaluation}
 
-Lorem ipsum doler set amet...
+We used a standard experiment plaform to evaluate the power side-channel
+hardened AES \ISE{3} instructions, the details of which are found
+below.
 
+The modified version of the \CORE{2} core was implemented on a
+Sasebo GIII \cite{HKSS:12}
+side-channel analysis platform, containing two FPGAs:
+a Xilinx  Kintex-7 
+(model {\tt xc7k160tfbg676})
+target  FPGA 
+and
+a Xilinx Spartan-6
+(model {\tt xc6slx45})
+support FPGA.
+Only the Kintex-7 was used.
+The design was synthesised using Xilinx Vivado 2019.2 with
+default synthesis and implementaiton strategies.
+No effort was spent on optimising the synthesis or routing.
+The Kintex-7 FPGA uses a 200MHz differential external clock source, which is
+transformed into a 50MHz internal clock used by the entire
+design.
+
+Trace capture uses a standard pipeline of components, including:
+a MiniCircuits BLK+89 D/C blocker,
+an Agilent 8447D amplifier (with a $\SI{100}{\kilo\hertz}$ to $\SI{1.3}{\giga\hertz}$ range, and $\SI{25}{\decibel}$ gain),
+and
+a  PicoScope 5000 series oscilloscope.
+The oscilloscope uses a 250 MHz sample rate, with a 12-bit sample resolution.
+The capture process is coordinated using a laptop, which is responsible for:
+1) configuring the target device with the correct experiment program,
+2) uploading and retrieving experiment input and output values,
+3) recording oscilloscope trace data and packaging it for storage.
+
+We performed a generic Test Vector Leakage Assessment (TVLA) flow to evaluate
+the effectivness of the side-channel hardened implementation;
+using the AES-128 block encrypt function as the target operation.
+The un-protected and protected implementation results are shown in
+\REFFIG{fig:sca:unprotected} and
+\REFFIG{fig:sca:protected} respectivley.
+Clearly, the protected implementaiton is effective at removing $1$'st
+order side-channel leakage.
+
+\REFTAB{tab:sca:sw-hw} show the impact on hardware and software cost
+of the side-channel hardening.
+
+\begin{table}[]
+\centering
+\begin{tabular}{lrr}
+Metric                & Un-protected AES-128 & Protected AES-128 \\
+\hline
+Static Code Size      & 290                  & TODO              \\
+Instructions Executed & 261                  & TODO              \\
+CPU Clock Cycles      & 351                  & TODO              \\
+ISE Size (NAND2)      & 1157                 & 4616              \\
+ISE LTP               & 30                   & 37                \\
+CPU Size (NAND2)      & 38610                & 45141             \\
+CPU Size  LUTs        & 4017                 & 4956              \\
+CPU Size  FFs         & 2078                 & 2420              \\
+Timing Slack @50MHz   & 8.12ns               & 7.05ns
+\end{tabular}
+\caption{
+Software and hardware overheads for the protected ISE implementation.
+The ``ISE Size'' row does not include the cost of the mask register file
+for the protected implementation.
+This is included in the CPU size measurements, since the exact method
+of mask delivery and storage is an implmentation option.
+}
+\label{tab:sca:sw-hw}
+\end{table}
+
+\begin{figure}
+\centering
+\begin{subfigure}[t]{0.95\textwidth}
+\centering
+\includegraphics[width=\textwidth]{graphs/aes-vanilla-enc-default-ttest.png}
+\caption{
+    Un-protected implementation TVLA results after $10$K traces.
+}
+\label{fig:sca:unprotected}
+\end{subfigure}
+\begin{subfigure}[t]{0.95\textwidth}
+\centering
+\includegraphics[width=\textwidth]{graphs/aes-secure-enc-default-ttest.png}
+\caption{
+    Side-channel protected implementation TVLA results after $100$K traces.
+}
+\label{fig:sca:protected}
+\end{subfigure}
+\caption{
+TVLA results for the baseline and protected implementations.
+The blue trace is the absoloute result of the TVLA evaluation, the green
+trace is the average power consumption for each TVLA trace set.
+}
+\end{figure}
