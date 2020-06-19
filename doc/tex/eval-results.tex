@@ -151,16 +151,15 @@ Static code size metrics for each variant, measured in bytes.
 & \multicolumn{2}{c|}{\begin{tabular}[c]{@{}c@{}}KeySchedule\\ Encrypt\end{tabular}} 
 & \multicolumn{2}{c }{\begin{tabular}[c]{@{}c@{}}KeySchedule\\ Decrypt\end{tabular}}
 \\
-Variant     &     iret &     cycles &     iret &     cycles &     iret &     cycles &     iret &     cycles \\ \hline
- T-table    &     953  &     1078   &     953  &     1058   &     445  &     555    &     1726 &     2202    \\
-\hline
-V1 (Latency)&     533  &     635    &     533  &     647    &{\bf 213} &{\bf 333}   &{\bf 219} &{\bf 350}    \\
-V2 (Latency)&{\bf 236} &{\bf 343}   &{\bf 237} &{\bf 343}   &{\bf 213} &     344    &     350  &     656     \\
-V5 (Latency)&     248  &     346    &     248  &     349    &     347  &     489    &     353  &     506     \\
-V3          &     261  &     351    &     261  &     346    &     233  &     352    &     683  &     1109    \\
-V1 (Size)   &     533  &     795    &     533  &     815    &{\bf 213} &     373    &     219  &     390     \\
-V2 (Size)   &{\bf 236} &     580    &     237  &     580    &{\bf 213} &     374    &     350  &     794     \\
-V5 (Size)   &     248  &     598    &     248  &     590    &     347  &     519    &     353  &     536  
+Variant           &     iret &     cycles &     iret &     cycles &     iret &     cycles &     iret &    cycles \\ \hline
+T-table           &     998  &    1076    &     998  &    1103    &     466  &     554    &    1747  &     2346  \\ \hline
+\ISE{1} (Latency) &     518  &     593    &     518  &     607    &{\bf 198} &{\bf 291}   &{\bf 204} &{\bf  310} \\
+\ISE{2} (Latency) &{\bf 221} &     301    &{\bf 222} &     303    &{\bf 198} &     302    &     335  &      616  \\
+\ISE{5} (Latency) &     233  &     304    &     233  &     309    &     332  &     447    &     338  &      466  \\
+\ISE{3}           &     238  &{\bf 291}   &     238  &{\bf 286}   &     219  &     312    &     659  &     1118  \\
+\ISE{1} (Size)    &     518  &     753    &     518  &     775    &{\bf 198} &     331    &{\bf 204} &      350  \\
+\ISE{2} (Size)    &     221  &     538    &     222  &     540    &{\bf 198} &     332    &     335  &      754  \\
+\ISE{5} (Size)    &     233  &     556    &     233  &     550    &     332  &     477    &     338  &      496
 \end{tabular}                
 \caption{                    
 Performance results for the \CORE{2} core.
@@ -217,18 +216,16 @@ Note that \ISE{4} uses the 64-bit base core, all others use the 32-bit base.
 & \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}KeySchedule\\ Encrypt\end{tabular}} 
 & \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}KeySchedule\\ Decrypt\end{tabular}}
 \\
-Variant      &       iret   &       cycle &       iret  &       cycles &       iret &     cycles &       iret  & cycles   \\
-\hline                                                                                                   
-V1 (Latency) &        2.12  &        2.01 &        2.12 &        1.94  &       2.48 &     1.98   &        9.35 &  7.47    \\
-V2 (Latency) &        4.69  &        3.65 &        4.67 &        3.58  &       2.43 &     1.87   &        5.73 &  3.90    \\
-V5 (Latency) &        3.84  &        3.12 &        3.84 &        3.03  &       1.28 &     1.13   &        4.89 &  4.35    \\
-V3           & {\bf 13.01}  & {\bf 10.94} & {\bf 13.01} & {\bf 10.89}  & {\bf 6.80} & {\bf 5.62} &  9.00       &  7.07    \\
-V1 (Size)    &         3.39 &        2.57 &        3.39 &         2.46 &       3.96 &      2.82  & {\bf 14.94} &  {\bf 10.70}   \\
-V2 (Size)    &        12.05 &        5.55 &       12.00 &         5.44 &       6.23 &      4.43  & 14.72       &  8.28    \\
-V5 (Size)    &         8.22 &        3.86 &        8.22 &         3.83 &       2.74 &      2.29  & 10.46       &  8.79    \\
-\hline
-V4           &        11.77 &        9.06 &       11.62 &         8.46 &       6.74 &      2.72  &  12.69      & 7.20
-
+Variant           &     iret    &     cycle  &      iret   &    cycles  &       iret  &     cycles  &      iret   &      cycles   \\
+\hline                                                                                                                                            
+\ISE{1} (Latency) &       4.61  &      4.34  &       4.61  &      4.35  &       5.39  &       6.06  &      20.50  &      18.12    \\
+\ISE{2} (Latency) &      10.58  &      8.38  &      10.53  &      8.53  &       5.28  &       4.30  &      12.22  &       8.92    \\
+\ISE{5} (Latency) &       8.64  &      7.14  &       8.64  &      7.20  &       2.71  &       2.50  &      10.43  &      10.15    \\
+\ISE{3}           & {\bf 30.12} &{\bf 26.56} & {\bf 30.12} &{\bf 27.71} & {\bf 14.63} & {\bf 12.76} &      19.04  &      15.08    \\
+\ISE{4}           &      12.32  &      9.04  &      12.17  &      8.82  &       6.76  &       2.72  &      12.85  &       7.67    \\
+\ISE{1} (Size)    &       7.37  &      5.46  &       7.37  &      5.44  &       8.61  &       6.40  & {\bf 32.74} & {\bf 25.63}   \\
+\ISE{2} (Size)    &      27.18  &     12.04  &      27.06  &     12.29  &      13.56  &      10.04  &      31.39  &      18.73    \\
+\ISE{5} (Size)    &      18.48  &      8.35  &      17.64  &      8.30  &       5.79  &       5.01  &      22.29  &      20.40
 \end{tabular}
 \caption{Comparison of performance improvement unit-area for each
 variant. 
