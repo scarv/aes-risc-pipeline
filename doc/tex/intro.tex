@@ -2,7 +2,7 @@
 
 \paragraph{Implementing the Advanced Encryption Standard (AES).}
 
-In $2001$, NIST pronounced Rijndael~\cite{DaeRij:98,DaeRij:02}, 
+In October $2000$, NIST pronounced Rijndael~\cite{DaeRij:98,DaeRij:02}, 
 a design due to Daemen and Rijmen, 
 as winner of a $5$-year standardisation process~\cite{NBBBDFR:01} instigated 
 to identify a replacement for the incumbent
@@ -11,7 +11,7 @@ block cipher; the resulting
 Advanced Encryption Standard (AES)~\cite{FIPS:197} 
 was announced in $2001$.
 
-Compared to more general cases, cryptographic kernels such as AES present a
+Compared to more general cases, cryptographic algorithm such as AES present a
 significant challenge wrt. implementation, because they often
 a) involve computationally intensive, somewhat niche functionality,
 b) are deployed in a diverse range of contexts,
@@ -71,10 +71,10 @@ and the associated threat more potent during said period.
 \paragraph{Support via Instruction Set Extensions (ISEs).}
 
 A potentially large space of implementation techniques will often exist
-for a given cryptographic kernel.  One could classify instances as being 
-   kernel-agnostic
+for a given cryptographic algorithm.  One could classify instances as being 
+   algorithm-agnostic
    or
-   kernel-specific,
+   algorithm-specific,
 and based on the use of   
    hardware              only,
                 software only,
@@ -83,7 +83,7 @@ and based on the use of
 The latter class includes instances based on the concept of an
 Instruction Set Extension (ISE)~\cite{GalBer:11,BarGioMar:09,RegIen:16}.
 The idea is to identify, e.g., through benchmarking, a set of additional 
-instructions that allow the kernel to leverage
+instructions that allow the algorithm to leverage
 special-purpose, domain-specific functionality
 in the resulting ISE,
 vs. 
@@ -117,7 +117,7 @@ As a fundamental, long-lived computer systems interface, the design of or
 changes to an ISA demands careful consideration
 (cf.~\cite[Section 4]{Gueron:09}); this implies that the production of a 
 concrete ISE design is far from trivial.  
-Such a design must deliver a demonstrable improvement wrt. the kernel in 
+Such a design must deliver a demonstrable improvement wrt. the algorithm in 
 question, {\em as well as} considering a (non-exhaustive) list of design 
 goals such as
 
@@ -146,7 +146,7 @@ Multi-Media      eXtensions (MMX),
 Streaming SIMD  Extensions (SSE),
 and
 Advanced Vector Extensions (AVX)
-support numerical kernels via vector (or SIMD) vs. scalar computation.  
+support numerical algorithms via vector (or SIMD) vs. scalar computation.  
 Likewise, the
     cryptographic
 Advanced Encryption Standard New Instructions (AES-NI)~\cite{Gueron:09,DruGueKra:19}
@@ -162,7 +162,7 @@ c) facilitating compatibility via the
    and
 d) offering utility beyond AES specifically:
    it supports AES-specific functionality but is able to maximise utility 
-   through more AES-agnostic support of {\em other} kernels
+   through more AES-agnostic support of {\em other} algorithms
    (see, e.g., use of AES-NI within SHA3~\cite{BBGR:09} and CEASER~\cite[Section 4.1]{AnkAnk:16} candidates).
 
 % -----------------------------------------------------------------------------
@@ -209,6 +209,8 @@ and prior commercial and academic ISE designs.
 used to select and design them.
 \REFSEC{sec:eval} gives evaluation results in terms of hardware cost
 and software performance.
+\REFSEC{sec:eval:gcm} analyses how best to implement $GF(2^{128})$ arithmetic
+using RISC-V, which is essential to the AES-GCM mode of operation.
 \REFSEC{sec:psca} shows how our ISE recommendation for highly resource
 constrained devices can be further extended to give power side-channel
 resistance.
