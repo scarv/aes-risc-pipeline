@@ -251,25 +251,21 @@ same conclusions may be drawn from the \CORE{1} results.
 We deliberately omit the size of the host core from our calculation,
 as this dominates the total size of the system and detracts from
 the comparison.
-
 Qualitatively, we place more weight on the block encrypt/decrypt results
 than the KeySchedule results, as one typically performs many more
 block operations than KeySchedules.
-In almost all cases, we find that \ISE{3} is clearly much more
-efficient in terms of performance per unit area.
-The size optimised version of \ISE{2} performs almost on par with
-\ISE{3} when looking at performance/area efficiency in terms of
-instructions retired.
-When looking at actual execution times in terms of cycles however,
-it is slower than \ISE{3} in all cases.
 
-Based on these results, we believe that for $32$-bit RISC-V cores,
-ISE \ISE{3} makes the best candidate for standardisation,
+\ISE{3} gives the best performance per unit area
+for Encryption, Decryption and encrypt KeySchedule generation.
+Its decryption KeySchedule performance suffers slightly for needing
+to use the equivilent inverse cipher transform.
+Based on these results, we believe ISE \ISE{3} makes the best candidate for
+standardisationfor $32$-bit RISC-V cores,
 based on its efficiency, raw performance and simplicity to implement.
 
-For the $64$-bit case, \ISE{4} is a fairly obvious choice for making
+For the $64$-bit case, \ISE{4} is an obvious choice for making
 sensible use of the wider data-path within the constraints of RISC-V.
-We not the relativley poor performance of \ISE{4} in terms of cycles
+We note the relativley poor performance of \ISE{4} in terms of cycles
 per instruction executed - a $50\%$ overhead for Encrypt/Decrypt.
 This is attributed to the forwarding behaviour of the \CORE{1}:
 ROCC instruction results are not
