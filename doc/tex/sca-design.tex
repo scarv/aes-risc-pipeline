@@ -34,7 +34,7 @@ mask storage, generation and all computations on secret data.
 The aim is to keep the secure zone as small and separate from the main
 processor data-path as possible.
 
-\subsection{Design Overview}
+\subsection{Design and Implementation}
 
 We extend ISE \ISE{3} to support 1'st order masking.
 To this end, the secret key is represented as two boolean masked shares.
@@ -52,12 +52,13 @@ Each mask register $M_i$ is $32$-bits wide, and stores the mask for
 one of the GPRs.
 We use a fixed mapping between GPRs and mask registers;
 not all GPRs have a corresponding mask register.
-({\bf TODO:} define this mapping. E.g. \{a0..a3,t0..t4\} onto MRF \{0..7\}).
+We use the mapping $\{a0..a3,t0..t4\} \Rightarrow \{m0..m7\}$.
 
 Share $0$ of each secret value is loaded into the GPRs.
 We define a new Load Mask instruction {\tt lm rd, imm(rs1)} which
-loads {\em the mask for GPR {\tt rd}} from memory into the corresponding
-MRF entry.
+loads {\em the mask for GPR {\tt rd}}
+(i.e. Share $1$)
+from memory into the corresponding MRF entry.
 A corresponding Store Mask instruction {\tt sm rs2, imm(rs1)} writes
 the mask corresponding to GPR {\tt rs2} to memory.
 The {\tt sm} instruction is only used for context switches, and
@@ -70,6 +71,9 @@ We require that the secret values be stored in shared form in memory
 to extend the SCA protection boundary outside the CPU.
 Otherwise, the hamming weight of un-masked secret values would be
 leaked by memory-hierarchy registers outside the CPU.
+Executing an {\tt lm} instruction such that {\tt rd} does not map to
+a mask register raises an illegal opcode exception.
+Likewise for {\tt sm} and {\tt rs2}.
 
 When an ISE instruction is executed such that any of its GPR source
 registers also map onto an MRF register, both GPR and MRF are
@@ -88,22 +92,34 @@ $1$'st order leakage.
 
 If the destination register is in the set which has a corresponding
 mask register, share $0$ is stored in the GPRs, share $1$ in the MRF.
-If destination is not a GPR, result is written back un-masked.
+If the destination GPR does not map to a mask register, the result is written
+to the GPR un-masked.
 This means that in the final encrypt/decrypt round, we can obtain
 the un-masked results without having to store the shares to memory,
 load them back and un-mask them.
 
-\subsection{Implementation}
-
-We use the \CORE{2} core as the basis for our side-channel secure
+We used the \CORE{2} core as the basis for our side-channel secure
 implementation of \ISE{3}.
 \REFFIG{fig:sca:uarch} shows a block diagram of the modifications
 made to the core, and which data-paths carry masked data.
+To avoid accidental combining (un-masking) of the two shares,
+Share $1$ is stored in {\em bit-reversed} form in the MRF and pipeline
+stage registers.
+This means that any accidental multiplexing between pipeline operand
+registers causes toggles between non-corresponding bits of each share.
+Share $1$ is only un-reversed immediately prior to entering the
+AES functional unit, and is re-reversed before exiting it.
+We note that bit-reversal has zero cost in terms of logic gates, but
+does add some minor routing complexity.
+
 
 \begin{figure}
+\centering
+\includegraphics[scale=0.45,angle=90]{diagrams/scarv-cpu-uarch-sca.png}
 \caption{Block diagram of the modifications to the \CORE{2} core,
 supporting an extended version of ISE \ISE{3} for side-channel
-security. {\bf TODO}}
+security.
+Red arrows show internal connections which carry mask shares.}
 \label{fig:sca:uarch}
 \end{figure}
 
@@ -154,24 +170,39 @@ order side-channel leakage.
 
 \REFTAB{tab:sca:sw-hw} show the impact on hardware and software cost
 of the side-channel hardening.
+The ISE Size/LTP rows are inclusive of the SBox Size/LTP rows.
+Likewise, the CPU Size rows are inclusive of the ISE Size rows.
+For software, the overheads are $~20\%$
+in terms of static code size and executed instructions, considerably
+less than for a non-ISE based software masking approach for AES.
+The hardware overheads are dominated by the increased size of the
+SBox (owing to the 3-share design), and the Mask Register File.
+It is important to note that although the overhead to the dedicated
+ISE logic is almost $4x$, this drops to only $~1.2x$ when the entire
+CPU sub-system is considered.
+In the context of an entire SoC, the additional logic requirements
+are very modest when compared with a dedicated masked AES accelerator.
 
 \begin{table}[]
 \centering
-\begin{tabular}{lrr}
-Metric                & Un-protected AES-128 & Protected AES-128 \\
+\begin{tabular}{lrrr}
+Metric  & Un-protected & Protected  & Overhead \\
 \hline
-Static Code Size      & 290                  & TODO              \\
-Instructions Executed & 261                  & TODO              \\
-CPU Clock Cycles      & 351                  & TODO              \\
-ISE Size (NAND2)      & 1157                 & 4616              \\
-ISE LTP               & 30                   & 37                \\
-CPU Size (NAND2)      & 38610                & 45141             \\
-CPU Size  LUTs        & 4017                 & 4956              \\
-CPU Size  FFs         & 2078                 & 2420              \\
-Timing Slack @50MHz   & 8.12ns               & 7.05ns
+Static Code Size      & 290                  & 358    & $1.23$x        \\
+Instructions Executed & 238                  & 287    & $1.21$x        \\
+CPU Clock Cycles      & 291                  & 331    & $1.14$x        \\
+SBox Size (NAND2)     & 554                  & 3245   & $5.86$x        \\
+SBox LTP              & 19                   & 22     & $1.16$x        \\
+ISE Size (NAND2)      & 1157                 & 4616   & $3.99$x        \\
+ISE LTP               & 30                   & 37     & $1.23$x        \\
+CPU Size (NAND2)      & 38610                & 45141  & $1.16$x        \\
+CPU Size  LUTs        & 4017                 & 4956   & $1.23$x        \\
+CPU Size  FFs         & 2078                 & 2420   & $1.16$x        \\
+Timing Slack @50MHz   & 8.12ns               & 7.05ns & $0.87$x
 \end{tabular}
 \caption{
-Software and hardware overheads for the protected ISE implementation.
+Software and hardware overheads for the protected ISE implementation
+of AES-128 block encryption.
 The ``ISE Size'' row does not include the cost of the mask register file
 for the protected implementation.
 This is included in the CPU size measurements, since the exact method
