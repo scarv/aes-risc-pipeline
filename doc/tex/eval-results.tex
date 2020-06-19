@@ -25,7 +25,7 @@ instantiated independently from any wider system.
 The LTP column gives the Longest Topological Path of the synthesised
 functional unit circuit from input to combinatorial output.
 The \CORE{2} Size column gives the size in NAND2 equivalent gates of the
-\CORE{2}, with the various AES functional units integrated.
+\CORE{2}, with the AES functional units integrated.
 The ``Baseline'' row gives the size of the core without any of the
 ISEs integrated.
 We found that none of the proposed ISEs affected the critical
@@ -57,8 +57,8 @@ The V5 Encrypt Key Schedule is split into the basic KeySchedule
 operation, plus a re-arrangement of the bytes in each word to make
 KeyAddition more efficient in subsequent encrypt/decrypt operations.
 
-For the Encrypt and Decrypt functions, all versions are very similar
-in terms of code size.
+For the Encrypt and Decrypt functions, all versions have similar
+static code size.
 The 32-bit variants (V1,V2,V3,V5) all use loop-based implementations.
 V1, V2, V5 implement one round per loop iteration. V3 implements two
 rounds per loop iteration to avoid needless register move operations.
