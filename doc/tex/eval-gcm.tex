@@ -1,2 +1,142 @@
 
-TODO:
+Galois/Counter Mode (GCM) is a block cipher mode of operation specified
+by NIST\cite{NIST:SP800:38D} for providing confidentiality and integrity of
+communicated data.
+GCM consists of a symmetric key block cipher to provide message
+confidentiality, and a universal hash function GHASH to provide
+authenticity.
+It is the only cipher mode which TLS 1.3
+\cite[Section 9.1]{RFC:8446}
+mandates be implemented, and uses AES-128 as the block cipher.
+
+The importance of AES-GCM mean they are frequently considered together
+from an evaluation perspective.
+The computationally intensive parts of AES-GCM are the AES Encryption
+and GHASH functions.
+We have already shown how to efficiently accelerate AES, we now show
+how GHASH may be implemented efficiently using the proposed Bit-manipulation
+extension to RISC-V.
+
+\subsection{GHASH Background}
+
+We briefly outline the core components of GHASH here, A full explanation may
+be found in
+\cite[Section 6.4]{NIST:SP800:38D}.
+
+GHASH is a universal hash defined over the binary field $GF(2^{128})$.
+The core of it's operation is the multiplication between a $128$-bit
+block of input data, and a secret generator $H$, where
+$H$ is obtained by encrypting an all-zeros input block using the
+block cipher.
+
+The field is defined as the ring of binary polynomials, modulo the
+primitive polynomial
+$R(x) = x^{128} + x^{7} + x^{2} + x + 1$.
+The field is encoded in little-endian form, where the multiplicative
+identity ($1$) is encoded as the byte sequence {\tt 0x80, 0x00, ... 0x00}.
+
+\subsection{GHASH Implementation}
+
+Converting the inputs to a little-endian representation is achieved
+using the {\tt grev} instruction to reverse all of the bits in each byte
+of an input word.
+On RV32, this requires four {\tt grev} instructions, while RV64 requires
+only two.
+
+Addition in the field is simply the {\tt xor} operation, i.e. addition
+modulo $2$.
+Multiplication is more complex, requiring ``carry-less multiply''
+{\tt clmul[h]} instructions to implement efficiently.
+The {\tt clmul} instruction computes the carry-less product of two source
+registers and writes back the low half
+(i.e. $32$-bits on RV32, $64$-bits on RV64)
+of the result.
+The {\tt clmulh} instruction does the same, but writes the {\em high}
+half of the result.
+Pairs of {\tt clmulh/clmul} instructions
+should be scheduled adjacently, so that micro-architectures can employ
+macro-op fusion to compute both results at once.
+
+Computing the $256$-bit result of the $128*128$-bit multiplication
+on RISC-V with the Bit-manipulation extension requires
+four {\tt clmulh/clmul} pairs for RV64,
+and $16$ pairs on RV32.
+This may be speeded up asymptotically using the Karatsuba method,
+resulting in $3$ pairs on RV64 and $9$ pairs on RV32
+at the cost of additional {\tt xor} operations.
+
+Reducing the $256$-bit multiplication result back to $128$-bits
+can generally be done in one of two ways:
+1) A shift reduction, made possible by the low hamming weight of
+the primitive polynomial
+or
+2) a multiplication reduction; analogous to the Montgomery or
+Barret methods.
+The fastest method depends on the relative speed of
+the carry-less multiply instructions compared to the basic
+shift and {\tt xor} instructions.
+
+\REFTAB{tab:gcm:instrs} shows instruction counts for the GHASH multiplication
+operation implemented using the different combinations of base architecture,
+multiplication and reduction methods.
+\REFTAB{tab:gcm:cycles} then estimates the execution time in cycles
+for a scalar CPU assuming that {\tt grev}, {\tt xor}, and shifts take a
+single cycle.
+We can see that if the {\tt clmul} instructions take twice the time
+of a shift/{\tt xor}, then the Karatsuba method is worthwhile.
+If the {\tt clmul} instructions are six or more times slower than
+a shift/{\tt xor}, then it is worthwhile to implement a shift/{\tt xor}
+based reduction.
+These tables inform developers as to the {\em fastest} way to implement
+the GHASH multiplication in a scalar CPU.
+This may not be the only concern, for example embedded applications may
+prefer the smaller code size or lower instruction counts (and hence
+lower energy consumption) over raw performance.
+
+We also note that in order to be usable for cryptographic purposes, the
+{\tt clmul} implementation {\em must} be constant time with respect
+to its inputs.
+An early-out implementaiton will result in a timing channel.
+
+\begin{table}
+\centering
+\begin{tabular}{lccrrrrrr}
+Arch  & Karatsuba & Reduce & GREV & XOR & Shift & CLMUL & CLMULH & Total \\
+\hline
+RV32IB&   no      &   mul  &   4  & 36  &   0   &   20  &   20   & 80    \\
+RV32IB&   no      & shift  &   4  & 56  &   24  &   16  &   16   & 116   \\
+RV32IB&   yes     &   mul  &   4  & 52  &   0   &   13  &   13   & 82    \\
+RV32IB&   yes     & shift  &   4  & 72  &   24  &   9   &   9    & 118   \\
+\hline
+RV64IB&   no      &   mul  &   2  & 10  &   0   &   6   &   6    & 24    \\
+RV64IB&   no      & shift  &   2  & 20  &   12  &   4   &   4    & 42    \\
+RV64IB&   yes     &   mul  &   2  & 14  &   0   &   5   &   5    & 26    \\
+RV64IB&   yes     & shift  &   2  & 24  &   12  &   3   &   3    & 44    \\
+\end{tabular}
+\caption{
+    Instruction counts for implementing the GHASH multiplication.
+}
+\label{tab:gcm:instrs}
+\end{table}
+
+
+\begin{table}
+\centering
+\begin{tabular}{lccrrrrrr}
+Arch  & Karatsuba & Reduce &   MUL=1  &   MUL=2   &   MUL=3   &    MUL=6   \\
+\hline
+RV32IB&   no      &   mul  & {\bf 80} &      120  &      160  &      280   \\
+RV32IB&   no      & shift  &     116  &      148  &      180  &      276   \\
+RV32IB&   yes     &   mul  &      82  & {\bf 108} & {\bf 134} &      212   \\
+RV32IB&   yes     & shift  &     118  &      136  &      154  & {\bf 208}  \\
+\hline
+RV64IB&   no      &   mul  & {\bf 24} & {\bf  36} &       48  &       84   \\
+RV64IB&   no      & shift  &      42  &       50  &       58  &       82   \\
+RV64IB&   yes     &   mul  &      26  & {\bf  36} & {\bf  46} &       76   \\
+RV64IB&   yes     & shift  &      44  &       50  &       56  & {\bf  74}  \\
+\end{tabular}
+\caption{
+    Modelled cycle counts for implementing the GHASH multiplication.
+}
+\label{tab:gcm:cycles}
+\end{table}
