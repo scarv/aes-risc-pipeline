@@ -1,6 +1,155 @@
+% =============================================================================
 
-TODO:
+The
+Electronic Codebook Mode (ECB)~\cite[Section 6.1]{NIST:sp.800.38a}
+captures ``raw'' use of AES as is.  However, demand for enhanced security
+properties and/or functionality, for example, has led to use of AES in a
+variety of {\em other} constructions.
+Although not our focus per se, such use-cases are subtly important in the 
+sense they inform or constrain the ISE interface: if the interface cannot 
+support standard constructions, for example, then it cannot be deemed fit 
+for purpose even {\em if} it supports AES as is.
 
-Galois / Counter Mode (GCM) for data in transit.
+% -----------------------------------------------------------------------------
 
-XTS-AES for data at rest.
+\subsubsection{Modes of operation: ``AES plus insignificant extras''}
+
+Some modes of operation use AES in combination with
+insignificant 
+additional operations
+(e.g., XOR).
+Pertinent examples include the following.
+
+\paragraph{CBC.}
+
+Encryption
+and 
+decryption
+using
+Cipher Block Chaining (CBC) mode
+~\cite[Section 6.2]{NIST:sp.800.38a}
+is outlined in
+\REFALGO{alg:cbc:enc}
+and
+\REFALGO{alg:cbc:dec}
+respectively:
+note that it uses {\em both} AES encryption {\em and} decryption.
+
+\paragraph{CTR.}
+
+Encryption
+and 
+decryption
+using
+Counter               (CTR) mode
+~\cite[Section 6.5]{NIST:sp.800.38a}
+is outlined in
+\REFALGO{alg:ctr:enc}
+and
+\REFALGO{alg:ctr:dec}
+respectively:
+note that it uses {\em only} AES encryption, and that suitable choices of 
+the $iv$ and increment function~\cite[Appendix B]{NIST:sp.800.38a} $f$ are
+required.
+
+% -----------------------------------------------------------------------------
+
+\subsubsection{Modes of operation: ``AES plus   significant extras''}
+
+Some modes of operation use AES in combination with
+  significant 
+additional operations.  
+We pay particular attention examples which combine the use of AES with
+operations in the finite field $\F_{2^{128}}$ constructed as
+$
+\F_{2}[\IND{x}] / ( \IND{x}^{128} + \IND{x}^{7} + \IND{x}^{2} + \IND{x} + 1 ) .
+$
+Field 
+      addition
+and
+multiplication
+are denoted by
+$\oplus$
+and
+$\otimes$
+respectively:
+a natural encoding/decoding is assumed, allowing conversion between field 
+elements and, e.g., $128$-bit plaintexts or ciphertexts.
+Whereas $\oplus$ can be realised in most ISAs using XOR, $\otimes$ can be
+more problematic.  This has led many ISAs to include associated ISEs for
+what is often termed ``carry-less'' multiplication; 
+examples include
+Intel via \VERB{PCLMULQDQ}~\cite[Page 4-241]{X86:2:18},
+ARM   via \VERB{PMULL} and \VERB{PMULL2}~\cite[Section C7.2.215]{ARMv8-A:20},
+and
+SPARC via \VERB{XMULX} and \VERB{XMULXHI}~\cite[Section 7.143]{SPARC:16}.
+
+\paragraph{GCM.}
+
+The Galois Counter Mode (GCM)
+~\cite{NIST:sp.800.38d}
+supports authenticated encryption, using a parameterisable block cipher,
+e.g., as AES-GCM when using AES; this is the {\em only} parameterisation
+mandated by TLS 1.3~\cite[Section 9.1]{rfc:8446}.
+AES-GCM is comprised of two components:
+
+\begin{enumerate}
+
+\item \ALG{GCTR}
+      is responsible for 
+          encryption,
+      using AES; 
+      a simplified description of
+      ~\cite[Algorithm 3]{NIST:sp.800.38d}
+      is presented in
+      \REFALGO{alg:gctr}
+      for completeness.
+
+\item \ALG{GHASH}
+      is responsible for
+      authentication,
+      using operations in $\F_{2^{128}}$;
+      a simplified description of
+      ~\cite[Algorithm 2]{NIST:sp.800.38d}
+      is presented in
+      \REFALGO{alg:ghash}
+      for completeness,
+      where the so-called hash key is
+      $
+      h = \SCOPE{\ID{AES}}{\ALG{Enc}}( k, 0 ) .
+      $
+
+\end{enumerate}
+
+\paragraph{XTS-AES.}
+
+The XTS-AES mode 
+~\cite{NIST:sp.800.38e}
+is an AES-specific instantiation of the XEX (XOR Encrypt XOR) tweakable
+block cipher of Rogaway~\cite{Rogaway:04};
+rather than ``data in transit'', XTS-AES is designed to support access
+to ``data at rest'' on some block-addressable storage medium.
+\REFALGO{alg:xts:enc}
+and
+\REFALGO{alg:xts:dec}
+capture the XTS-AES encryption and decryption respectively, noting that 
+$
+\alpha = \IND{x} .
+$
+
+% -----------------------------------------------------------------------------
+
+\subsubsection{Other}
+
+Various other constructions use components {\em in} AES, rather than AES
+{\em itself}.
+For example,
+the Gr{\o}stl~\cite{GKMMRST:11} hash function
+(a SHA-3  candidate)
+uses the AES S-box~\cite[Section 4.3]{GKMMRST:11},
+and
+the YAES~\cite{BosVer:14} authenticated encryption scheme
+(a CAESAR candidate)
+uses the full AES round~\cite[Section 1.3]{BosVer:14}.
+
+% =============================================================================

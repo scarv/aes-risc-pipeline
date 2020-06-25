@@ -36,6 +36,11 @@
 \setlist{noitemsep,leftmargin=0.65\parindent,align=left,labelwidth=0.65\parindent,labelsep=2pt,topsep=2pt,partopsep=2pt,parsep=2pt}
 \setlength{\textfloatsep}{0.7\baselineskip plus 0.2\baselineskip minus 0.5\baselineskip}
 
+\setlength{\algomargin}{0em}
+\SetArgSty{textnormal}
+\DontPrintSemicolon
+\SetKwProg{KwFn}{function}{~begin}{end}
+
 \newcommandx{\F}{\ensuremath{\mathbb F}}
 
 \newcommandx{\REP}[1]{\hat{#1}}
@@ -45,12 +50,14 @@
 \newcommandx{\FIG}[1][1={}]{\IfEq{#1}{s}{Figures}{Figure}\xspace}
 \newcommandx{\LST}[1][1={}]{\IfEq{#1}{s}{Listings}{Listing}\xspace}
 \newcommandx{\APPX}[1][1={}]{\IfEq{#1}{s}{Appendices}{Appendix}\xspace}
+\newcommandx{\ALGO}[1][1={}]{\IfEq{#1}{s}{Algorithms}{Algorithm}\xspace}
 
 \newcommandx{\REFSEC}[1]{\SEC~\ref{#1}\xspace}
 \newcommandx{\REFTAB}[1]{\TAB~\ref{#1}\xspace}
 \newcommandx{\REFFIG}[1]{\FIG~\ref{#1}\xspace}
 \newcommandx{\REFLST}[1]{\LST~\ref{#1}\xspace}
 \newcommandx{\REFAPPX}[1]{\APPX~\ref{#1}\xspace}
+\newcommandx{\REFALGO}[1]{\ALGO~\ref{#1}\xspace}
 
 \newcommandx{\TUPLE}[1]{\ensuremath{({#1})}\xspace}
 \newcommandx{\TABLE}[1]{\ensuremath{[{#1}]}\xspace}
@@ -62,9 +69,15 @@
 \newcommandx{\IOR}{\ensuremath{\vee  }\xspace}
 \newcommandx{\XOR}{\ensuremath{\oplus}\xspace}
 
+\newcommandx{\INDEX}[2]{\ensuremath{#1}_{#2}\xspace}
+\newcommandx{\FIELD}[2]{\ensuremath{#1}[{#2}]\xspace}
+\newcommandx{\SCOPE}[2]{\ensuremath{#1}.{#2}\xspace}
+
+\newcommandx{\CONS}{\ensuremath{\;\parallel\;}\xspace}
 \newcommandx{\RADIX}[2]{\ensuremath{{#1}_{({#2})}}\xspace}
 \newcommandx{\ASN}{\ensuremath{\leftarrow}\xspace}
 \newcommandx{\ALG}[1]{\textsc{#1}}
+\newcommandx{\ID}[1]{\textsf{#1}}
 \newcommandx{\IND}[1]{\ensuremath{\mbox{\bf #1}}\xspace}
 
 \newcommandx{\AESRND}[2]{\ensuremath{#1}^{(#2)}}

@@ -1,0 +1,180 @@
+% =============================================================================
+
+\begin{algorithm}
+\KwData  {A  cipher key             $k$,
+          an initialisation vector $iv$,
+          and
+          an $n$-block  plaintext   $m$.
+}
+\KwResult{An $n$-block ciphertext   $c$.
+}
+\BlankLine
+\KwFn{$\mbox{\SCOPE{\ID{AES-CBC}}{\ALG{Enc}}}( k, iv, m )$}{
+    $c_0 \ASN \SCOPE{\ID{AES}}{\ALG{Enc}}( k, m_0   \XOR iv       )$ \;
+  \For{$i = 0$ {\bf upto} $n-1$}{
+    $c_i \ASN \SCOPE{\ID{AES}}{\ALG{Enc}}( k, m_i   \XOR  c_{i-1} )$ \;
+  }
+  \KwRet{$c$} \;
+}
+\caption{AES-CBC~\cite[Section 6.2]{NIST:sp.800.38a} encryption.}
+\label{alg:cbc:enc}
+\end{algorithm}
+
+\begin{algorithm}
+\KwData  {A  cipher key             $k$,
+          an initialisation vector $iv$,
+          and
+          an $n$-block ciphertext   $c$.
+}
+\KwResult{An $n$-block  plaintext   $m$.
+}
+\BlankLine
+\KwFn{$\mbox{\SCOPE{\ID{AES-CBC}}{\ALG{Dec}}}( k, iv, c )$}{
+    $m_0 \ASN \SCOPE{\ID{AES}}{\ALG{Dec}}( k, c_0 ) \XOR iv        $ \;
+  \For{$i = 0$ {\bf upto} $n-1$}{
+    $m_i \ASN \SCOPE{\ID{AES}}{\ALG{Dec}}( k, c_i ) \XOR  c_{i-1}  $ \;
+  }
+  \KwRet{$m$} \;
+}
+\caption{AES-CBC~\cite[Section 6.2]{NIST:sp.800.38a} decryption.}
+\label{alg:cbc:dec}
+\end{algorithm}
+
+% =============================================================================
+
+\begin{algorithm}
+\KwData  {A  cipher key             $k$,
+          an initialisation vector $iv$,
+          an increment function     $f$,
+          and
+          an $n$-block  plaintext   $m$.
+}
+\KwResult{An $n$-block ciphertext   $c$.
+}
+\BlankLine
+\KwFn{$\mbox{\SCOPE{\ID{AES-CTR}}{\ALG{Enc}}}( k, iv, m )$}{
+  $t_0 \ASN iv$ \;
+  \For{$i = 0$ {\bf upto} $n-1$}{
+    $t_{i+1} \ASN f( t_{i} )$ \;
+    $c_{i  } \ASN \SCOPE{\ID{AES}}{\ALG{Enc}}( k, t_{i+1} ) \XOR m_{i}$ \;
+  }
+  \KwRet{$c$} \;
+}
+\caption{AES-CTR~\cite[Section 6.5]{NIST:sp.800.38a} encryption.}
+\label{alg:ctr:enc}
+\end{algorithm}
+
+\begin{algorithm}
+\KwData  {A  cipher key             $k$,
+          an initialisation vector $iv$,
+          an increment function     $f$,
+          and
+          an $n$-block ciphertext   $c$.
+}
+\KwResult{An $n$-block  plaintext   $m$.
+}
+\BlankLine
+\KwFn{$\mbox{\SCOPE{\ID{AES-CTR}}{\ALG{Dec}}}( k, iv, m )$}{
+  $t_0 \ASN iv$ \;
+  \For{$i = 0$ {\bf upto} $n-1$}{
+    $t_{i+1} \ASN f( t_{i} )$ \;
+    $m_{i  } \ASN \SCOPE{\ID{AES}}{\ALG{Enc}}( k, t_{i+1} ) \XOR c_{i}$ \;
+  }
+  \KwRet{$m$} \;
+}
+\caption{AES-CTR~\cite[Section 6.5]{NIST:sp.800.38a} decryption.}
+\label{alg:ctr:dec}
+\end{algorithm}
+
+% =============================================================================
+
+\begin{algorithm}
+\KwData  {A  cipher key             $k$,
+          an initialisation vector $iv$,
+          an increment function     $f$,
+          and
+          an $n$-block sequence     $x$.
+}
+\KwResult{An $n$-block sequence     $y$.
+}
+\BlankLine
+\KwFn{$\mbox{\SCOPE{\ID{GCM}}{\ALG{GCTR}}}( k, iv, f, x )$}{
+  $t_0 \ASN iv$ \;
+  \For{$i = 0$ {\bf upto} $n-1$}{
+    $t_{i+1} \ASN f( t_{i} )$ \;
+    $y_{i  } \ASN \SCOPE{\ID{AES}}{\ALG{Enc}}( k, t_{i+1} ) \oplus x_i$ \;
+  }
+  \KwRet{$y$} \;
+}
+\caption{The GCTR  component of AES-GCM~\cite[Algorithm 3]{NIST:sp.800.38d}.}
+\label{alg:gctr}
+\end{algorithm}
+
+% -----------------------------------------------------------------------------
+
+\begin{algorithm}
+\KwData  {A  hash   key             $h$,
+          and
+          an $n$-block sequence     $x$.
+}
+\KwResult{A         tag             $t$.
+}
+\BlankLine
+\KwFn{$\mbox{\SCOPE{\ID{GCM}}{\ALG{GHASH}}}( h, x )$}{
+  $t \ASN 0$ \;
+  \For{$i = 0$ {\bf upto} $n-1$}{
+    $t \ASN ( t \oplus x_{i} ) \otimes h$
+  }
+  \KwRet{$t$}
+}
+\caption{The GHASH component of AES-GCM~\cite[Algorithm 2]{NIST:sp.800.38d}.}
+\label{alg:ghash}
+\end{algorithm}
+
+% -----------------------------------------------------------------------------
+
+\begin{algorithm}
+\KwData  {A  cipher key       $k$,
+          a   plaintext block $m$,
+          a       tweak block $i$,
+          and
+          a       block index $j$.
+}
+\KwResult{A  ciphertext block $c$.
+}
+\BlankLine
+\KwFn{$\mbox{\SCOPE{\ID{XTS-AES}}{\ALG{Enc}}}( k, m, i, j )$}{
+  parse $k = k_1 \CONS k_2$ \;
+  $t  \ASN \SCOPE{\ID{AES}}{\ALG{Enc}}( k_2, i  ) \otimes \alpha^k$ \;
+  $m' \ASN m  \oplus t                                            $ \;
+  $c' \ASN \SCOPE{\ID{AES}}{\ALG{Enc}}( k_1, m' )                 $ \;
+  $c  \ASN c' \oplus t                                            $ \;
+  \KwRet{$c$} \;
+}
+\caption{XTS-AES~\cite{NIST:sp.800.38e} encryption.}
+\label{alg:xts:enc}
+\end{algorithm}
+
+\begin{algorithm}
+\KwData  {A  cipher key       $k$,
+          a  ciphertext block $c$,
+          a       tweak block $i$,
+          and
+          a       block index $j$.
+}
+\KwResult{A   plaintext block $m$.
+}
+\BlankLine
+\KwFn{$\mbox{\SCOPE{\ID{XTS-AES}}{\ALG{Dec}}}( k, c, i, j )$}{
+  parse $k = k_1 \CONS k_2$ \;
+  $t  \ASN \SCOPE{\ID{AES}}{\ALG{Enc}}( k_2, i  ) \otimes \alpha^k$ \;
+  $c' \ASN c  \oplus t                                            $ \;
+  $m' \ASN \SCOPE{\ID{AES}}{\ALG{Enc}}( k_1, c' )                 $ \;
+  $m  \ASN m' \oplus t                                            $ \;
+  \KwRet{$m$} \;
+}
+\caption{XTS-AES~\cite{NIST:sp.800.38e} decryption.}
+\label{alg:xts:dec}
+\end{algorithm}
+
+% =============================================================================

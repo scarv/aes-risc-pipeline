@@ -169,13 +169,42 @@ d) offering utility beyond AES specifically:
 
 \paragraph{Remit.}
 
-In this paper, we address the challenge of supporting AES by designing and
-evaluating an associated ISE for RISC-V
+In this paper, we address the challenge of supporting AES on RISC-V
 (see, e.g.,~\cite{riscv:1,riscv:2}).
 Note that we specifically focus on extending the scalar RISC-V instruction 
 set, thereby contrasting with work related to cryptographic support in the
-standard V (or vector) extension~\cite[Section 21]{RV:ISA:I:19}.
+standard V 
+(or vector) 
+extension~\cite[Section 21]{RV:ISA:I:19}.
 
+\begin{enumerate}
+
+\item In 
+      \REFSEC{sec:X}
+      we implement and evaluate various ISEs for AES.
+      As well as exploring existing ISE designs, 
+      \REFSEC{sec:X}
+      introduces what is, to the best of our knowledge, a novel ISE design 
+      that leverages a tiled representation of the state.
+
+\item In
+      \REFSEC{sec:X}
+      we evaluate how the
+      standard B 
+      (or bit manipulation) 
+      extension~\cite[Section 21]{RV:ISA:I:19}
+      to RISC-V can be harnessed for efficient implementation of AES-GCM.
+
+\item In
+      \REFSEC{sec:X}
+      we select a candidate ISE design from 
+      \REFSEC{sec:X},
+      and demonstrate how the associated implementation can be hardened
+      against side-channel attacks.
+
+\end{enumerate}
+
+\noindent
 On one hand, 
 RISC-V represents an excellent vehicle for such work:
 extensibility is a by-design feature in the ISA, whose open nature renders
@@ -194,8 +223,6 @@ RV128I~\cite[Section 6]{RV:ISA:I:19},
 that each support a different word size:
 designing ISEs that are applicable (or scale) across these options is a
 complicating factor, yet an important design goal.
-
-% TODO: need to be clearer what constraints are for a given design
 
 % -----------------------------------------------------------------------------
 

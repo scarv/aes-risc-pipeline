@@ -50,10 +50,10 @@ use the term AES and AES-128 synonymously.
 \paragraph{Design.}
 
 AES is based on some underpinning Mathematics~\cite[Section 4]{FIPS:197},
-and, in particular, can be defined in terms of operations over the finite 
-field $\F_{2^8}$ constructed as
+and, in particular, can be defined in terms of 
+operations in the finite field $\F_{2^{  8}}$ constructed as
 \[
-\F_{2}[\IND{x}] / ( \IND{x}^8 + \IND{x}^4 + \IND{x}^3 + \IND{x} + 1 ) .
+\F_{2}[\IND{x}] / ( \IND{x}^{8} + \IND{x}^{4} + \IND{x}^{3} + \IND{x} + 1 ) .
 \]
 A hexadecimal short-hand~\cite[Section 3.2]{FIPS:197} is used to represent 
 field literals, e.g.,
