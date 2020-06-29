@@ -1,90 +1,6 @@
 % =============================================================================
 
-\subsection{Hardware Evaluation}
-\label{sec:eval:hw}
-
-Each ISE variant was evaluated on the host cores
-described in \REFSEC{sec:design}.
-The 32-bit designs (V1,V2,V3,V5) were implemented on both the
-\CORE{1} and \CORE{2} cores.
-The 64-bit design (v4) was only evaluated on the 64-bit configuration
-of the \CORE{1} core.
-Table \ref{tab:eval:hw} shows the hardware implementation costs.
-
-For variants 1, 2 and 5, two implementations are evaluated.
-The {\em Size} optimised implementations instantiate only a single
-Forward/Inverse SBox circuit and take multiple cycles
-to produce a result.
-The {\em Latency} optimised implementations instantiate $4$ SBox
-MixColumn circuits to produce their results in a single processor 
-clock cycle.
-
-The {\em Size} columns of Table \ref{tab:eval:hw} 
-record the number of NAND2 equivalent gates of each variant,
-instantiated independently from any wider system.
-The LTP column gives the Longest Topological Path of the synthesised
-functional unit circuit from input to combinatorial output.
-The \CORE{2} Size column gives the size in NAND2 equivalent gates of the
-\CORE{2}, with the AES functional units integrated.
-The ``Baseline'' row gives the size of the core without any of the
-ISEs integrated.
-We found that none of the proposed ISEs affected the critical
-path of the \CORE{2} or \CORE{1} cores.
-
-
-% =============================================================================
-
-\subsection{Software Evaluation}
-\label{sec:eval:sw}
-
-To evaluate the software performance, we implemented AES 128, and
-measure the static code size, instruction execution counts and cycle
-counts of the Key Schedule, Encrypt and Decrypt functions.
-We also separate generation of the KeySchedule for Encrypt and Decrypt.
-A T-table implementation of AES (See \REFSEC{sec:bg:aes_impl_sw})
-is used as a performance baseline.
-
-\REFTAB{tab:eval:sw:size} shows the static code size for each
-function.
-These are measured targeting the {\tt rv32imc} base ISA for all variants,
-except for V4, which targets {\tt rv64imc}.
-Decryption KeySchedule entries with a $\star$ indicate that the
-implementation uses the Equivalent Inverse Cipher construction
-\cite[Section 5.3.5, Page 23]{FIPS:197}, meaning that the
-Decrypt KeySchedule calls the Encrypt KeySchedule, then performs some
-additional post processing. The code size listed is for the post processing.
-The V5 Encrypt Key Schedule is split into the basic KeySchedule
-operation, plus a re-arrangement of the bytes in each word to make
-KeyAddition more efficient in subsequent encrypt/decrypt operations.
-
-For the Encrypt and Decrypt functions, all versions have similar
-static code size.
-The 32-bit variants (V1,V2,V3,V5) all use loop-based implementations.
-V1, V2, V5 implement one round per loop iteration. V3 implements two
-rounds per loop iteration to avoid needless register move operations.
-The 64-bit variant (V4) uses a completely un-rolled implementation.
-
-\REFTAB{tab:eval:sw:perf:scarv}
-and
-\REFTAB{tab:eval:sw:perf:rocket}
-give cycle and instruction counts for each
-variant under the \CORE{2} and \CORE{1} cores respectively.
-Each implementation uses word-aligned state, meaning the input blocks
-can be loaded with $4$ load-word instructions on $32$-bit host cores,
-or $2$ load-double instructions on the $64$-bit host cores.
-For the Encrypt/Decrypt columns, we show instruction execution counts
-and processor clock cycle measurements for a single block
-encryption of AES-128.
-Likewise, the KeySchedule columns are for a single AES-128 KeySchedule
-operation.
-
-% ------------------------------------------------------------
-
-%
-% Hardware evaluation results.
-%
-
-\begin{table}
+\begin{table}[p]
 \centering
 \begin{tabular}{lrrrr}
 Variant     &     ISE Size &     ISE LTP & \CORE{2} Size   & \CORE{1} Size \\
@@ -111,11 +27,7 @@ Yosys\cite{yosys} tool suite.
 \label{tab:eval:hw}
 \end{table}
 
-%
-% Static Code Size Results
-%
-
-\begin{table}
+\begin{table}[p]
 \centering
 \begin{tabular}{l|r|r|r|r|r}
 Variant &
@@ -139,11 +51,7 @@ Static code size metrics for each variant, measured in bytes.
 \label{tab:eval:sw:size}
 \end{table}
 
-%
-% SCARV CPU Performance Results
-%
-
-\begin{table}
+\begin{table}[p]
 \centering
 \begin{tabular}{l|rr|rr|rr|rr}
 & \multicolumn{2}{c|}{\begin{tabular}[c]{@{}c@{}}AES 128 Block\\ Encrypt\end{tabular}}
@@ -168,11 +76,7 @@ Note the $64$-bit \ISE{4} is absent.
 \label{tab:eval:sw:perf:scarv}
 \end{table}
 
-%
-% Rocket Core Performance Results
-%
-
-\begin{table}
+\begin{table}[p]
 \centering
 \begin{tabular}{l|rr|rr|rr|rr}
 & \multicolumn{2}{c|}{\begin{tabular}[c]{@{}c@{}}AES 128 Block\\ Encrypt\end{tabular}}
@@ -202,13 +106,9 @@ Note that \ISE{4} uses the 64-bit base core, all others use the 32-bit base.
 \label{tab:eval:sw:perf:rocket}
 \end{table}
 
+% -----------------------------------------------------------------------------
 
-% =============================================================================
-
-\subsection{Evaluation Discussion}
-\label{sec:eval:results}
-
-\begin{table}[]
+\begin{table}[t]
 \centering
 \begin{tabular}{l|rr|rr|rr|rr}
 & \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}AES 128 Block\\ Encrypt\end{tabular}}
@@ -232,6 +132,8 @@ variant.
 }
 \label{tab:eval:results}
 \end{table}
+
+% -----------------------------------------------------------------------------
 
 For the $32$-bit ISEs 
 (\ISE{1},\ISE{2},\ISE{3},\ISE{5})
@@ -272,3 +174,4 @@ ROCC instruction results are not
 forwarded to subsequent instructions as quickly as core ISA
 instructions.
 
+% =============================================================================

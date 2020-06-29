@@ -20,7 +20,7 @@ but was not designed
 
 % =============================================================================
 
-\paragraph{Industry-specified ISEs.}
+\paragraph    {Standard, industry-specified ISEs.}
 
 \begin{itemize}
 
@@ -194,7 +194,7 @@ but was not designed
 
 % -----------------------------------------------------------------------------
 
-\paragraph{Academia-specified ISEs.}
+\paragraph{Non-standard, academia-specified ISEs.}
 
 \begin{itemize}
 
@@ -212,6 +212,7 @@ but was not designed
          \VERB{ROR},
          which perform
          left- and right-rotate,
+         and
       b) \VERB{SBOX},
          which performs
          extraction of elements to form of look-up table offsets; in one
@@ -267,6 +268,7 @@ but was not designed
          packed  input column
       2) use the input to compute an output element equivalent to a
          look-up from the T-table,
+         and
       3) store   the output element into a
          packed output column.
       This approach was rediscovered by Saarinen~\cite{Saarinen:20}, set 
@@ -285,6 +287,7 @@ but was not designed
       1) extract an   input element from a packed  input row or column,
       2) use the input to compute an output element equivalent to a
          look-up from the S-box,
+         and
       3)  insert the output element into a packed output row or column;
          by using insert vs. overwrite semantics, allow 
          a zero-overhead implementation of \AESFUNC{ShiftRows} to be realised.
@@ -296,6 +299,7 @@ but was not designed
       ``hardware-assisted round functions''.
       Per~\cite[Section 4]{BBFR:06}, the ISE includes
       a) zero-overhead rotation (a la ARM),
+         and
       b) byte- and word-oriented variants of
          $\VERB{SMix} \mapsto \AESFUNC{MixColumn} \circ \AESFUNC{SubBytes}$.
       
@@ -304,7 +308,7 @@ but was not designed
       a kernel-specific ISE
        that could be described as 
       ``hardware-assisted round functions''.
-      Per~\cite[Section 4]{BBFR:06}, the ISE includes
+      Per~\cite[Section 4]{TilGro:06}, the ISE includes
          byte- and word-oriented variants of
          $\VERB  {sbox[4][s/r]} \mapsto \AESFUNC{SubBytes} $
          and

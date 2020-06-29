@@ -1,0 +1,32 @@
+% =============================================================================
+
+Each ISE variant was evaluated on the host cores
+described in \REFSEC{sec:design}.
+The 32-bit designs (V1,V2,V3,V5) were implemented on both the
+\CORE{1} and \CORE{2} cores.
+The 64-bit design (v4) was only evaluated on the 64-bit configuration
+of the \CORE{1} core.
+Table \ref{tab:eval:hw} shows the hardware implementation costs.
+
+For variants 1, 2 and 5, two implementations are evaluated.
+The {\em Size} optimised implementations instantiate only a single
+Forward/Inverse S-box circuit and take multiple cycles
+to produce a result.
+The {\em Latency} optimised implementations instantiate $4$ S-box
+\AESFUNC{MixColumn} circuits to produce their results in a single processor 
+clock cycle.
+
+The {\em Size} columns of Table \ref{tab:eval:hw} 
+record the number of NAND2 equivalent gates of each variant,
+instantiated independently from any wider system.
+The LTP column gives the Longest Topological Path of the synthesised
+functional unit circuit from input to combinatorial output.
+The \CORE{2} Size column gives the size in NAND2 equivalent gates of the
+\CORE{2}, with the AES functional units integrated.
+The ``Baseline'' row gives the size of the core without any of the
+ISEs integrated.
+We found that none of the proposed ISEs affected the critical
+path of the \CORE{2} or \CORE{1} cores.
+
+
+% =============================================================================

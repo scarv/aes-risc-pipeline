@@ -17,9 +17,9 @@ columns $2$ and $3$ ({\tt AES\_EROUND23}).
 
 We improve upon this by utilising the Equivalent Inverse Cipher
 construction of AES \cite[Section 5.4.4, Page 27]{FIPS:197}
-and noting that the (inverse) SubBytes and ShiftRows steps commute.
+and noting that the (inverse) \AESFUNC{SubBytes} and \AESFUNC{ShiftRows} steps commute.
 This allows the encrypt and decrypt round functions to apply (inverse)
-ShiftRows, SubBytes and MixColumns all in the same order.
+\AESFUNC{ShiftRows}, \AESFUNC{SubBytes} and \AESFUNC{MixColumns} all in the same order.
 By swapping the order of {\tt rs1} and {\tt rs2}
 for the {\tt enc*} and {\tt dec*} instructions, we can compute {\em either}
 columns $1$ and $2$ or columns $3$ and $4$ of the next round state with the
@@ -39,10 +39,10 @@ operation.
 
 A single encryption round using this variant requires
 two load-double instructions to fetch the round key,
-two {\tt xor} instructions to add the round key
+two {\tt xor} instructions to perform \AESFUNC{\AESFUNC{AddRoundKey}}
 and
-two {\tt saes.v4.encs[m]} instructions to compute SubBytes, ShiftRows
-and MixColumns.
+two {\tt saes.v4.encs[m]} instructions to compute \AESFUNC{SubBytes}, \AESFUNC{ShiftRows}
+and \AESFUNC{MixColumns}.
 \REFFIG{fig:round:v4} shows an example AES encrypt round function
 using this variant.
 
@@ -52,7 +52,7 @@ It sources only two general purpose registers however (rather than $3$),
 making it less demanding to implement in the context of the wider
 system.
 The addition of an extra source register would save $2$ instructions
-per round by allowing AddRoundKey to be included, at the expense
+per round by allowing \AESFUNC{AddRoundKey} to be included, at the expense
 of breaking the RISC-V design principles.
 
 % =============================================================================

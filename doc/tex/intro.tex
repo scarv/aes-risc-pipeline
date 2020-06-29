@@ -127,7 +127,7 @@ goals such as
       limit the number and scope (local vs. global) of changes,
 \item minimal overhead,
       e.g.,
-      avoid instructions that demand support via large or complex hardware components,
+      avoid too many instructions, and instructions which demand support via large or complex hardware components,
 \item maximal compatibility,
       e.g.,
       align with constraints in the base ISA, such as use of existing instruction formats,
@@ -138,8 +138,8 @@ goals such as
 \end{itemize}
 
 \noindent
-By extending x86, Intel provide archetypal examples of and evidence in
-support of ISEs.
+By extending x86, Intel provide archetypal examples and evidence in support 
+of ISEs.
 For example, various generations of
 non-cryptographic
 Multi-Media      eXtensions (MMX),
@@ -162,33 +162,35 @@ c) facilitating compatibility via the
    and
 d) offering utility beyond AES specifically:
    it supports AES-specific functionality but is able to maximise utility 
-   through more AES-agnostic support of {\em other} algorithms
-   (see, e.g., use of AES-NI within SHA3~\cite{BBGR:09} and CEASER~\cite[Section 4.1]{AnkAnk:16} candidates).
+   through more AES-agnostic support of {\em other} constructions.
 
 % -----------------------------------------------------------------------------
 
-\paragraph{Remit.}
+\paragraph{Remit and organisation.}
 
-In this paper, we address the challenge of supporting AES on RISC-V
-(see, e.g.,~\cite{riscv:1,riscv:2}).
-Note that we specifically focus on extending the scalar RISC-V instruction 
-set, thereby contrasting with work related to cryptographic support in the
-standard V 
-(or vector) 
-extension~\cite[Section 21]{RV:ISA:I:19}.
+In this paper we address the challenge of supporting AES on RISC-V
+(see, e.g.,~\cite{riscv:1,riscv:2}),
+and therefore inform on-going efforts to standardise cryptographic ISEs for 
+RISC-V.  In specific terms, our contributions are as follows:
 
 \begin{enumerate}
 
 \item In 
-      \REFSEC{sec:X}
-      we implement and evaluate various ISEs for AES.
+      \REFSEC{sec:bg}
+      we capture some background, including a limited form of
+      Systematisation of Knowledge (SoK)
+      wrt. ISEs for AES.
+
+\item In 
+      \REFSEC{sec:ise}
+      we implement and evaluate $5$ different ISEs for AES.
       As well as exploring existing ISE designs, 
-      \REFSEC{sec:X}
+      \REFSEC{sec:ise:design:v5}
       introduces what is, to the best of our knowledge, a novel ISE design 
       that leverages a tiled representation of the state.
 
 \item In
-      \REFSEC{sec:X}
+      \REFSEC{sec:gcm}
       we evaluate how the
       standard B 
       (or bit manipulation) 
@@ -196,11 +198,11 @@ extension~\cite[Section 21]{RV:ISA:I:19}.
       to RISC-V can be harnessed for efficient implementation of AES-GCM.
 
 \item In
-      \REFSEC{sec:X}
+      \REFSEC{sec:sca}
       we select a candidate ISE design from 
-      \REFSEC{sec:X},
+      \REFSEC{sec:ise},
       and demonstrate how the associated implementation can be hardened
-      against side-channel attacks.
+      against DPA-style attacks.
 
 \end{enumerate}
 
@@ -223,27 +225,6 @@ RV128I~\cite[Section 6]{RV:ISA:I:19},
 that each support a different word size:
 designing ISEs that are applicable (or scale) across these options is a
 complicating factor, yet an important design goal.
-
-% -----------------------------------------------------------------------------
-
-\paragraph{Organisation.}
-
-% TODO
-
-\REFSEC{sec:bg} describes the AES cipher, existing implementation strategies
-and prior commercial and academic ISE designs.
-\REFSEC{sec:design} details five candidate ISEs, including the criteria
-used to select and design them.
-\REFSEC{sec:eval} gives evaluation results in terms of hardware cost
-and software performance.
-\REFSEC{sec:eval:gcm} analyses how best to implement $GF(2^{128})$ arithmetic
-using RISC-V, which is essential to the AES-GCM mode of operation.
-\REFSEC{sec:psca} shows how our ISE recommendation for highly resource
-constrained devices can be further extended to give power side-channel
-resistance.
-Finally, 
-\REFSEC{sec:outro}
-presents some conclusions and potential directions for future work.
 
 \ifbool{submission}{%
 Note that in order to satisfy the TCHES submission guidelines, we have 

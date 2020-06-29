@@ -1,0 +1,44 @@
+% =============================================================================
+
+To evaluate the software performance, we implemented AES 128, and
+measure the static code size, instruction execution counts and cycle
+counts of the Key Schedule, Encrypt and Decrypt functions.
+We also separate generation of the KeySchedule for Encrypt and Decrypt.
+A T-table implementation of AES (See \REFSEC{sec:bg:aes_impl_sw})
+is used as a performance baseline.
+
+\REFTAB{tab:eval:sw:size} shows the static code size for each
+function.
+These are measured targeting the {\tt rv32imc} base ISA for all variants,
+except for V4, which targets {\tt rv64imc}.
+Decryption KeySchedule entries with a $\star$ indicate that the
+implementation uses the Equivalent Inverse Cipher construction
+\cite[Section 5.3.5, Page 23]{FIPS:197}, meaning that the
+Decrypt KeySchedule calls the Encrypt KeySchedule, then performs some
+additional post processing. The code size listed is for the post processing.
+The V5 Encrypt Key Schedule is split into the basic KeySchedule
+operation, plus a re-arrangement of the bytes in each word to make
+KeyAddition more efficient in subsequent encrypt/decrypt operations.
+
+For the Encrypt and Decrypt functions, all versions have similar
+static code size.
+The 32-bit variants (V1,V2,V3,V5) all use loop-based implementations.
+V1, V2, V5 implement one round per loop iteration. V3 implements two
+rounds per loop iteration to avoid needless register move operations.
+The 64-bit variant (V4) uses a completely un-rolled implementation.
+
+\REFTAB{tab:eval:sw:perf:scarv}
+and
+\REFTAB{tab:eval:sw:perf:rocket}
+give cycle and instruction counts for each
+variant under the \CORE{2} and \CORE{1} cores respectively.
+Each implementation uses word-aligned state, meaning the input blocks
+can be loaded with $4$ load-word instructions on $32$-bit host cores,
+or $2$ load-double instructions on the $64$-bit host cores.
+For the Encrypt/Decrypt columns, we show instruction execution counts
+and processor clock cycle measurements for a single block
+encryption of AES-128.
+Likewise, the KeySchedule columns are for a single AES-128 KeySchedule
+operation.
+
+% =============================================================================

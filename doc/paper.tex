@@ -11,8 +11,8 @@
 }{%
 \author{
 Ben Marshall\inst{1}                \and
-Markku-Juhani O. Saarinen\inst{2}   \and
 Dan Page\inst{1}                    \and
+Markku-Juhani O. Saarinen\inst{2}   \and
 (Andy/ Richard / Barry / Claire?)
 }
 \institute{
@@ -29,18 +29,23 @@ Dan Page\inst{1}                    \and
 \maketitle
 
 \begin{abstract}
-AES is one of the most widely used block ciphers in the world.
-RISC-V is a popular open Instruction Set Architecture (ISA) used
-for new CPU designs and research in both industry and academia.
-Secure and efficient execution of AES is an essential property for any ISA,
-particularly in resource constrained environments such as embedded and IoT
-class CPUs.
-We survey existing approaches to accelerating AES using Instruction Set
-Extensions (ISEs) from academia and industry, create RISC-V targeted variants,
-and evaluate them for software performance, code size and hardware
-implementation cost.
-Our work informs on-going efforts to standardise the proposed Cryptographic
-ISEs for RISC-V.
+Secure, efficient execution of AES represents an imperative, and therefore 
+well studied requirement in many use-cases.  Use of an
+Instruction Set Extension (ISE)
+is one approach to addressing this requirement, and, as a result, ISEs for 
+AES exist in many ISAs.  
+However, RISC-V is a (relatively) new ISA that lacks such an ISE: this gap
+motivates our work.  In specific terms, and set against on-going effort to 
+standardise cryptographic ISEs for RISC-V, we
+1) survey the state-of-the-art wrt. ISEs for AES,
+2) implement and evaluate $5$ different ISEs for AES,
+   one of which is novel,
+3) explore how the B 
+   (or bit manipulation) 
+   extension
+   to RISC-V can be harnessed for efficient implementation of AES-GCM,
+   and
+4) demonstrate how an ISE for AES can hardened against DPA-style attacks.
 \end{abstract}
 
 % =============================================================================
@@ -97,49 +102,64 @@ ISEs for RISC-V.
 
 % =============================================================================
 
-\section{Design and implementation}
-\label{sec:design}
+\section{Exploring ISEs for AES}
+\label{sec:ise}
 
-\input{tex/design-selection.tex}
+% -----------------------------------------------------------------------------
 
-\subsection{Variant 1 (\ISE{1}): column-wise acceleration}
-\label{sec:design:v1}
-\input{tex/design_v1.tex}
+\subsection{Design}
 
-\subsection{Variant 2 (\ISE{2}): combined row/column acceleration}
-\label{sec:design:v2}
-\input{tex/design_v2.tex}
+\input{tex/body-ise_intro.tex}
 
-\subsection{Variant 3 (\ISE{3}): T-tables acceleration}
-\label{sec:design:v3}
-\input{tex/design_v3.tex}
+\subsubsection{Variant 1 (\ISE{1}): column-wise acceleration}
+\label{sec:ise:design:v1}
+\input{tex/body-ise_design_v1.tex}
+\subsubsection{Variant 2 (\ISE{2}): combined row/column acceleration}
+\label{sec:ise:design:v2}
+\input{tex/body-ise_design_v2.tex}
+\subsubsection{Variant 3 (\ISE{3}): T-tables acceleration}
+\label{sec:ise:design:v3}
+\input{tex/body-ise_design_v3.tex}
+\subsubsection{Variant 4 (\ISE{4}): $64$-bit}
+\label{sec:ise:design:v4}
+\input{tex/body-ise_design_v4.tex}
+\subsubsection{Variant 5 (\ISE{5}): tiled}
+\label{sec:ise:design:v5}
+\input{tex/body-ise_design_v5.tex}
 
-\subsection{Variant 4 (\ISE{4}): $64$-bit}
-\label{sec:design:v4}
-\input{tex/design_v4.tex}
+% -----------------------------------------------------------------------------
 
-\subsection{Variant 5 (\ISE{5}): tiled}
-\label{sec:design:v5}
-\input{tex/design_v5.tex}
+\subsection{Implementation}
+\label{sec:ise:imp}
+\input{tex/body-ise_implement.tex}
+
+% -----------------------------------------------------------------------------
+
+\subsection{Evaluation}
+
+\subsubsection{Hardware}
+\label{sec:ise:eval:hw}
+\input{tex/body-ise_eval_hw.tex}
+
+\subsubsection{Software}
+\label{sec:ise:eval:sw}
+\input{tex/body-ise_eval_sw.tex}
+
+\subsubsection{Discussion}
+\label{sec:ise:eval:discuss}
+\input{tex/body-ise_eval_discuss.tex}
 
 % =============================================================================
 
-\section{AES Evaluation}
-\label{sec:eval}
-\input{tex/eval-hosts.tex}
-\input{tex/eval-results.tex}
+\section{Using ISEs to implement AES-GCM}
+\label{sec:gcm}
+\input{tex/body-gcm.tex}
 
 % =============================================================================
 
-\section{Galois/Counter Mode on RISC-V}
-\label{sec:eval:gcm}
-\input{tex/eval-gcm.tex}
-
-% =============================================================================
-
-\section{Power Side-channel Resistance}
-\label{sec:psca}
-\input{tex/sca-design.tex}
+\section{Hardening an ISE for AES against DPA attack}
+\label{sec:sca}
+\input{tex/body-sca.tex}
 
 % =============================================================================
 

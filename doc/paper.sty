@@ -41,9 +41,7 @@
 \DontPrintSemicolon
 \SetKwProg{KwFn}{function}{~begin}{end}
 
-\newcommandx{\F}{\ensuremath{\mathbb F}}
-
-\newcommandx{\REP}[1]{\hat{#1}}
+\newtheorem{requirement}{Requirement}
 
 \newcommandx{\SEC}[1][1={}]{\IfEq{#1}{s}{Sections}{Section}\xspace}
 \newcommandx{\TAB}[1][1={}]{\IfEq{#1}{s}{Tables}{Table}\xspace}
@@ -73,6 +71,8 @@
 \newcommandx{\FIELD}[2]{\ensuremath{#1}[{#2}]\xspace}
 \newcommandx{\SCOPE}[2]{\ensuremath{#1}.{#2}\xspace}
 
+\newcommandx{\F}{\ensuremath{\mathbb F}}
+\newcommandx{\REP}[1]{\hat{#1}}
 \newcommandx{\CONS}{\ensuremath{\;\parallel\;}\xspace}
 \newcommandx{\RADIX}[2]{\ensuremath{{#1}_{({#2})}}\xspace}
 \newcommandx{\ASN}{\ensuremath{\leftarrow}\xspace}

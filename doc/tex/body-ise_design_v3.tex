@@ -1,6 +1,5 @@
 % =============================================================================
 
-
 \REFSEC{sec:pseudo:v3} shows the mnemonics and pseudo-code functions
 for \ISE{3}.
 These instructions are based on
@@ -12,23 +11,23 @@ using the $2$-bit {\tt bs} immediate.
 This byte is used as the input to a standard T-table lookup operation,
 but the table entry is calculated in hardware.
 \REFFIG{fig:design:fu_block:v3} shows the data-path for these instructions.
-The result of the T-table lookup is then xor'd with {\tt rs1} to
+The result of the T-table lookup is then XOR'ed with {\tt rs1} to
 accumulate the results of the round transformation.
 
-These instructions require only one SBox instantiation,
+These instructions require only one S-box instantiation,
 which is a clear advantage in resource constrained applications.
-While the previous designs could be implemented with a single SBox, they
+While the previous designs could be implemented with a single S-box, they
 would require additional temporary registers and evaluation over multiple
 cycles.
 
 We also note that \cite{Saarinen:20} improves on \cite{BBFR:06}
-by using an extra source register and allowing the AddRoundKey step to be
+by using an extra source register and allowing the \AESFUNC{AddRoundKey} step to be
 performed implicitly, thus saving four instructions per round.
 
 A single encryption round using this variant requires
 four load-word instructions to fetch the round key and
-$16$ {\tt saes.v3.encs[m]} instructions to perform AddRoundKey,
-SubBytes, ShiftRows and (optionally) MixColumns.
+$16$ {\tt saes.v3.encs[m]} instructions to perform \AESFUNC{AddRoundKey},
+\AESFUNC{SubBytes}, \AESFUNC{ShiftRows} and (optionally) \AESFUNC{MixColumns}.
 \REFFIG{fig:round:v3} shows an example AES encrypt round function
 using this variant.
 

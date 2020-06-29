@@ -1,7 +1,8 @@
 % =============================================================================
 
 The
-Electronic Codebook Mode (ECB)~\cite[Section 6.1]{NIST:sp.800.38a}
+Electronic CodeBook (ECB) mode
+~\cite[Section 6.1]{NIST:sp.800.38a} 
 captures ``raw'' use of AES as is.  However, demand for enhanced security
 properties and/or functionality, for example, has led to use of AES in a
 variety of {\em other} constructions.
@@ -14,7 +15,7 @@ for purpose even {\em if} it supports AES as is.
 
 \subsubsection{Modes of operation: ``AES plus insignificant extras''}
 
-Some modes of operation use AES in combination with
+Some modes of operation use AES in combination with relatively
 insignificant 
 additional operations
 (e.g., XOR).
@@ -56,10 +57,10 @@ required.
 
 \subsubsection{Modes of operation: ``AES plus   significant extras''}
 
-Some modes of operation use AES in combination with
+Some modes of operation use AES in combination with relatively
   significant 
 additional operations.  
-We pay particular attention examples which combine the use of AES with
+We pay particular attention to examples which combine the use of AES with
 operations in the finite field $\F_{2^{128}}$ constructed as
 $
 \F_{2}[\IND{x}] / ( \IND{x}^{128} + \IND{x}^{7} + \IND{x}^{2} + \IND{x} + 1 ) .
@@ -132,7 +133,7 @@ to ``data at rest'' on some block-addressable storage medium.
 \REFALGO{alg:xts:enc}
 and
 \REFALGO{alg:xts:dec}
-capture the XTS-AES encryption and decryption respectively, noting that 
+capture XTS-AES encryption and decryption respectively, noting that 
 $
 \alpha = \IND{x} .
 $
@@ -145,11 +146,11 @@ Various other constructions use components {\em in} AES, rather than AES
 {\em itself}.
 For example,
 the Gr{\o}stl~\cite{GKMMRST:11} hash function
-(a SHA-3  candidate)
+(a SHA-3  candidate; see also~\cite{BBGR:09})
 uses the AES S-box~\cite[Section 4.3]{GKMMRST:11},
 and
 the YAES~\cite{BosVer:14} authenticated encryption scheme
-(a CAESAR candidate)
+(a CAESAR candidate; see also~\cite[Section 4.1]{AnkAnk:16})
 uses the full AES round~\cite[Section 1.3]{BosVer:14}.
 
 % =============================================================================
