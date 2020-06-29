@@ -38,7 +38,7 @@ However, RISC-V is a (relatively) new ISA that lacks such an ISE: this gap
 motivates our work.  In specific terms, and set against on-going effort to 
 standardise cryptographic ISEs for RISC-V, we
 1) survey the state-of-the-art wrt. ISEs for AES,
-2) implement and evaluate $5$ different ISEs for AES,
+2) implement and evaluate five different ISEs for AES,
    one of which is novel,
 3) explore how the B 
    (or bit manipulation) 
@@ -111,16 +111,16 @@ standardise cryptographic ISEs for RISC-V, we
 
 \input{tex/body-ise_intro.tex}
 
-\subsubsection{Variant 1 (\ISE{1}): column-wise acceleration}
+\subsubsection{Variant 1 (\ISE{1}): \AESFUNC{SubBytes} $+$ \AESFUNC{MixColumn} $+$ explicit \AESFUNC{ShiftRows}}
 \label{sec:ise:design:v1}
 \input{tex/body-ise_design_v1.tex}
-\subsubsection{Variant 2 (\ISE{2}): combined row/column acceleration}
+\subsubsection{Variant 2 (\ISE{2}): \AESFUNC{SubBytes} $+$ \AESFUNC{MixColumn} $+$ implicit \AESFUNC{ShiftRows}}
 \label{sec:ise:design:v2}
 \input{tex/body-ise_design_v2.tex}
-\subsubsection{Variant 3 (\ISE{3}): T-tables acceleration}
+\subsubsection{Variant 3 (\ISE{3}): T-tables}
 \label{sec:ise:design:v3}
 \input{tex/body-ise_design_v3.tex}
-\subsubsection{Variant 4 (\ISE{4}): $64$-bit}
+\subsubsection{Variant 4 (\ISE{4}): SPARC-like}
 \label{sec:ise:design:v4}
 \input{tex/body-ise_design_v4.tex}
 \subsubsection{Variant 5 (\ISE{5}): tiled}
@@ -191,22 +191,18 @@ under the RISE (\url{http://www.ukrise.org}) programme.
 \section{\ISE{1} Mnemonics and pseudo-code}
 \label{sec:pseudo:v1}
 \input{tex/appx-design_v1.tex}
-
 \newpage
 \section{\ISE{2} Mnemonics and pseudo-code}
 \label{sec:pseudo:v2}
 \input{tex/appx-design_v2.tex}
-
 \newpage
 \section{\ISE{3} Mnemonics and pseudo-code}
 \label{sec:pseudo:v3}
 \input{tex/appx-design_v3.tex}
-
 \newpage
 \section{\ISE{4} Mnemonics and pseudo-code}
 \label{sec:pseudo:v4}
 \input{tex/appx-design_v4.tex}
-
 \newpage
 \section{\ISE{5} Mnemonics and pseudo-code}
 \label{sec:pseudo:v5}

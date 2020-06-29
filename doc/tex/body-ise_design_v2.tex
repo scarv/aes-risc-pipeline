@@ -1,32 +1,53 @@
 % =============================================================================
 
-\REFSEC{sec:pseudo:v2} shows the mnemonics and pseudo-code functions
-for \ISE{2}.
-Here we reproduce the instructions proposed in~\cite[Section 4.3]{TilGro:06}.
-We continue to store the AES column-wise in four $32$-bit words.
-By using two source registers however,
-the \AESFUNC{ShiftRows} transformation can be implicitly performed by selecting
-appropriate bytes from each source word, as shown in
-\REFFIG{fig:design:fu_block:v2}.
-Executing $4$  {\tt v2.encs}/{\tt v2.encm} instructions each hence
-performs the entire \AESFUNC{SubBytes}, \AESFUNC{ShiftRows} and \AESFUNC{MixColumns} steps.
-The {\tt v2.encs} instruction can be used for the KeySchedule by
-making {\tt rs1} equal to {\tt rs2}.
-
-A single encryption round using this variant requires $16$ instructions
-in total:
-four {\tt saes.v2.sub.enc} instructions to perform \AESFUNC{SubBytes} and part of
-shift rows,
-four {\tt saes.v2.mix.enc} instructions to perform \AESFUNC{MixColumns} and the
-remainder of \AESFUNC{ShiftRows},
-four load-word instructions to fetch the round key
+By reproducing~\cite[Section 4.3]{TilGro:06},
+\ISE{2}
+assumes 
+$w = 32$
+and adopts a 
+column-packed 
+representation of state and round key matrices.
+As detailed in
+\REFFIG{fig:mnemonics:v2}
 and
-four {\tt xor} instructions to perform \AESFUNC{AddRoundKey}.
-\REFFIG{fig:round:v2} shows an example AES encrypt round function
-using this variant.
+\REFFIG{fig:pseudo:v2},
+it adds
+$ 4$
+instructions ($2$ for encryption, $2$ for decryption).
+For example
+\VERB{saes.v2.encs}
+applies \AESFUNC{SubBytes}  to elements in a packed column,
+and
+\VERB{saes.v2.encm}
+applies \AESFUNC{MixColumn} to             a packed column (which is optionally rotated).
+Both 
+\VERB{saes.v2.encs}
+and
+\VERB{saes.v2.encm}
+use an instruction format with $2$ source and $1$ destination register address.
+\ISE{2} improves \ISE{1} by applying \AESFUNC{ShiftRows} 
+{\em implicitly}:
+this is supported by careful indexing of elements in source and destination
+columns during application of \AESFUNC{SubBytes} and \AESFUNC{MixColumns},
+and also permits
+\VERB{saes.v2.encs}
+to be used within the key schedule.
 
-Because the final round does not include \AESFUNC{MixColumns}, we must
-complete the final \AESFUNC{ShiftRows} operation with an additional
-$12$ {\tt and}/{\tt or} instructions.
+As detailed in
+\REFFIG{fig:round:v2},
+using this variant to implement AES encryption requires
+$16$
+instructions per round:
+$ 4$ \VERB{saes.v1.encs} instructions to apply \AESFUNC{SubBytes},
+$ 4$ \VERB{saes.v1.encm} instructions to apply \AESFUNC{MixColumns},
+$ 4$ \VERB{ lw}          instructions to load the round key,
+and
+$ 4$ \VERB{xor}          instructions to apply \AESFUNC{AddRoundKey}.
+However, recall that the $Nr$-th round omits \AESFUNC{MixColumns}: in this
+case, application of \AESFUNC{ShiftRows} must be completed 
+{\em explicitly}
+via additional 
+$12$
+instructions.
 
 % =============================================================================

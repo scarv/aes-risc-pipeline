@@ -91,7 +91,7 @@ as follows:
       $\AESRND {s}{r+1} = \ALG{P-layer}( \ALG{S-layer}( \AESRND{s}{r}                        ) ) \AESADD \AESRND{rk}{r}$,
       and therefore use of round key
       $\AESRND{rk}{r  }$
-      derived from the cipher key $k$ via the key expansion process~\cite[Section 5.2]{FIPS:197},
+      derived from the cipher key $k$ via the key schedule (or expansion) process~\cite[Section 5.2]{FIPS:197},
 3)    the output ciphertext is
       $c = \AESRND{s}{Nr}$.
 Note that an alternative round definition, namely

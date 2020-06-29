@@ -1,31 +1,41 @@
 % =============================================================================
 
-\REFSEC{sec:pseudo:v1} shows the mnemonics and pseudo-code functions
-for \ISE{1}.
-This variant is the simplest conceptual approach, and
-is also described in~\cite[Section 4.2]{TilGro:06}.
-The AES state is stored column-wise in four $32$-bit words.
-Each instruction applies the forward/inverse AES \AESFUNC{SubBytes} or
-\AESFUNC{MixColumn} function to a single word.
-The instructions have only a single source and destination register,
-making them very compact in terms of encoding points.
-\REFFIG{fig:design:fu_block:v1} shows a block diagram of these
-instructions.
-
-The authors of \cite{TilGro:06} note that these instructions do not
-efficiently support the \AESFUNC{ShiftRows} operation of AES.  We reproduce their
-optimisation addressing this in the \ISE{2} instructions.
-
-A single encryption round using this variant requires
-four {\tt saes.v1.encs} instructions to perform \AESFUNC{SubBytes},
-four {\tt saes.v1.encm} instructions to perform \AESFUNC{MixColumns},
-four load-word instructions to fetch the round key
+By reproducing~\cite[Section 4.2]{TilGro:06},
+\ISE{1}
+assumes 
+$w = 32$
+and adopts a 
+column-packed 
+representation of state and round key matrices.
+As detailed in
+\REFFIG{fig:mnemonics:v1}
 and
-four {\tt xor} instructions to perform \AESFUNC{AddRoundKey}.
-As noted, the inefficiency of these instructions is the
-lack of \AESFUNC{ShiftRows} support, which takes $31$ instructions using the
-base {\tt rv32i} ISA.
-\REFFIG{fig:round:v1} shows an example AES encrypt round function
-using this variant.
+\REFFIG{fig:pseudo:v1},
+it adds
+$ 4$
+instructions ($2$ for encryption, $2$ for decryption).
+For example
+\VERB{saes.v1.encs}
+applies \AESFUNC{SubBytes}  to elements in a packed column,
+and
+\VERB{saes.v1.encm}
+applies \AESFUNC{MixColumn} to             a packed column (which is optionally rotated).
+Both 
+\VERB{saes.v1.encs}
+and
+\VERB{saes.v1.encm}
+use an instruction format with $1$ source and $1$ destination register address.
+
+As detailed in
+\REFFIG{fig:round:v1},
+using this variant to implement AES encryption requires
+$47$
+instructions per round:
+$ 4$ \VERB{saes.v1.encs} instructions to apply \AESFUNC{SubBytes},
+$ 4$ \VERB{saes.v1.encm} instructions to apply \AESFUNC{MixColumns},
+$ 4$ \VERB{ lw}          instructions to load the round key,
+$31$                     instructions to apply \AESFUNC{ShiftRows},
+and
+$ 4$ \VERB{xor}          instructions to apply \AESFUNC{AddRoundKey}.
 
 % =============================================================================

@@ -6,31 +6,31 @@
     \centering
     \includegraphics[width=\textwidth]{diagrams/ise-datapath-v1.png}
     \caption{\ISE{1}.}
-    \label{fig:design:fu_block:v1}
+    \label{fig:ise:design:v1}
 \end{subfigure}
 \begin{subfigure}[t]{0.40\textwidth}
     \centering
     \includegraphics[width=\textwidth]{diagrams/ise-datapath-v2.png}
     \caption{\ISE{2}.}
-    \label{fig:design:fu_block:v2}
+    \label{fig:ise:design:v2}
 \end{subfigure}
 
 \begin{subfigure}[t]{0.40\textwidth}
     \centering
     \includegraphics[width=\textwidth]{diagrams/ise-datapath-v3.png}
     \caption{\ISE{3}.}
-    \label{fig:design:fu_block:v3}
+    \label{fig:ise:design:v3}
 \end{subfigure}
 \begin{subfigure}[t]{0.40\textwidth}
     \centering
     \includegraphics[width=\textwidth]{diagrams/ise-datapath-v5.png}
     \caption{\ISE{5}.}
-    \label{fig:design:fu_block:v5}
+    \label{fig:ise:design:v5}
 \end{subfigure}
-\label{fig:design:fu_block}
 \caption{
 A block diagram for each ISE variant, illustrating the associated AES functional unit.
 }
+\label{fig:ise:design}
 \end{figure}
 
 % -----------------------------------------------------------------------------
@@ -45,8 +45,7 @@ The ISE should align with the wider RISC-V ethos and design principles.
 Foremost, this means it should 
 1) favour simple building-block operations,
    and
-2) permit a $3$-address instruction format
-   (resp. $2$-read, $1$-write register file port constraint).
+2) permit an instruction format with at most $2$ source and $1$ destination register address.
 \end{requirement}
 
 \begin{requirement}
@@ -95,9 +94,37 @@ already caters for
 high(er)-end
 alternatives.
 
-We arrive at $5$ ISE varients, which are outlined in the following;
-in each case, a dedicate \APPX contains additional technical detail, e.g.,
-a complete list of instructions and their semantics, and examples of their
-use when implementing AES.
+We arrive at five ISE variants using the requirements, the description of 
+which is summarised by 
+
+\begin{center}
+\begin{tabular}{|c|ccc|}
+\hline
+Mnemonic & Intuitive                  & Technical               & Diagrammatic               \\
+\hline
+\ISE{1}  & \REFSEC{sec:ise:design:v1} & \REFAPPX{sec:pseudo:v1} & \REFFIG{fig:ise:design:v1} \\
+\ISE{2}  & \REFSEC{sec:ise:design:v2} & \REFAPPX{sec:pseudo:v2} & \REFFIG{fig:ise:design:v2} \\
+\ISE{3}  & \REFSEC{sec:ise:design:v3} & \REFAPPX{sec:pseudo:v3} & \REFFIG{fig:ise:design:v3} \\
+\ISE{4}  & \REFSEC{sec:ise:design:v4} & \REFAPPX{sec:pseudo:v4} &                            \\
+\ISE{5}  & \REFSEC{sec:ise:design:v5} & \REFAPPX{sec:pseudo:v5} & \REFFIG{fig:ise:design:v5} \\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent
+That is, for each variant we include
+1) an 
+   intuitive 
+   description in one of the following \SEC[s],
+2) a
+   technical
+   description
+   (i.e., a complete list of instructions and their semantics, plus examples of their use when implementing AES)
+   in a dedicate \APPX,
+   and
+3) a 
+   diagramatic
+   description
+   in \REFFIG{fig:ise:design}.
 
 % =============================================================================
