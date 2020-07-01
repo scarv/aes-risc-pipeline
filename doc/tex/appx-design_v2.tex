@@ -1,11 +1,6 @@
+% =============================================================================
 
-%
-% V2
-% ------------------------------------------------------------
-
-
-\begin{figure}[h]
-\begin{subfigure}{\textwidth}
+\begin{figure}[!h]
 \begin{lstlisting}[language=pseudo,style=block]
 saes.v2.encs rd, rs1, rs2 : v2.SubBytes(rd, rs1, rs2, fwd=1)
 saes.v2.decs rd, rs1, rs2 : v2.SubBytes(rd, rs1, rs2, fwd=0)
@@ -13,11 +8,12 @@ saes.v2.encm rd, rs1, rs2 : v2.MixColumns(rd, rs1, rs2, fwd=1)
 saes.v2.decm rd, rs1, rs2 : v2.MixColumns(rd, rs1, rs2, fwd=0)
 \end{lstlisting}
 \caption{
-\ISE{2} mnemonics and mappings onto pseudo-code functions.
+  Instruction mnemonics, and their mapping onto pseudo-code functions, for \ISE{2}.
 }
-\label{fig:mnemonics:v2}
-\end{subfigure}
-\begin{subfigure}{\textwidth}
+\label{fig:v2:mnemonics}
+\end{figure}
+
+\begin{figure}[!h]
 \begin{lstlisting}[language=pseudo,style=block]
 v2.SubBytes(rd, rs1, rs2, fwd):
   t1.32  = {rs1.8[0], rs2.8[1], rs1.8[2], rs2.8[3]}
@@ -30,11 +26,12 @@ v2.MixColumns(rd, rs1, rs2, fwd):
       rd.8[i]= AESMixColumn(tmp.32) if fwd else AESInvMixColumn(tmp.32)
 \end{lstlisting}
 \caption{
-    \ISE{2} instruction pseudo-code.
+  Instruction pseudo-code functions for \ISE{2}.
 }
-\label{fig:pseudo:v2}
-\end{subfigure}
-\begin{subfigure}{\textwidth}
+\label{fig:v2:pseudo}
+\end{figure}
+
+\begin{figure}[!h]
 \begin{lstlisting}[language=pseudo,style=block]
 lw              a0,  0(a4)     // Load Round Key
 lw              a1,  4(a4)
@@ -54,12 +51,20 @@ saes.v2.mix.enc t2, a1, a0
 saes.v2.mix.enc t3, a3, a2
 \end{lstlisting}
 \caption{
-A single AES encryption round, implemented using \ISE{2}.
+  An AES encryption round implemented using \ISE{2}.
 }
-\label{fig:round:v2}
-\end{subfigure}
-\caption{
-    Mnemonics, pseudo code mappings and example encryption
-    round function for \ISE{2}.
-}
+\label{fig:v2:round}
 \end{figure}
+
+\newpage
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width={0.5\textwidth}]{diagrams/ise-datapath-v2.png}
+\caption{
+  A diagramatic description of the functional unit required to support \ISE{2}.
+}
+\label{fig:v2:fu}
+\end{figure}
+
+% =============================================================================

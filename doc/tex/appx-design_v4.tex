@@ -1,10 +1,6 @@
+% =============================================================================
 
-%
-% V4
-% ------------------------------------------------------------
-
-\begin{figure}[h]
-\begin{subfigure}{\textwidth}
+\begin{figure}[!h]
 \begin{lstlisting}[language=pseudo,style=block]
 saes.v4.ks1       rd rs1 rcon : v4.ks1(rd, rs1, rcon)
 saes.v4.ks2       rd rs1 rs2  : v4.ks2(rd, rs1, rs2 )
@@ -15,11 +11,12 @@ saes.v4.decsm     rd rs1 rs2  : v4.Dec(rd, rs1, rs2, mix=1)
 saes.v4.decs      rd rs1 rs2  : v4.Dec(rd, rs1, rs2, mix=0)
 \end{lstlisting}
 \caption{
-\ISE{4} mnemonics and mappings onto pseudo-code functions.
+  Instruction mnemonics, and their mapping onto pseudo-code functions, for \ISE{4}.
 }
-\label{fig:mnemonics:v4}
-\end{subfigure}
-\begin{subfigure}{\textwidth}
+\label{fig:v4:mnemonics}
+\end{figure}
+
+\begin{figure}[!h]
 \begin{lstlisting}[language=pseudo,style=block]
 v4.ks1(rd, rs1, enc_rcon):     // KeySchedule: SubBytes, Rotate, Round Const
     temp.32   = rs1.32[1]
@@ -51,11 +48,12 @@ v4.InvMix(rd, rs1):             // Inverse MixColumns
     rd.32[i]  = AESInvMixColumn(rs1.32[i]) for i=0..1
 \end{lstlisting}
 \caption{
-    \ISE{4} instruction pseudo-code.
+  Instruction pseudo-code functions for \ISE{4}.
 }
-\label{fig:pseudo:v4}
-\end{subfigure}
-\begin{subfigure}{\textwidth}
+\label{fig:v4:pseudo}
+\end{figure}
+
+\begin{figure}[!h]
 \begin{lstlisting}[language=pseudo,style=block]
 ld              a0, 0(a4)  // Load round key as double words.
 ld              a1, 8(a4)
@@ -65,12 +63,9 @@ aes.v5.encsm    t2, t0, t1 // Next round state: columns 0, 1
 aes.v5.encsm    t3, t1, t0 // columns 2, 3 - Note swapped rs1/rs2
 \end{lstlisting}
 \caption{
-A single AES encryption round, implemented using \ISE{4}.
+  An AES encryption round implemented using \ISE{4}.
 }
-\label{fig:round:v4}
-\end{subfigure}
-\caption{
-    Mnemonics, pseudo code mappings and example encryption
-    round function for \ISE{4}.
-}
+\label{fig:v4:round}
 \end{figure}
+
+% =============================================================================

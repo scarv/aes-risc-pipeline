@@ -6,6 +6,13 @@ options that we {\em could} consider.  To narrow the design space into
 those we {\em do} consider, we use the requirements as outlined below:
 
 \begin{requirement}
+The ISE should support
+1) AES encryption {\em and} decryption,
+   and
+2) {\em all} parameter sets, i.e., AES-128, AES-192, and AES-256.
+\end{requirement}
+
+\begin{requirement}
 The ISE should align with the wider RISC-V ethos and design principles.
 Foremost, this means it should 
 1) favour simple building-block operations,
@@ -19,8 +26,8 @@ the RISC-V general-purpose scalar register file
 (i.e., st. $w \in \SET{32,64}$),
 vs. 
 any                        vector register file
-(e.g., $w \ge 128$).
-Note that this requirement excludes most standard ISEs outlined in 
+(e.g., $w \ge 128$):
+this requirement excludes the majority of standard ISEs outlined in 
 \REFSEC{sec:bg:aes_impl_ise}.
 \end{requirement}
 
@@ -60,36 +67,14 @@ high(er)-end
 alternatives.
 
 We arrive at five ISE variants using the requirements, the description of 
-which is summarised by 
-
-\begin{center}
-\begin{tabular}{|c|ccc|}
-\hline
-Mnemonic & Intuitive                  & Technical               & Diagrammatic               \\
-\hline
-\ISE{1}  & \REFSEC{sec:ise:design:v1} & \REFAPPX{sec:pseudo:v1} & \REFFIG{fig:ise:design:v1} \\
-\ISE{2}  & \REFSEC{sec:ise:design:v2} & \REFAPPX{sec:pseudo:v2} & \REFFIG{fig:ise:design:v2} \\
-\ISE{3}  & \REFSEC{sec:ise:design:v3} & \REFAPPX{sec:pseudo:v3} & \REFFIG{fig:ise:design:v3} \\
-\ISE{4}  & \REFSEC{sec:ise:design:v4} & \REFAPPX{sec:pseudo:v4} &                            \\
-\ISE{5}  & \REFSEC{sec:ise:design:v5} & \REFAPPX{sec:pseudo:v5} & \REFFIG{fig:ise:design:v5} \\
-\hline
-\end{tabular}
-\end{center}
-
-\noindent
-That is, for each variant we include
+which is split into
 1) an 
    intuitive 
    description in one of the following \SEC[s],
 2) a
    technical
    description
-   (i.e., a complete list of instructions and their semantics, plus examples of their use when implementing AES)
-   in a dedicate \APPX,
-   and
-3) a 
-   diagramatic
-   description
-   in \REFFIG{fig:ise:design}.
+   (e.g., a complete list of instructions and their semantics)
+   in an associated \APPX.
 
 % =============================================================================

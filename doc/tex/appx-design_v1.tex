@@ -1,11 +1,6 @@
+% =============================================================================
 
-%
-% V1
-% ------------------------------------------------------------
-
-
-\begin{figure}[h]
-\begin{subfigure}{\textwidth}
+\begin{figure}[!h]
 \begin{lstlisting}[language=pseudo,style=block]
 saes.v1.encs rd, rs1 : v1.SubBytes(rd, rs1, fwd=1)
 saes.v1.decs rd, rs1 : v1.SubBytes(rd, rs1, fwd=0)
@@ -13,11 +8,12 @@ saes.v1.encm rd, rs1 : v1.MixColumn(rd, rs1, fwd=1)
 saes.v1.decm rd, rs1 : v1.MixColumn(rd, rs1, fwd=0)
 \end{lstlisting}
 \caption{
-\ISE{1} mnemonics and mappings onto pseudo-code functions.
+  Instruction mnemonics, and their mapping onto pseudo-code functions, for \ISE{1}.
 }
-\label{fig:mnemonics:v1}
-\end{subfigure}
-\begin{subfigure}{\textwidth}
+\label{fig:v1:mnemonics}
+\end{figure}
+
+\begin{figure}[!h]
 \begin{lstlisting}[language=pseudo,style=block]
 v1.SubByte(rd, rs1, fwd):
     rd.8[i] = AESSBox[rs1.8[i]] if fwd else AESInbSBox[rs1.8[i]] for i=0..3
@@ -28,11 +24,12 @@ v1.MixColumn(rd, rs1, fwd)
         rd.8[i] = AESMixColumn(tmp.32) if fwd else AESInvMixColumn(tmp.32)
 \end{lstlisting}
 \caption{
-    \ISE{1} instruction pseudo-code.
+  Instruction pseudo-code functions for \ISE{1}.
 }
-\label{fig:pseudo:v1}
-\end{subfigure}
-\begin{subfigure}{\textwidth}
+\label{fig:v1:pseudo}
+\end{figure}
+
+\begin{figure}[!h]
 \begin{lstlisting}[language=pseudo,style=block]
 lw           a0,  0(a4)       // Load Round Key
 lw           a1,  4(a4)
@@ -53,12 +50,20 @@ saes.v1.encm t2, t2
 saes.v1.encm t3, t3
 \end{lstlisting}
 \caption{
-A single AES encryption round, implemented using \ISE{1}.
+  An AES encryption round implemented using \ISE{1}.
 }
-\label{fig:round:v1}
-\end{subfigure}
-\caption{
-    Mnemonics, pseudo code mappings and example encryption
-    round function for \ISE{1}.
-}
+\label{fig:v1:round}
 \end{figure}
+
+\newpage
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width={0.5\textwidth}]{diagrams/ise-datapath-v1.png}
+\caption{
+  A diagramatic description of the functional unit required to support \ISE{1}.
+}
+\label{fig:v1:fu}
+\end{figure}
+
+% =============================================================================

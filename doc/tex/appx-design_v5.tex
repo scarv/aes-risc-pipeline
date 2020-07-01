@@ -1,11 +1,6 @@
+% =============================================================================
 
-%
-% V5
-% ------------------------------------------------------------
-
-
-\begin{figure}[h]
-\begin{subfigure}{\textwidth}
+\begin{figure}[!h]
 \begin{lstlisting}[language=pseudo,style=block]
 saes.v5.esrsub.lo rd, rs1, rs2 : rd = v5.SrSub(rs1, rs2, fwd=1, hi=0)
 saes.v5.esrsub.hi rd, rs1, rs2 : rd = v5.SrSub(rs1, rs2, fwd=1, hi=1)
@@ -16,11 +11,12 @@ saes.v5.dmix      rd, rs1, rs2 : rd = v5.Mix(rs1, rs2, fwd=0)
 saes.v5.sub       rd, rs1      : rd = SubBytes(rs1.8[i])         for i=0..3
 \end{lstlisting}
 \caption{
-\ISE{5} mnemonics and mappings onto pseudo-code functions.
+  Instruction mnemonics, and their mapping onto pseudo-code functions, for \ISE{5}.
 }
-\label{fig:mnemonics:v5}
-\end{subfigure}
-\begin{subfigure}{\textwidth}
+\label{fig:v5:mnemonics}
+\end{figure}
+
+\begin{figure}[!h]
 \begin{lstlisting}[language=pseudo,style=block]
 v5.SrSub(rd, rs1, rs2, fwd, hi):
   if(fwd):
@@ -44,11 +40,12 @@ v5.mix(rd, rs1, rs2, fwd):
   rd.32 = {n2, n3, n0, n1}
 \end{lstlisting}
 \caption{
-    \ISE{5} instruction pseudo-code.
+  Instruction pseudo-code functions for \ISE{5}.
 }
-\label{fig:pseudo:v5}
-\end{subfigure}
-\begin{subfigure}{\textwidth}
+\label{fig:v5:pseudo}
+\end{figure}
+
+\begin{figure}[!h]
 \begin{lstlisting}[language=pseudo,style=block]
 lw                a0,  0(a4)   // Load Round Key
 lw                a1,  4(a4)
@@ -68,12 +65,20 @@ saes.v5.emix      t2, a2, a0   // Quad 2
 saes.v5.emix      t3, a3, a1   // Quad 3
 \end{lstlisting}
 \caption{
-A single AES encryption round, implemented using \ISE{1}.
+  An AES encryption round implemented using \ISE{5}.
 }
-\label{fig:round:v5}
-\end{subfigure}
-\caption{
-    Mnemonics, pseudo code mappings and example encryption
-    round function for \ISE{5}.
-}
+\label{fig:v5:round}
 \end{figure}
+
+\newpage
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width={0.5\textwidth}]{diagrams/ise-datapath-v5.png}
+\caption{
+  A diagramatic description of the functional unit required to support \ISE{5}.
+}
+\label{fig:v5:fu}
+\end{figure}
+
+% =============================================================================

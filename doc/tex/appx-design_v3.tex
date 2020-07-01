@@ -1,11 +1,6 @@
+% =============================================================================
 
-%
-% V3
-% ------------------------------------------------------------
-
-
-\begin{figure}[h]
-\begin{subfigure}{\textwidth}
+\begin{figure}[!h]
 \begin{lstlisting}[language=pseudo,style=block]
 saes.v3.encs  rd, rs1, rs2, bs : v3.Proc(rd, rs1, rs2, bs, fwd=1, mix=0)
 saes.v3.encsm rd, rs1, rs2, bs : v3.Proc(rd, rs1, rs2, bs, fwd=1, mix=1)
@@ -13,11 +8,12 @@ saes.v3.decs  rd, rs1, rs2, bs : v3.Proc(rd, rs1, rs2, bs, fwd=0, mix=0)
 saes.v3.decsm rd, rs1, rs2, bs : v3.Proc(rd, rs1, rs2, bs, fwd=0, mix=1)
 \end{lstlisting}
 \caption{
-\ISE{3} mnemonics and mappings onto pseudo-code functions.
+  Instruction mnemonics, and their mapping onto pseudo-code functions, for \ISE{3}.
 }
-\label{fig:mnemonics:v3}
-\end{subfigure}
-\begin{subfigure}{\textwidth}
+\label{fig:v3:mnemonics}
+\end{figure}
+
+\begin{figure}[!h]
 \begin{lstlisting}[language=pseudo,style=block]
 v3.Proc(rd, rs1, rs2, bs, fwd, mix):
   x     = AESSBox[rs2.8[bs]] if fwd else AESInvSBox[rs2.8[bs]]
@@ -27,11 +23,12 @@ v3.Proc(rd, rs1, rs2, bs, fwd, mix):
   rd.32 = ROTL32(t1.32, 8*bs) ^ rs1
 \end{lstlisting}
 \caption{
-    \ISE{3} instruction pseudo-code.
+  Instruction pseudo-code functions for \ISE{3}.
 }
-\label{fig:pseudo:v3}
-\end{subfigure}
-\begin{subfigure}{\textwidth}
+\label{fig:v3:pseudo}
+\end{figure}
+
+\begin{figure}[!h]
 \begin{lstlisting}[language=pseudo,style=block]
 lw              a0, 16(RK)      // Load Round Key
 lw              a1, 20(RK)
@@ -55,12 +52,20 @@ saes.v3.encsm   a3, a3, t1, 2
 saes.v3.encsm   a3, a3, t2, 3   // a0,a1,a2,a3 contains new round state
 \end{lstlisting}
 \caption{
-A single AES encryption round, implemented using \ISE{3}.
+  An AES encryption round implemented using \ISE{3}.
 }
-\label{fig:round:v3}
-\end{subfigure}
-\caption{
-    Mnemonics, pseudo code mappings and example encryption
-    round function for \ISE{3}.
-}
+\label{fig:v3:round}
 \end{figure}
+
+\newpage
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width={0.5\textwidth}]{diagrams/ise-datapath-v3.png}
+\caption{
+  A diagramatic description of the functional unit required to support \ISE{3}.
+}
+\label{fig:v3:fu}
+\end{figure}
+
+% =============================================================================
