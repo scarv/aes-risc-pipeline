@@ -9,7 +9,7 @@
 \KwResult{An $n$-block ciphertext   $c$.
 }
 \BlankLine
-\KwFn{$\mbox{\SCOPE{\ID{AES-CBC}}{\ALG{Enc}}}( k, iv, m )$}{
+\KwFn{$\SCOPE{\ID{AES-CBC}}{\ALG{Enc}}( k, iv, m )$}{
     $c_0 \ASN \SCOPE{\ID{AES}}{\ALG{Enc}}( k, m_0   \XOR iv       )$ \;
   \For{$i = 0$ {\bf upto} $n-1$}{
     $c_i \ASN \SCOPE{\ID{AES}}{\ALG{Enc}}( k, m_i   \XOR  c_{i-1} )$ \;
@@ -29,7 +29,7 @@
 \KwResult{An $n$-block  plaintext   $m$.
 }
 \BlankLine
-\KwFn{$\mbox{\SCOPE{\ID{AES-CBC}}{\ALG{Dec}}}( k, iv, c )$}{
+\KwFn{$\SCOPE{\ID{AES-CBC}}{\ALG{Dec}}( k, iv, c )$}{
     $m_0 \ASN \SCOPE{\ID{AES}}{\ALG{Dec}}( k, c_0 ) \XOR iv        $ \;
   \For{$i = 0$ {\bf upto} $n-1$}{
     $m_i \ASN \SCOPE{\ID{AES}}{\ALG{Dec}}( k, c_i ) \XOR  c_{i-1}  $ \;
@@ -52,7 +52,7 @@
 \KwResult{An $n$-block ciphertext   $c$.
 }
 \BlankLine
-\KwFn{$\mbox{\SCOPE{\ID{AES-CTR}}{\ALG{Enc}}}( k, iv, m )$}{
+\KwFn{$\SCOPE{\ID{AES-CTR}}{\ALG{Enc}}( k, iv, m )$}{
   $t_0 \ASN iv$ \;
   \For{$i = 0$ {\bf upto} $n-1$}{
     $t_{i+1} \ASN f( t_{i} )$ \;
@@ -74,7 +74,7 @@
 \KwResult{An $n$-block  plaintext   $m$.
 }
 \BlankLine
-\KwFn{$\mbox{\SCOPE{\ID{AES-CTR}}{\ALG{Dec}}}( k, iv, m )$}{
+\KwFn{$\SCOPE{\ID{AES-CTR}}{\ALG{Dec}}( k, iv, m )$}{
   $t_0 \ASN iv$ \;
   \For{$i = 0$ {\bf upto} $n-1$}{
     $t_{i+1} \ASN f( t_{i} )$ \;
@@ -98,7 +98,7 @@
 \KwResult{An $n$-block sequence     $y$.
 }
 \BlankLine
-\KwFn{$\mbox{\SCOPE{\ID{GCM}}{\ALG{GCTR}}}( k, iv, f, x )$}{
+\KwFn{$\SCOPE{\ID{GCM}}{\ALG{GCTR}}( k, iv, f, x )$}{
   $t_0 \ASN iv$ \;
   \For{$i = 0$ {\bf upto} $n-1$}{
     $t_{i+1} \ASN f( t_{i} )$ \;
@@ -120,7 +120,7 @@
 \KwResult{A         tag             $t$.
 }
 \BlankLine
-\KwFn{$\mbox{\SCOPE{\ID{GCM}}{\ALG{GHASH}}}( h, x )$}{
+\KwFn{$\SCOPE{\ID{GCM}}{\ALG{GHASH}}( h, x )$}{
   $t \ASN 0$ \;
   \For{$i = 0$ {\bf upto} $n-1$}{
     $t \ASN ( t \oplus x_{i} ) \otimes h$
@@ -143,7 +143,7 @@
 \KwResult{A  ciphertext block $c$.
 }
 \BlankLine
-\KwFn{$\mbox{\SCOPE{\ID{XTS-AES}}{\ALG{Enc}}}( k, m, i, j )$}{
+\KwFn{$\SCOPE{\ID{XTS-AES}}{\ALG{Enc}}( k, m, i, j )$}{
   parse $k = k_1 \CONS k_2$ \;
   $t  \ASN \SCOPE{\ID{AES}}{\ALG{Enc}}( k_2, i  ) \otimes \alpha^k$ \;
   $m' \ASN m  \oplus t                                            $ \;
@@ -165,7 +165,7 @@
 \KwResult{A   plaintext block $m$.
 }
 \BlankLine
-\KwFn{$\mbox{\SCOPE{\ID{XTS-AES}}{\ALG{Dec}}}( k, c, i, j )$}{
+\KwFn{$\SCOPE{\ID{XTS-AES}}{\ALG{Dec}}( k, c, i, j )$}{
   parse $k = k_1 \CONS k_2$ \;
   $t  \ASN \SCOPE{\ID{AES}}{\ALG{Enc}}( k_2, i  ) \otimes \alpha^k$ \;
   $c' \ASN c  \oplus t                                            $ \;
