@@ -7,15 +7,17 @@ confidentiality, and a universal hash function GHASH to provide
 authenticity.
 It is the only cipher mode which TLS 1.3
 \cite[Section 9.1]{rfc:8446}
-mandates be implemented, and uses AES-128 as the block cipher.
+mandates be implemented, using AES-128 as the block cipher.
 
-The importance of AES-GCM mean they are frequently considered together
+The importance of AES and GCM mean they are frequently considered together
 from an evaluation perspective.
 The computationally intensive parts of AES-GCM are the AES Encryption
 and GHASH functions.
 We have already shown how to efficiently accelerate AES, we now show
 how GHASH may be implemented efficiently using the proposed Bit-manipulation
-extension to RISC-V.
+extension to RISC-V.\footnote{
+\url{https://github.com/riscv/riscv-bitmanip}
+}
 
 \subsection{GHASH Background}
 
@@ -33,12 +35,14 @@ The field is defined as the ring of binary polynomials, modulo the
 primitive polynomial
 $R(x) = x^{128} + x^{7} + x^{2} + x + 1$.
 The field is encoded in little-endian form, where the multiplicative
-identity ($1$) is encoded as the byte sequence {\tt 0x80, 0x00, ... 0x00}.
+identity ($1$) is encoded as the byte sequence {\tt 0x80, 0x00, ..., 0x00}.
 
 \subsection{GHASH Implementation}
 
 Converting the inputs to a little-endian representation is achieved
-using the {\tt grev} instruction to reverse all of the bits in each byte
+using the 
+{\tt grev} (Generalised Reverse)
+instruction to reverse all of the bits in each byte
 of an input word.
 On RV32, this requires four {\tt grev} instructions, while RV64 requires
 only two.
@@ -61,7 +65,7 @@ Computing the $256$-bit result of the $128*128$-bit multiplication
 on RISC-V with the Bit-manipulation extension requires
 four {\tt clmulh/clmul} pairs for RV64,
 and $16$ pairs on RV32.
-This may be speeded up asymptotically using the Karatsuba method,
+This may be sped up asymptotically using the Karatsuba method,
 resulting in $3$ pairs on RV64 and $9$ pairs on RV32
 at the cost of additional {\tt xor} operations.
 

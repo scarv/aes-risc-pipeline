@@ -10,7 +10,7 @@ each instruction selects a single byte of {\tt rs2} to operate on
 using the $2$-bit {\tt bs} immediate.
 This byte is used as the input to a standard T-table lookup operation,
 but the table entry is calculated in hardware.
-\REFFIG{fig:design:fu_block:v3} shows the data-path for these instructions.
+\REFFIG{fig:ise:design:v3} shows the data-path for these instructions.
 The result of the T-table lookup is then XOR'ed with {\tt rs1} to
 accumulate the results of the round transformation.
 

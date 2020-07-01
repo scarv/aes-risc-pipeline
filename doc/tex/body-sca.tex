@@ -1,9 +1,8 @@
 
 Embedded implementations often consider power side-channels in their threat
 model.
-Having identified ISE \ISE{3} detailed in
-\REFSEC{sec:design:v3} as a strong candidate for embedded $32$-bit
-RISC-V cores, we now show a possible
+Having identified ISE \ISE{3} as a strong standardisation candidate
+for embedded $32$-bit RISC-V cores, we now show a possible
 way of extending the ISE further to add power side-channel resistance
 with minimal area and performance overheads.
 We aim for $1$'st order side-channel security.
@@ -41,11 +40,15 @@ To this end, the secret key is represented as two boolean masked shares.
 An implementation of the AES block encrypt/decrypt function requires
 eight registers: four for the current round state, four to load the
 next round key into and then accumulate the next round state.
-Doubling this requirement to store shares of each secret variable
+Storing shares of each secret variable
 in the General Purpose Register (GPR) file is un-reasonable.
 It would require drastic modifications to the instruction definitions and
 register file to read four registers (two sources, of two shares each) and
 write two registers.
+While this is not insurmountable for a more general purpose ISE
+(especially where adjacent register pairs are used to store corresponding
+shares),
+it wouldbreak the RISC-V $2$-read-$1$-write principle.
 
 Instead, we define a new, $8$-element ``Mask Register File'' (MRF).
 Each mask register $M_i$ is $32$-bits wide, and stores the mask for

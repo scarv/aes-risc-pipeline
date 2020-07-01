@@ -168,10 +168,11 @@ based on its efficiency, raw performance and simplicity to implement.
 For the $64$-bit case, \ISE{4} is an obvious choice for making
 sensible use of the wider data-path within the constraints of RISC-V.
 We note the relativley poor performance of \ISE{4} in terms of cycles
-per instruction executed - a $50\%$ overhead for Encrypt/Decrypt.
+per instruction executed for the Rocket core - a $50\%$ overhead for
+Encrypt/Decrypt.
 This is attributed to the forwarding behaviour of the \CORE{1}:
 ROCC instruction results are not
-forwarded to subsequent instructions as quickly as core ISA
+forwarded to subsequent instructions as quickly as base ISA
 instructions.
 
 % =============================================================================

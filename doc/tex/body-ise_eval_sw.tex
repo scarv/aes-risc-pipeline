@@ -32,9 +32,12 @@ and
 \REFTAB{tab:eval:sw:perf:rocket}
 give cycle and instruction counts for each
 variant under the \CORE{2} and \CORE{1} cores respectively.
-Each implementation uses word-aligned state, meaning the input blocks
+Each implementation uses naturally-aligned state, meaning the input blocks
 can be loaded with $4$ load-word instructions on $32$-bit host cores,
-or $2$ load-double instructions on the $64$-bit host cores.
+or $2$ load-double instructions on the $64$-bit host cores.\footnote{
+RISC-V does not mandate cores support misaligned loads and
+stores. Aligning the state this way ensures the best performance across
+the widest number of cores.}
 For the Encrypt/Decrypt columns, we show instruction execution counts
 and processor clock cycle measurements for a single block
 encryption of AES-128.
