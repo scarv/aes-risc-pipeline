@@ -1,5 +1,23 @@
+% =============================================================================
 
-\begin{figure}[h!]
+\begin{figure}[!h]
+\begin{lstlisting}[language=scala]
+class AESVanilla32 extends Config (
+  new freechips.rocketchip.subsystem.WithNoMMIOPort ++
+  new freechips.rocketchip.subsystem.WithNoSlavePort ++
+  new freechips.rocketchip.subsystem.WithInclusiveCache ++
+  new freechips.rocketchip.subsystem.WithRV32 ++
+  new freechips.rocketchip.subsystem.WithNExtTopInterrupts(0) ++
+  new freechips.rocketchip.subsystem.WithNBigCores(1) ++
+  new freechips.rocketchip.subsystem.WithoutFPU ++
+  new freechips.rocketchip.system.BaseConfig
+)
+\end{lstlisting}
+\caption{$32$-bit Rocket core configuration.}
+\label{fig:rocket:32}
+\end{figure}
+
+\begin{figure}[!h]
 \begin{lstlisting}[language=scala]
 class AESVanilla64 extends Config(
   new freechips.rocketchip.subsystem.WithNoMMIOPort ++
@@ -7,20 +25,13 @@ class AESVanilla64 extends Config(
   new freechips.rocketchip.subsystem.WithInclusiveCache ++
   new freechips.rocketchip.subsystem.WithNExtTopInterrupts(0) ++
   new freechips.rocketchip.subsystem.WithNBigCores(1) ++
-  new freechips.rocketchip.subsystem.WithoutFPU ++  // No FPU
-  new freechips.rocketchip.system.BaseConfig)
-
-class AESVanilla32 extends Config (
-  new freechips.rocketchip.subsystem.WithNoMMIOPort ++
-  new freechips.rocketchip.subsystem.WithNoSlavePort ++
-  new freechips.rocketchip.subsystem.WithInclusiveCache ++
-  new freechips.rocketchip.subsystem.WithRV32 ++ // 32-bit
-  new freechips.rocketchip.subsystem.WithNExtTopInterrupts(0) ++
-  new freechips.rocketchip.subsystem.WithNBigCores(1) ++
-  new freechips.rocketchip.subsystem.WithoutFPU ++  // No FPU
+  new freechips.rocketchip.subsystem.WithoutFPU ++
   new freechips.rocketchip.system.BaseConfig
 )
 \end{lstlisting}
-\caption{$32$ and $64$-bit Rocket core base configurations.}
-\label{fig:rocket:cfg}
+\caption{$64$-bit Rocket core configuration.}
+\label{fig:rocket:64}
 \end{figure}
+
+
+% =============================================================================
