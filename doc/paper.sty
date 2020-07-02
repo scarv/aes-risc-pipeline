@@ -20,16 +20,8 @@
 \newbool{submission} \setbool{submission}{false}
 \newbool{anonymous}  \setbool{anonymous} {false}
 
-\newcommandx{\CORE}[1]{%
-  \protect\IfEqCase{#1}{%
-    {1}{Rocket}%
-    {2}{\ifbool{anonymous}{Anonymous}{SCARV}}%
-  }\xspace%
-}%
-
-\newcommandx{\ISE}[1]{%
-    V#1\xspace
-}%
+\newcommandx{\CORE}[1]{\ifstrequal{#1}{1}{Rocket}{\ifbool{anonymous}{Anonymous}{SCARV}}\xspace}
+\newcommandx{\ISE}[1]{V#1\xspace}
 
 % hack-ish control of space etc.
 %\captionsetup[subfigure]{justification=centering}

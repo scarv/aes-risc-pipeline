@@ -1,14 +1,5 @@
 % =============================================================================
 
-\begin{figure}
-\centering
-\includegraphics[scale=0.45,angle=90]{diagrams/scarv-cpu-uarch.png}
-\caption{Core $2$: \CORE{2}.}
-\label{fig:design:cpu_block:2}
-\end{figure}
-
-% -----------------------------------------------------------------------------
-
 The evaluation of each ISE considers two different RISC-V compliant base
 micro-architectures, which constitute two different host cores:
 
@@ -28,7 +19,7 @@ micro-architectures, which constitute two different host cores:
                C~\cite[Section 16]{RV:ISA:I:19}
                (or compressed)
                extensions.
-      Per the block diagram shown in~\REFFIG{fig:design:cpu_block:2},
+      Per the block diagram shown in~\REFFIG{fig:core:2:normal},
       the core 
       executes instructions using a $5$-stage, in-order pipeline;
       no mechanism for

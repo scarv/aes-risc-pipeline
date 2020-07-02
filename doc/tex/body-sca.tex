@@ -103,7 +103,7 @@ load them back and un-mask them.
 
 We used the \CORE{2} core as the basis for our side-channel secure
 implementation of \ISE{3}.
-\REFFIG{fig:sca:uarch} shows a block diagram of the modifications
+\REFFIG{fig:core:2:secure} shows a block diagram of the modifications
 made to the core, and which data-paths carry masked data.
 To avoid accidental combining (un-masking) of the two shares,
 Share $1$ is stored in {\em bit-reversed} form in the MRF and pipeline
@@ -127,17 +127,6 @@ results) but would need to be used in conjunction with a true random
 number source (E.g. a set of ring-oscillators) in a deployed system.
 Only the S-box is implemented using $3$-shares.
 Subsequent \AESFUNC{MixColumns} logic is only implemented using $2$ shares.
-
-\begin{figure}
-\centering
-\includegraphics[scale=0.45,angle=90]{diagrams/scarv-cpu-uarch-sca.png}
-\caption{Block diagram of the modifications to the \CORE{2} core,
-supporting an extended version of ISE \ISE{3} for side-channel
-security.
-Red arrows show internal connections which carry mask shares.}
-\label{fig:sca:uarch}
-\end{figure}
-
 
 \subsection{Evaluation}
 
