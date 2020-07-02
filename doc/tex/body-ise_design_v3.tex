@@ -1,34 +1,52 @@
 % =============================================================================
 
-\REFSEC{sec:pseudo:v3} shows the mnemonics and pseudo-code functions
-for \ISE{3}.
-These instructions are based on
-\cite{NadIkeKur:04,BBFR:06} and \cite{Saarinen:20},
-which implement a T-tables based representation of AES \cite{DaeRij:02}.
-The AES state is stored column-wise in four $32$-bit words, and
-each instruction selects a single byte of {\tt rs2} to operate on
-using the $2$-bit {\tt bs} immediate.
-This byte is used as the input to a standard T-table lookup operation,
-but the table entry is calculated in hardware.
-\REFFIG{fig:ise:design:v3} shows the data-path for these instructions.
-The result of the T-table lookup is then XOR'ed with {\tt rs1} to
-accumulate the results of the round transformation.
+\ISE{3}
+is based on~\cite{NadIkeKur:04,BBFR:06,Saarinen:20}; it
+assumes 
+$w = 32$
+and adopts a 
+column-packed 
+representation of state and round key matrices.
 
-These instructions require only one S-box instantiation,
-which is a clear advantage in resource constrained applications.
-While the previous designs could be implemented with a single S-box, they
-would require additional temporary registers and evaluation over multiple
-cycles.
+As detailed in
+\REFFIG{fig:v3:mnemonics}
+and
+\REFFIG{fig:v3:pseudo},
+it adds
+$ 4$
+instructions ($2$ for encryption, $2$ for decryption).
+The basic idea is to support an implementation strategy aligned with use
+of 
+T-tables~\cite[Section 4.2]{DaeRij:02}, 
+but compute entries in hardware vs. store then look-up entries in memory.
+For example
+\VERB{saes.v3.encsm}
+extracts                     an     element from a packed column,
+ applies \AESFUNC{SubBytes}  to the element,
+ expands                        the element into a packed column,
+ applies \AESFUNC{MixColumn},
+then
+ applies \AESFUNC{AddRoundKey}.
+The inclusion of \AESFUNC{AddRoundKey} follows~\cite{Saarinen:20}, which
+improves on~\cite{NadIkeKur:04,BBFR:06}; as a result of this,
+the instruction format for
+\VERB{saes.v3.encsm}
+uses 
+includes $1$ source and $1$ destination register address.
+The requirement for $1$ application  of the S-box
+allows for a more efficient functional unit than \ISE{1} or \ISE{2}, for
+example, either wrt. latency or area.
 
-We also note that \cite{Saarinen:20} improves on \cite{BBFR:06}
-by using an extra source register and allowing the \AESFUNC{AddRoundKey} step to be
-performed implicitly, thus saving four instructions per round.
-
-A single encryption round using this variant requires
-four load-word instructions to fetch the round key and
-$16$ {\tt saes.v3.encs[m]} instructions to perform \AESFUNC{AddRoundKey},
-\AESFUNC{SubBytes}, \AESFUNC{ShiftRows} and (optionally) \AESFUNC{MixColumns}.
-\REFFIG{fig:round:v3} shows an example AES encrypt round function
-using this variant.
+\REFFIG{fig:v3:round}
+demonstrates that use of \ISE{3} to implement AES encryption requires
+$20$
+instructions per round:
+$ 4$ \VERB{ lw}           instructions to load the round key,
+and
+$16$ \VERB{saes.v3.encsm} instructions to apply \AESFUNC{SubBytes}, \AESFUNC{ShiftRows}, \AESFUNC{MixColumns}, and \AESFUNC{AddRoundKey}.
+In the $Nr$-th round, which omits \AESFUNC{MixColumns},
+     \VERB{saes.v3.encsm}
+is replaced by 
+     \VERB{saes.v3.encs}.
 
 % =============================================================================

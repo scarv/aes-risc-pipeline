@@ -9,56 +9,91 @@
 
 % -----------------------------------------------------------------------------
 
-The ISE designs were evaluated using two different {\em host} cores:
+The evaluation of each ISE considers two different RISC-V compliant base
+micro-architectures, which constitute two different host cores:
 
 \begin{itemize}
-\item
-    The \CORE{2} core\footnote{%
-  \ifbool{anonymous}{Details of this core have been anonymised to comply with the TCHES submission guidelines.}{\url{https://github.com/scarv/scarv-cpu}}
-}   is a 5-stage, in-order scalar micro-controller.
-    It implements the
-    {\tt rv32imc}
-    instruction set: 32-bit base ISA, with the Multiply and Compressed
-    ISA extensions.
-    A block diagram of the core is shown in~\REFFIG{fig:design:cpu_block:2}.
-    The core has separate memory interfaces for instruction and data
-    accesses, with no cache hierarchy or branch prediction.
-    The core implements various performance counters,
-    and
-    elements of the
-    RISC-V Privileged Resource Architecture 
-    (PRA)~\cite[Chapter 3]{RV:ISA:II:17}
-    related to exception and interrupt handling.
+\item The \CORE{2}\footnote{%
+        \ifbool{anonymous}{Details of this core have been anonymised to comply with the TCHES submission guidelines.}{\url{https://github.com/scarv/scarv}}
+      } core 
+      supports the 
+      RV32IMC 
+      instruction set, i.e.,
+      the 
+             $32$-bit~\cite[Section 2]{RV:ISA:I:19} 
+      base integer ISA plus 
+      standard M~\cite[Section  7]{RV:ISA:I:19}
+               (or   multiply)
+               and
+               C~\cite[Section 16]{RV:ISA:I:19}
+               (or compressed)
+               extensions.
+      Per the block diagram shown in~\REFFIG{fig:design:cpu_block:2},
+      the core 
+      executes instructions using a $5$-stage, in-order pipeline;
+      no mechanism for
+      branch prediction
+      is supported.
+      Although there are two memory interfaces, one for (instruction) fetch and one for (data) memory access stages,
+      no
+      instruction or data caches 
+      are supported.
+      The core implements various performance counters,
+      and
+      elements of the
+      RISC-V Privileged Resource Architecture (PRA)~\cite[Chapter 3]{RV:ISA:II:17}
+      related to exception and interrupt handling.
 
-\item
-    The \CORE{1} core\cite{rocket:16} 
-    is a 5-stage, in-order pipeline with a configurable cache hierarchy and
-    branch predictor.
-    We used both $32$-bit and $64$-bit variants of \CORE{1} as bases for
-    our work.
-    We configured both base designs to have a single ``big'' core, with
-    no floating point support.
-    Exact configurations for the Rocket core variants are listed in
-    \REFFIG{fig:rocket:32} and \REFFIG{fig:rocket:64}.
+\item The \CORE{1}~\cite{rocket:16} 
+        core
+      executes instructions using a $5$-stage, in-order pipeline
+      which is highly configurable.
+      We take advantage of this, considering two variants whose configuration
+      is outlined in
+      \REFFIG{fig:rocket:32} 
+      and 
+      \REFFIG{fig:rocket:64}:
+      the variants represent single $32$-bit and $64$-bit cores respectively,
+      and so
+      support  the 
+      RV32IMC 
+      instruction set, i.e.,
+      the 
+             $32$-bit~\cite[Section 2]{RV:ISA:I:19} 
+      (resp. $64$-bit~\cite[Section 5]{RV:ISA:I:19})
+      base integer ISA plus 
+      standard M~\cite[Section  7]{RV:ISA:I:19}
+               (or   multiply)
+               and
+               C~\cite[Section 16]{RV:ISA:I:19}
+               (or compressed)
+               extensions.
+      Each varient is configured to support
+      an instruction cache, 
+      a  data        cache,
+      and
+      a  branch prediction mechanism,
+      but 
+      no floating-point support.
 
 \end{itemize}
 
-Two modifications were made to the host cores to support the ISE variants:
-1) The Instruction Decode module was modified to support identification and
-   operand selection for the new instructions. 
-2) A new ``AES'' functional unit (AES FU) was added to perform the instruction
-   computations.
-In the \CORE{2} core, the new block was built directly into the execution
-pipeline.
-For the \CORE{1}, we used the Rocket Custom Coprocessor (RoCC)
-interface.
-A synthesis time parameter was then added to switch between different
-ISE variants for each host core.
-
-Because all of the ISE variants read at most two,
-and write one general purpose register, no new structural data-paths
-were needed.
-This was an important design consideration, as RISC-V tries to
-aggressively follow this pattern.
+\noindent
+To support a given ISE, two modifications were made to each host core:
+1) the instruction decoder was modified to support identification and 
+   operand selection for instructions in the ISE,
+   and
+2) an AES Functional Unit (AES-FU) was added to support execution of
+   (i.e., ISE-specific computation by) those instructions:
+   the \CORE{2} core integrates the AES-FU directly into the pipeline,
+   whereas
+   the \CORE{1} core accesses   the AES-FU via the
+   Rocket Custom Coprocessor (RoCC)~\cite[Section 4]{rocket:16}
+   interface.
+Due to \REFREQ{req:2}, 
+specifically that each instruction uses at most $2$ source and $1$ destination register, 
+neither micro-architecture required further structural alteration, so
+a synthesis-time parameter was sufficient to switch between different 
+ISEs.
 
 % =============================================================================

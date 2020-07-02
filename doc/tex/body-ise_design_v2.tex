@@ -7,46 +7,51 @@ $w = 32$
 and adopts a 
 column-packed 
 representation of state and round key matrices.
+
 As detailed in
-\REFFIG{fig:mnemonics:v2}
+\REFFIG{fig:v2:mnemonics}
 and
-\REFFIG{fig:pseudo:v2},
+\REFFIG{fig:v2:pseudo},
 it adds
 $ 4$
 instructions ($2$ for encryption, $2$ for decryption).
 For example
 \VERB{saes.v2.encs}
-applies \AESFUNC{SubBytes}  to elements in a packed column,
+\VERB{saes.v2.encs}
+ applies \AESFUNC{SubBytes}  to elements in   a packed column,
 and
 \VERB{saes.v2.encm}
-applies \AESFUNC{MixColumn} to             a packed column (which is optionally rotated).
-Both 
+ applies \AESFUNC{MixColumn} to               a packed column (which is optionally rotated);
+the instruction format for
 \VERB{saes.v2.encs}
 and
 \VERB{saes.v2.encm}
-use an instruction format with $2$ source and $1$ destination register address.
+uses 
+includes $1$ source and $1$ destination register address.
 \ISE{2} improves \ISE{1} by applying \AESFUNC{ShiftRows} 
 {\em implicitly}:
-this is supported by careful indexing of elements in source and destination
+this is possible by careful indexing of elements in source and destination
 columns during application of \AESFUNC{SubBytes} and \AESFUNC{MixColumns},
 and also permits
 \VERB{saes.v2.encs}
 to be used within the key schedule.
+The same trade-off is possible as in \ISE{1}, whereby
+$n$ physical S-box instances are (re)used in $4/n$ cycles
+(e.g., $1$ instance in $4$ cycles, or $4$ instances in $1$ cycle).
 
-As detailed in
-\REFFIG{fig:round:v2},
-using this variant to implement AES encryption requires
+\REFFIG{fig:v2:round}
+demonstrates that use of \ISE{2} to implement AES encryption requires
 $16$
 instructions per round:
-$ 4$ \VERB{saes.v1.encs} instructions to apply \AESFUNC{SubBytes},
-$ 4$ \VERB{saes.v1.encm} instructions to apply \AESFUNC{MixColumns},
-$ 4$ \VERB{ lw}          instructions to load the round key,
+$ 4$ \VERB{saes.v1.encs}  instructions to apply \AESFUNC{SubBytes},
+$ 4$ \VERB{saes.v1.encm}  instructions to apply \AESFUNC{MixColumns},
+$ 4$ \VERB{ lw}           instructions to load the round key,
 and
-$ 4$ \VERB{xor}          instructions to apply \AESFUNC{AddRoundKey}.
-However, recall that the $Nr$-th round omits \AESFUNC{MixColumns}: in this
-case, application of \AESFUNC{ShiftRows} must be completed 
+$ 4$ \VERB{xor}           instructions to apply \AESFUNC{AddRoundKey}.
+In the $Nr$-th round, which omits \AESFUNC{MixColumns},
+\AESFUNC{ShiftRows} must be applied
 {\em explicitly}
-via additional 
+using additional 
 $12$
 instructions.
 

@@ -9,10 +9,19 @@ The base ISA comes in $32$, $64$ and $128$-bit wide variants.
 For this work, we focus on the $32$ and $64$ bit variants, since these
 are the more mature and commercially relevant ones at present.
 
-Various optional extensions are used to support more complex and specialised
-functionality (e.g. the Floating point {\tt F} extension),
-or to optimise for certain goals (e.g. code density and size
-with the Compressed {\tt C} extension).
+Various optional extensions are used to 
+support additional functionality 
+(e.g., floating-point, 
+       via the 
+       standard F~\cite[Section 11]{RV:ISA:I:19}
+                and
+                D~\cite[Section 12]{RV:ISA:I:19}
+       extension),
+or satisfy specific optimisation goals
+(e.g., code density, 
+       via the 
+       standard C~\cite[Section 16]{RV:ISA:I:19}
+       extension).
 
 Further, RISC-V is a free to use, open standard managed by the independent
 RISC-V Foundation.

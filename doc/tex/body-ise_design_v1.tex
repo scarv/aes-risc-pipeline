@@ -7,35 +7,42 @@ $w = 32$
 and adopts a 
 column-packed 
 representation of state and round key matrices.
+
 As detailed in
-\REFFIG{fig:mnemonics:v1}
+\REFFIG{fig:v1:mnemonics}
 and
-\REFFIG{fig:pseudo:v1},
+\REFFIG{fig:v1:pseudo},
 it adds
 $ 4$
 instructions ($2$ for encryption, $2$ for decryption).
 For example
 \VERB{saes.v1.encs}
-applies \AESFUNC{SubBytes}  to elements in a packed column,
+ applies \AESFUNC{SubBytes}  to elements in   a packed column,
 and
 \VERB{saes.v1.encm}
-applies \AESFUNC{MixColumn} to             a packed column (which is optionally rotated).
-Both 
+ applies \AESFUNC{MixColumn} to               a packed column (which is optionally rotated);
+the instruction format for
 \VERB{saes.v1.encs}
 and
 \VERB{saes.v1.encm}
-use an instruction format with $1$ source and $1$ destination register address.
+uses 
+includes $1$ source and $1$ destination register address.
+Since 
+\VERB{saes.v1.encs}
+requires $4$ applications of the S-box, a trade-off between latency and
+area is possible st. 
+$n$ physical S-box instances are (re)used in $4/n$ cycles
+(e.g., $1$ instance in $4$ cycles, or $4$ instances in $1$ cycle).
 
-As detailed in
-\REFFIG{fig:round:v1},
-using this variant to implement AES encryption requires
+\REFFIG{fig:v1:round}
+demonstrates that use of \ISE{1} to implement AES encryption requires
 $47$
 instructions per round:
-$ 4$ \VERB{saes.v1.encs} instructions to apply \AESFUNC{SubBytes},
-$ 4$ \VERB{saes.v1.encm} instructions to apply \AESFUNC{MixColumns},
-$ 4$ \VERB{ lw}          instructions to load the round key,
-$31$                     instructions to apply \AESFUNC{ShiftRows},
+$ 4$ \VERB{saes.v1.encs}  instructions to apply \AESFUNC{SubBytes},
+$ 4$ \VERB{saes.v1.encm}  instructions to apply \AESFUNC{MixColumns},
+$ 4$ \VERB{ lw}           instructions to load the round key,
+$31$                      instructions to apply \AESFUNC{ShiftRows},
 and
-$ 4$ \VERB{xor}          instructions to apply \AESFUNC{AddRoundKey}.
+$ 4$ \VERB{xor}           instructions to apply \AESFUNC{AddRoundKey}.
 
 % =============================================================================
