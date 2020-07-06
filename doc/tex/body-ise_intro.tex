@@ -3,7 +3,7 @@
 \REFSEC{sec:bg:aes_impl_ise}
 outlined a range ISE designs, which constitute a large design space of
 options that we {\em could} consider.  To narrow the design space into
-those we {\em do} consider, we use the requirements as outlined below:
+those we {\em do} consider, we use the requirements outlined below:
 
 \begin{requirement}\label{req:1}
 The ISE should support
@@ -21,13 +21,14 @@ Foremost, this means it should
 1) favour simple building-block operations,
    and
 2) permit an instruction format with at most $2$ source and $1$ destination register address,
-   and, more over, a general-purpose register file with $2$ read and $1$ write port.
+   and therefore avoid demanding a general-purpose register file with more than $2$ read or
+   $1$ write port.
 \end{requirement}
 
 \begin{requirement}\label{req:3}
 The ISE should operate on 
 the RISC-V general-purpose scalar register file 
-(i.e., st. $w \in \SET{32,64}$),
+(i.e., st. $w \in \SET{ 32, 64 }$),
 vs. 
 any                        vector register file
 (e.g., $w \ge 128$):
