@@ -10,6 +10,9 @@ The ISE should support
 1) AES encryption {\em and} decryption,
    and
 2) {\em all} parameter sets, i.e., AES-128, AES-192, and AES-256.
+Support for 
+auxiliary operations, e.g., key schedule, 
+are deemed an advantage but not a requirement per se.
 \end{requirement}
 
 \begin{requirement}\label{req:2}
@@ -17,7 +20,8 @@ The ISE should align with the wider RISC-V ethos and design principles.
 Foremost, this means it should 
 1) favour simple building-block operations,
    and
-2) permit an instruction format with at most $2$ source and $1$ destination register address.
+2) permit an instruction format with at most $2$ source and $1$ destination register address,
+   and, more over, a general-purpose register file with $2$ read and $1$ write port.
 \end{requirement}
 
 \begin{requirement}\label{req:3}
@@ -51,6 +55,9 @@ The ISE should afford data-oblivious execution of AES, and thus prevent
 The ISE must be efficient, in terms of improvement in latency per unit
 unit of hardware required: this balances the value in both metrics, vs.
 exclusively favouring one or the other.
+Efficiency wrt. 
+auxiliary metrics, e.g., code footprint,
+are deemed an advantage but not a requirement per se.
 \end{requirement}
 
 \noindent
@@ -59,9 +66,9 @@ Overall, the requirements combine to intentionally target the ISE at
 resource-constrained (e.g., embedded) platforms.  
 We view such a focus as reasonable, because existing work on adding
 cryptographic support to the
-standard V~\cite[Section 21]{RV:ISA:I:19}
-         (or vector) 
-         extension
+standard 
+V~\cite[Section 21]{RV:ISA:I:19}
+extension
 already caters for
 high(er)-end
 alternatives.

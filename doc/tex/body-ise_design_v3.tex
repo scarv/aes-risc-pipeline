@@ -12,7 +12,8 @@ As detailed in
 \REFFIG{fig:v3:mnemonics}
 and
 \REFFIG{fig:v3:pseudo},
-it adds
+\ISE{3}
+adds
 $ 4$
 instructions ($2$ for encryption, $2$ for decryption).
 The basic idea is to support an implementation strategy aligned with use
@@ -32,18 +33,19 @@ improves on~\cite{NadIkeKur:04,BBFR:06}; as a result of this,
 the instruction format for
 \VERB{saes.v3.encsm}
 uses 
-includes $1$ source and $1$ destination register address.
-The requirement for $1$ application  of the S-box
-allows for a more efficient functional unit than \ISE{1} or \ISE{2}, for
-example, either wrt. latency or area.
+includes $2$ source and $1$ destination register address.
+The requirement for $1$ application of the S-box allows for a more efficient 
+functional unit than \ISE{1} or \ISE{2}, for example, either wrt. latency or 
+area.
 
 \REFFIG{fig:v3:round}
 demonstrates that use of \ISE{3} to implement AES encryption requires
-$20$
-instructions per round:
-$ 4$ \VERB{ lw}           instructions to load the round key,
+$20$ instructions per round:
+$ 4$ \VERB{ lw}           
+     instructions to load the round key,
 and
-$16$ \VERB{saes.v3.encsm} instructions to apply \AESFUNC{SubBytes}, \AESFUNC{ShiftRows}, \AESFUNC{MixColumns}, and \AESFUNC{AddRoundKey}.
+$16$ \VERB{saes.v3.encsm} 
+     instructions to apply \AESFUNC{SubBytes}, \AESFUNC{ShiftRows}, \AESFUNC{MixColumns}, and \AESFUNC{AddRoundKey}.
 In the $Nr$-th round, which omits \AESFUNC{MixColumns},
      \VERB{saes.v3.encsm}
 is replaced by 

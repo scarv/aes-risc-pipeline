@@ -69,11 +69,11 @@ the computational core of AES-GCM is formed from
    and
 2) \ALG{GHASH}.
 Since we dealt with efficient implementation of AES and hence \ALG{GCTR} in
-\REFSEC{sec:ise}, we now turn our attention to \ALG{GHASH} and focus on use
-of the
-standard B~\cite[Section 17]{RV:ISA:I:19}
-         (or bit manipulation) 
-         extension.
+\REFSEC{sec:ise}, we turn our attention to \ALG{GHASH}.  Rather than further 
+embelish the ISE for AES, we instead focus on use of the existing
+standard 
+B~\cite[Section 17]{RV:ISA:I:19}
+extension.
 
 % -----------------------------------------------------------------------------
 
@@ -148,6 +148,6 @@ lower energy consumption) over raw performance.
 We also note that in order to be usable for cryptographic purposes, the
 {\tt clmul} implementation {\em must} be constant time with respect
 to its inputs.
-An early-out implementaiton will result in a timing channel.
+An early-out implementaiton will result in a timing channel (cf.~\cite{GOPT:09}).
 
 % =============================================================================

@@ -33,7 +33,7 @@ Secure, efficient execution of AES represents an imperative, and therefore
 well studied requirement in many use-cases.  Use of an
 Instruction Set Extension (ISE)
 is one approach to addressing this requirement, and, as a result, ISEs for 
-AES exist in many ISAs.  
+AES exist in many base ISAs.  
 However, RISC-V is a (relatively) new ISA that lacks such an ISE: this gap
 motivates our work.  In specific terms, and set against on-going effort to 
 standardise cryptographic ISEs for RISC-V, we
@@ -45,7 +45,8 @@ standardise cryptographic ISEs for RISC-V, we
    extension
    to RISC-V can be harnessed for efficient implementation of AES-GCM,
    and
-4) demonstrate how an ISE for AES can hardened against DPA-style attacks.
+4) demonstrate how an implementation of one candidate ISE from 2) can be 
+   hardened against DPA-style attacks.
 \end{abstract}
 
 % =============================================================================
@@ -120,10 +121,10 @@ standardise cryptographic ISEs for RISC-V, we
 \subsubsection{Variant 3 (\ISE{3}): hardware-assisted T-tables}
 \label{sec:ise:design:v3}
 \input{tex/body-ise_design_v3.tex}
-\subsubsection{Variant 4 (\ISE{4}): SPARC-like}
+\subsubsection{Variant 4 (\ISE{4}): improved SPARC-like}
 \label{sec:ise:design:v4}
 \input{tex/body-ise_design_v4.tex}
-\subsubsection{Variant 5 (\ISE{5}): tiled}
+\subsubsection{Variant 5 (\ISE{5}): quadrant-packed}
 \label{sec:ise:design:v5}
 \input{tex/body-ise_design_v5.tex}
 

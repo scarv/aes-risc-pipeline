@@ -1,13 +1,12 @@
 % =============================================================================
 
-\REFSEC{sec:pseudo:v5} shows the mnemonics and pseudo-code functions
-for variant \ISE{5}.
-These instructions use a {\em tiled} approach to representing the
-AES state.
-Figure ({\bf TODO}) shows how the traditional column-wise representation
-of AES is changed such that each {\em quadrant} of the 16-byte state
-is kept in a single $32$-bit register.
-
+\ISE{5}
+assumes 
+$w = 32$
+and adopts a 
+novel, {\em quadrant}-packed 
+representation of state and round key matrices:
+per
 \[
 \begin{tikzpicture}
 \matrix [matrix of math nodes,right delimiter={\rbrack},left delimiter={\lbrack}] (S) {
@@ -17,44 +16,94 @@ is kept in a single $32$-bit register.
   \AESRND{s}{r}_{3,0} & \AESRND{s}{r}_{3,1} & \AESRND{s}{r}_{3,2} & \AESRND{s}{r}_{3,3} \\
 } ;
 
-\node [inner sep={-2pt},fit=(S-1-1) (S-2-2),fill={red},   fill opacity={0.2}] {} ;
-\node [inner sep={-2pt},fit=(S-1-3) (S-2-4),fill={green}, fill opacity={0.2}] {} ;
-\node [inner sep={-2pt},fit=(S-3-1) (S-4-2),fill={blue},  fill opacity={0.2}] {} ;
-\node [inner sep={-2pt},fit=(S-3-3) (S-4-4),fill={orange},fill opacity={0.2}] {} ;
+\matrix at ([xshift={+2.00cm}]  S.east) [matrix of math nodes,right delimiter={\rbrack},left delimiter={\lbrack},anchor={west}] (C0) {
+  \AESRND{s}{r}_{0,0} \\ \AESRND{s}{r}_{1,0} \\ \AESRND{s}{r}_{0,1} \\ \AESRND{s}{r}_{1,1} \\
+} ;
+\matrix at ([xshift={+0.50cm}] C0.east) [matrix of math nodes,right delimiter={\rbrack},left delimiter={\lbrack},anchor={west}] (C1) {
+  \AESRND{s}{r}_{0,2} \\ \AESRND{s}{r}_{1,2} \\ \AESRND{s}{r}_{0,3} \\ \AESRND{s}{r}_{1,3} \\
+} ;
+\matrix at ([xshift={+0.50cm}] C1.east) [matrix of math nodes,right delimiter={\rbrack},left delimiter={\lbrack},anchor={west}] (C2) {
+  \AESRND{s}{r}_{2,0} \\ \AESRND{s}{r}_{3,0} \\ \AESRND{s}{r}_{2,1} \\ \AESRND{s}{r}_{3,1} \\
+} ;
+\matrix at ([xshift={+0.50cm}] C2.east) [matrix of math nodes,right delimiter={\rbrack},left delimiter={\lbrack},anchor={west}] (C3) {
+  \AESRND{s}{r}_{2,2} \\ \AESRND{s}{r}_{3,2} \\ \AESRND{s}{r}_{2,3} \\ \AESRND{s}{r}_{3,3} \\
+} ;
 
-\node at ([xshift={-0.25cm}] S.west) [anchor={east}] {$\AESRND{s}{r} = $} ;
+\node at ($(S.east)!0.5!(C0.west)$) {$\mapsto$} ; \node at ([xshift={-0.50cm}] S.west) [anchor={east}] {$\AESRND{s}{r} = $} ;
+
+\node [inner sep={-2pt},fit=(S-1-1) (S-2-2),  fill={red},   fill opacity={0.2}] {} ;
+\node [inner sep={-2pt},fit=(S-1-3) (S-2-4),  fill={green}, fill opacity={0.2}] {} ;
+\node [inner sep={-2pt},fit=(S-3-1) (S-4-2),  fill={blue},  fill opacity={0.2}] {} ;
+\node [inner sep={-2pt},fit=(S-3-3) (S-4-4),  fill={orange},fill opacity={0.2}] {} ;
+
+\node [inner sep={-2pt},fit=(C0-1-1) (C0-4-1),fill={red},   fill opacity={0.2}] {} ;
+\node [inner sep={-2pt},fit=(C1-1-1) (C1-4-1),fill={green}, fill opacity={0.2}] {} ;
+\node [inner sep={-2pt},fit=(C2-1-1) (C2-4-1),fill={blue},  fill opacity={0.2}] {} ;
+\node [inner sep={-2pt},fit=(C3-1-1) (C3-4-1),fill={orange},fill opacity={0.2}] {} ;
 \end{tikzpicture}
 \]
+for example, doing so packs each $4$-element quadrant of the state into 
+a $32$-bit word.  Note that {\em either} two rows {\em or} two columns 
+of the state can be accessed by accessing two quadrants: the intuition,
+based on this fact, is that such a representation can
+1) afford advantages of {\em both} row- and column-packed alternatives,
+   {\em and}
+2) allow an instruction format that uses 
+   $2$ source and $1$ destination register address.
+However, it also implies a need to convert any input into (resp. output 
+from) {\em quadrant}-packed representation; although such conversion is
+amortised by $Nr$ rounds of computation, it represents an overhead vs.
+other variants.
 
-We can now compute the next round state of any quadrant by sourcing
-only two other quadrants (registers) at a time, thus keeping within
-the $2$-read-$1$-write constraint.
-
-The state matrix and must be re-arranged before and after applying
-the round functions, which adds a small overhead to this variant.
-Similarly, the KeySchedule words must also be re-arranged to allow
-\AESFUNC{AddRoundKey} to be performed efficiently.
-This can be done as a post-processing step in the key expansion.
-
-A single encryption round for this variant requires
-four load-word instructions to fetch the round key,
-four {\tt xor} instructions to perform \AESFUNC{AddRoundKey},
-four {\tt saes.v5.ersub.[lo|hi]} instructions to compute
-    \AESFUNC{SubBytes}, \AESFUNC{ShiftRows} for each quadrant
+As detailed in
+\REFFIG{fig:v5:mnemonics}
 and
-four {\tt saes.v5.emix} instructions to compute \AESFUNC{MixColumns} for each
-quadrant.
-This would make it equivalent to variant 2, however we must also
-account for the effort spent packing and un-packing the AES
-state into the quadrant representation.
-For the base ISA, this would take $12$ instructions to (un-)pack the state.
-We note that if the {\tt pack[h]} instructions from the draft
-Bit-manipulation extension were included, then packing and unpacking
-would be reduced to four instructions.
-All packing and un-packing occurs outside the performance critical
-loop sections.
-\REFFIG{fig:round:v5} shows an example AES encrypt round function
-using this variant.
+\REFFIG{fig:v5:pseudo},
+\ISE{5}
+adds
+$ 7$
+instructions ($3$ for encryption, $3$ for decryption, and $1$ auxiliary).
+For example
+\VERB{saes.v5.esrsub.lo}
+applies
+\AESFUNC{SubBytes} and \AESFUNC{ShiftRow}  
+to the lower
+row spanning    two packed quadrants,
+\VERB{saes.v5.esrsub.hi}
+applies
+\AESFUNC{SubBytes} and \AESFUNC{ShiftRow}  
+to the upper
+row spanning    two packed quadrants,
+and
+\VERB{saes.v5.emix}
+applies 
+\AESFUNC{MixColumn} 
+to a
+column spanning two packed quadrants.
+
+\REFFIG{fig:v5:round}
+demonstrates that use of 
+\ISE{5} 
+to implement AES encryption requires
+$16$ instructions per round:
+$ 4$ \VERB{lw}
+     instructions to load the round key,
+$ 4$ \VERB{xor}
+     instructions to apply \AESFUNC{AddRoundKey},
+$ 4$ \VERB{saes.v5.esrsub.[lo|hi]}
+     instructions to apply \AESFUNC{SubBytes} and \AESFUNC{ShiftRows},
+     and
+$ 4$ \VERB{saes.v5.emix}
+     instructions to apply \AESFUNC{MixColumns}.
+Note that conversion into (resp. from) quadrant-packed representation
+requires a further
+$12$ instructions;
+     this can be reduced to
+$ 4$ \VERB{pack[h]}
+     instructions using the 
+     standard 
+     B~\cite[Section 17]{RV:ISA:I:19}
+     extension.
 
 % =============================================================================
 

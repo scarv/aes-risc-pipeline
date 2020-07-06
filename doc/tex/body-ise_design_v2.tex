@@ -12,22 +12,25 @@ As detailed in
 \REFFIG{fig:v2:mnemonics}
 and
 \REFFIG{fig:v2:pseudo},
-it adds
+\ISE{2}
+adds
 $ 4$
 instructions ($2$ for encryption, $2$ for decryption).
 For example
 \VERB{saes.v2.encs}
 \VERB{saes.v2.encs}
- applies \AESFUNC{SubBytes}  to elements in   a packed column,
+applies 
+\AESFUNC{SubBytes}  to elements in   a packed column,
 and
 \VERB{saes.v2.encm}
- applies \AESFUNC{MixColumn} to               a packed column (which is optionally rotated);
+applies 
+\AESFUNC{MixColumn} to               a packed column;
 the instruction format for
 \VERB{saes.v2.encs}
 and
 \VERB{saes.v2.encm}
 uses 
-includes $1$ source and $1$ destination register address.
+includes $2$ source and $1$ destination register address.
 \ISE{2} improves \ISE{1} by applying \AESFUNC{ShiftRows} 
 {\em implicitly}:
 this is possible by careful indexing of elements in source and destination
@@ -41,18 +44,20 @@ $n$ physical S-box instances are (re)used in $4/n$ cycles
 
 \REFFIG{fig:v2:round}
 demonstrates that use of \ISE{2} to implement AES encryption requires
-$16$
-instructions per round:
-$ 4$ \VERB{saes.v1.encs}  instructions to apply \AESFUNC{SubBytes},
-$ 4$ \VERB{saes.v1.encm}  instructions to apply \AESFUNC{MixColumns},
-$ 4$ \VERB{ lw}           instructions to load the round key,
-and
-$ 4$ \VERB{xor}           instructions to apply \AESFUNC{AddRoundKey}.
+$16$ instructions per round:
+$ 4$ \VERB{lw}           
+     instructions to load the round key,
+$ 4$ \VERB{xor}           
+     instructions to apply \AESFUNC{AddRoundKey},
+$ 4$ \VERB{saes.v1.encs}  
+     instructions to apply \AESFUNC{SubBytes},
+     and
+$ 4$ \VERB{saes.v1.encm}  
+     instructions to apply \AESFUNC{MixColumns}.
 In the $Nr$-th round, which omits \AESFUNC{MixColumns},
 \AESFUNC{ShiftRows} must be applied
 {\em explicitly}
 using additional 
-$12$
-instructions.
+$12$ instructions.
 
 % =============================================================================

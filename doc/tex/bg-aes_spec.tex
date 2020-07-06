@@ -129,7 +129,9 @@ round functions (each of which has an inverse, to support decryption):
       $f$ is a specially selected affine transformation.
       Where appropriate,
       we overload \AESFUNC{SubBytes} by allowing it to denote application 
-      of the S-box to {\em any} collection, e.g., a sequence, of elements.
+      of the S-box to {\em any} collection, 
+      e.g., a row, column, or, more generally, a sequence, 
+      of elements.
 
 \item \AESFUNC{ShiftRows}
       ~\cite[Section 5.1.2]{FIPS:197}
@@ -144,6 +146,13 @@ round functions (each of which has an inverse, to support decryption):
       $\AESRND{s}{r+1}$,
       i.e.,
       $\AESRND{s}{r+1}_{i,j} = \AESRND{s}{r}_{i,j + i \pmod{Nb}}$.
+      Where appropriate,
+      we use
+      \AESFUNC{ShiftRow}
+      to denote
+      the operation applied to a single 
+      row
+      within \AESFUNC{ShiftRows}.
 
 \item \AESFUNC{MixColumns}
       ~\cite[Section 5.1.3]{FIPS:197}
@@ -160,9 +169,10 @@ round functions (each of which has an inverse, to support decryption):
       we use
       \AESFUNC{MixColumn}
       to denote
-      the operation applied to a single column within \AESFUNC{MixColumns},
-      i.e., multiplication of a $4$-element column vector by the constant
-      MDS matrix.
+      the operation applied to a single 
+      column 
+      within \AESFUNC{MixColumns}, i.e., multiplication of a $4$-element 
+      column vector by the constant MDS matrix.
       
 \item \AESFUNC{AddRoundKey}
       ~\cite[Section 5.1.4]{FIPS:197}
