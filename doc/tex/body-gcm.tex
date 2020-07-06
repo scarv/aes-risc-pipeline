@@ -2,7 +2,8 @@
 
 \begin{table}[p]
 \centering
-\begin{tabular}{lccrrrrrr}
+\begin{tabular}{|l|c|c|rrrrrr|}
+\hline
 ISA    & Karatsuba & Reduce & \VERB{grev}
                             & \VERB{xor}
                             & \VERB{s[lr]li}
@@ -10,15 +11,17 @@ ISA    & Karatsuba & Reduce & \VERB{grev}
                             & \VERB{clmulh}
                             & Total \\
 \hline
-RV32IB &        no &    mul &   4  & 36  &   0   &   20  &   20   & 80    \\
-RV32IB &        no &  shift &   4  & 56  &   24  &   16  &   16   & 116   \\
-RV32IB &       yes &    mul &   4  & 52  &   0   &   13  &   13   & 82    \\
-RV32IB &       yes &  shift &   4  & 72  &   24  &   9   &   9    & 118   \\
 \hline
-RV64IB &        no &    mul &   2  & 10  &   0   &   6   &   6    & 24    \\
-RV64IB &        no &  shift &   2  & 20  &   12  &   4   &   4    & 42    \\
-RV64IB &       yes &    mul &   2  & 14  &   0   &   5   &   5    & 26    \\
-RV64IB &       yes &  shift &   2  & 24  &   12  &   3   &   3    & 44    \\
+RV32IB &        no &    mul &$  4$&$ 36$&$  0$&$ 20$&$ 20$&$ 80$ \\
+RV32IB &        no &  shift &$  4$&$ 56$&$ 24$&$ 16$&$ 16$&$116$ \\
+RV32IB &       yes &    mul &$  4$&$ 52$&$  0$&$ 13$&$ 13$&$ 82$ \\
+RV32IB &       yes &  shift &$  4$&$ 72$&$ 24$&$  9$&$  9$&$118$ \\
+\hline
+RV64IB &        no &    mul &$  2$&$ 10$&$  0$&$  6$&$  6$&$ 24$ \\
+RV64IB &        no &  shift &$  2$&$ 20$&$ 12$&$  4$&$  4$&$ 42$ \\
+RV64IB &       yes &    mul &$  2$&$ 14$&$  0$&$  5$&$  5$&$ 26$ \\
+RV64IB &       yes &  shift &$  2$&$ 24$&$ 12$&$  3$&$  3$&$ 44$ \\
+\hline
 \end{tabular}
 \caption{
   Instruction    counts for multiplication in $\F_{2^{128}}$ as used by \ALG{GHASH}.
@@ -28,19 +31,22 @@ RV64IB &       yes &  shift &   2  & 24  &   12  &   3   &   3    & 44    \\
 
 \begin{table}[p]
 \centering
-\begin{tabular}{lccrrrrrr}
+\begin{tabular}{|l|c|c|rrrr|}
+\hline
 ISA    & Karatsuba & Reduce & $1$-cycle       & $2$-cycle       & $3$-cycle       & $6$-cycle       \\
        &           &        & \VERB{clmul[h]} & \VERB{clmul[h]} & \VERB{clmul[h]} & \VERB{clmul[h]} \\
 \hline
-RV32IB &        no &    mul &       {\bf  80} &            120  &            160  &            280  \\
-RV32IB &        no &  shift &            116  &            148  &            180  &            276  \\
-RV32IB &       yes &    mul &             82  &       {\bf 108} &       {\bf 134} &            212  \\
-RV32IB &       yes &  shift &            118  &            136  &            154  &       {\bf 208} \\
 \hline
-RV64IB &        no &    mul &       {\bf  24} &       {\bf  36} &             48  &             84  \\
-RV64IB &        no &  shift &             42  &             50  &             58  &             82  \\
-RV64IB &       yes &    mul &             26  &       {\bf  36} &       {\bf  46} &             76  \\
-RV64IB &       yes &  shift &             44  &             50  &             56  &       {\bf  74} \\
+RV32IB &        no &    mul &$      {\bf  80}$&$           120 $&$           160 $&$           280 $\\
+RV32IB &        no &  shift &$           116 $&$           148 $&$           180 $&$           276 $\\
+RV32IB &       yes &    mul &$            82 $&$      {\bf 108}$&$      {\bf 134}$&$           212 $\\
+RV32IB &       yes &  shift &$           118 $&$           136 $&$           154 $&$      {\bf 208}$\\
+\hline
+RV64IB &        no &    mul &$      {\bf  24}$&$      {\bf  36}$&$            48 $&$            84 $\\
+RV64IB &        no &  shift &$            42 $&$            50 $&$            58 $&$            82 $\\
+RV64IB &       yes &    mul &$            26 $&$      {\bf  36}$&$      {\bf  46}$&$            76 $\\
+RV64IB &       yes &  shift &$            44 $&$            50 $&$            56 $&$      {\bf  74}$\\
+\hline
 \end{tabular}
 \caption{
   Modelled cycle counts for multiplication in $\F_{2^{128}}$ as used by \ALG{GHASH}.
