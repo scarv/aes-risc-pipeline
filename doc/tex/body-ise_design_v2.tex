@@ -18,18 +18,18 @@ $ 4$
 instructions ($2$ for encryption, $2$ for decryption).
 For example
 \VERB{saes.v2.encs}
-\VERB{saes.v2.encs}
 applies 
-\AESFUNC{SubBytes}  to elements in   a packed column,
+\AESFUNC{SubBytes}  
+to elements in   a packed column,
 and
 \VERB{saes.v2.encm}
 applies 
-\AESFUNC{MixColumn} to               a packed column;
+\AESFUNC{MixColumn} 
+to               a packed column;
 the instruction format for
 \VERB{saes.v2.encs}
 and
 \VERB{saes.v2.encm}
-uses 
 includes $2$ source and $1$ destination register address.
 \ISE{2} improves \ISE{1} by applying \AESFUNC{ShiftRows} 
 {\em implicitly}:

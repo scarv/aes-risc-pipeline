@@ -1,13 +1,7 @@
 % =============================================================================
 
-\ISE{5}
-assumes 
-$w = 32$
-and adopts a 
-novel, {\em quadrant}-packed 
-representation of state and round key matrices:
-per
-\[
+\begin{figure}[t]
+\begin{math}
 \begin{tikzpicture}
 \matrix [matrix of math nodes,right delimiter={\rbrack},left delimiter={\lbrack}] (S) {
   \AESRND{s}{r}_{0,0} & \AESRND{s}{r}_{0,1} & \AESRND{s}{r}_{0,2} & \AESRND{s}{r}_{0,3} \\
@@ -41,15 +35,29 @@ per
 \node [inner sep={-2pt},fit=(C2-1-1) (C2-4-1),fill={blue},  fill opacity={0.2}] {} ;
 \node [inner sep={-2pt},fit=(C3-1-1) (C3-4-1),fill={orange},fill opacity={0.2}] {} ;
 \end{tikzpicture}
-\]
+\end{math}
+\caption{An illustration of quadrant-packed representation, as applied to a state matrix.}
+\label{fig:ise:v5:quadpack}
+\end{figure}
+
+% -----------------------------------------------------------------------------
+
+\ISE{5}
+assumes 
+$w = 32$
+and adopts a 
+novel, {\em quadrant}-packed 
+representation of state and round key matrices:
+per
+\REFFIG{fig:ise:v5:quadpack}
 for example, doing so packs each $4$-element quadrant of the state into 
 a $32$-bit word.  Note that {\em either} two rows {\em or} two columns 
 of the state can be accessed by accessing two quadrants: the intuition,
 based on this fact, is that such a representation can
 1) afford advantages of {\em both} row- and column-packed alternatives,
    {\em and}
-2) allow an instruction format that uses 
-   $2$ source and $1$ destination register address.
+2) allow an instruction format that 
+   includes $2$ source and $1$ destination register address.
 However, it also implies a need to convert any input into (resp. output 
 from) {\em quadrant}-packed representation; although such conversion is
 amortised by $Nr$ rounds of computation, it represents an overhead vs.

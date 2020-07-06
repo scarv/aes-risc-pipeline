@@ -1,58 +1,80 @@
 % =============================================================================
 
-\REFSEC{sec:pseudo:v4} shows the mnemonics and pseudo-code functions
-for variant \ISE{4}.
-These instructions are designed to take advantage of a 64-bit
-data-path.
-The AES State is stored in two $64$-bit words: column $0$ in the
-lower word of {\tt rs1}, and column $3$ in the upper word of {\tt rs2}.
-Hence, the entire AES state can be passed to an instruction, but only
-half of the next round state can be written back owing to the
-$2$-read-$1$-write constraint of RISC-V.
+\ISE{4}
+is based on SPARC~\cite[Page 109]{SPARC:16}; it
+assumes 
+$w = 64$
+and adopts a 
+{\em double}
+column-packed 
+representation of state and round key matrices,
+i.e., {\em two} columns (or $8$ elements) are packed into a $64$-bit word.
+While still adhering to a format that
+includes $2$ source and $1$ destination register address,
+a single instruction can therefore 
+1) accept  all  of the current state as  input,
+   and
+2) produce half of the next    state as output.
 
-This is the approach taken by the Oracle SPARC instructions
-\cite[Page 109]{SPARC:16}, which use dedicated instructions to compute
-columns $0$ and $1$ ({\tt AES\_EROUND01}) followed by
-columns $2$ and $3$ ({\tt AES\_EROUND23}).
-
-We improve upon this by utilising the Equivalent Inverse Cipher
-construction of AES \cite[Section 5.4.4, Page 27]{FIPS:197}
-and noting that the (inverse) \AESFUNC{SubBytes} and \AESFUNC{ShiftRows} steps commute.
-This allows the encrypt and decrypt round functions to apply (inverse)
-\AESFUNC{ShiftRows}, \AESFUNC{SubBytes} and \AESFUNC{MixColumns} all in the same order.
-By swapping the order of {\tt rs1} and {\tt rs2}
-for the {\tt enc*} and {\tt dec*} instructions, we can compute {\em either}
-columns $1$ and $2$ or columns $3$ and $4$ of the next round state with the
-same instruction.
-Thus, our solution requires half of the instruction encoding points
-for the encrypt/decrypt round functions: four v.s. eight.
-
-The {\tt ks*} instructions allow the a new round key to be computed
-in three instructions.
-Again, we improve upon the SPARC solution by requiring only two,
-$2$-operand instruction encodings.
-This is done by allowing the {\tt saes.v4.ks1} instruction
-to optionally apply the round constant based on the value of
-it's {\tt rcon} immediate.
-See \REFFIG{fig:pseudo:v4} for the pseudo-code of this
-operation.
-
-A single encryption round using this variant requires
-two load-double instructions to fetch the round key,
-two {\tt xor} instructions to perform \AESFUNC{\AESFUNC{AddRoundKey}}
+SPARC~\cite[Page 109]{SPARC:16}
+adds
+$ 9$
+instructions ($4$ for encryption, $4$ for decryption, and $1$ auxiliary).
+For example
+\VERB{AES_EROUND01}
 and
-two {\tt saes.v4.encs[m]} instructions to compute \AESFUNC{SubBytes}, \AESFUNC{ShiftRows}
-and \AESFUNC{MixColumns}.
-\REFFIG{fig:round:v4} shows an example AES encrypt round function
-using this variant.
+\VERB{AES_EROUND23}
+produce
+columns $0$ and $1$
+and
+columns $2$ and $3$
+respectively.
+As detailed in
+\REFFIG{fig:v4:mnemonics}
+and
+\REFFIG{fig:v4:pseudo},
+\ISE{4}
+refines this slightly by 
+adding 
+$ 7$
+instructions ($2$ for encryption, $2$ for decryption, and $3$ auxiliary).
+For example
+\VERB{saes.v4.encs}
+applies
+\AESFUNC{SubBytes}, \AESFUNC{ShiftRow}, and \AESFUNC{MixColumn}  
+to elements in   a packed column,
+but differs from 
+\VERB{AES_EROUND01}
+and
+\VERB{AES_EROUND23},
+because
+1) it constitutes
+   $1$ (vs. $2$)
+   instruction,
+   which is possible by observing that swapping the inputs allows 
+   computation of either 
+   columns $0$ and $1$ 
+   or 
+   columns $2$ and $3$,
+   and
+2) it uses 
+   $2$ (vs. $3$)
+   source register addresses, 
+   as a result of opting not to include
+   \AESFUNC{AddRoundKey}.
 
-This proposal is similar to \cite{SPARC:16} in how it utilises
-a 64-bit data-path.
-It sources only two general purpose registers however (rather than $3$),
-making it less demanding to implement in the context of the wider
-system.
-The addition of an extra source register would save $2$ instructions
-per round by allowing \AESFUNC{AddRoundKey} to be included, at the expense
-of breaking the RISC-V design principles.
+\REFFIG{fig:v4:round}
+demonstrates that use of \ISE{4} to implement AES encryption requires
+$ 6$ instructions per round:
+$ 2$ \VERB{ld}           
+     instructions to load the round key,
+$ 2$ \VERB{xor}           
+     instructions to apply \AESFUNC{AddRoundKey},
+$ 2$ \VERB{saes.v4.encsm}  
+     instructions to apply \AESFUNC{SubBytes}, \AESFUNC{ShiftRows}, and \AESFUNC{MixColumns}.
+In the $Nr$-th round, which omits \AESFUNC{MixColumns},
+     \VERB{saes.v4.encsm}
+is replaced by 
+     \VERB{saes.v4.encs}.
 
 % =============================================================================
