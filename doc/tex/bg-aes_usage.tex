@@ -21,37 +21,34 @@ additional operations
 (e.g., XOR).
 Pertinent examples include the following.
 
-\paragraph{CBC.}
-
-Encryption
-and 
-decryption
-using
-Cipher Block Chaining (CBC) mode
-~\cite[Section 6.2]{NIST:sp.800.38a}
-is outlined in
-\REFALGO{alg:cbc:enc}
-and
-\REFALGO{alg:cbc:dec}
-respectively:
-note that it uses {\em both} AES encryption {\em and} decryption.
-
-\paragraph{CTR.}
-
-Encryption
-and 
-decryption
-using
-Counter               (CTR) mode
-~\cite[Section 6.5]{NIST:sp.800.38a}
-is outlined in
-\REFALGO{alg:ctr:enc}
-and
-\REFALGO{alg:ctr:dec}
-respectively:
-note that it uses {\em only} AES encryption, and that suitable choices of 
-the $iv$ and increment function~\cite[Appendix B]{NIST:sp.800.38a} $f$ are
-required.
+\begin{itemize}
+\item Encryption
+      and 
+      decryption
+      using
+      Cipher Block Chaining (CBC) mode
+      ~\cite[Section 6.2]{NIST:sp.800.38a}
+      is outlined in
+      \REFALGO{alg:cbc:enc}
+      and
+      \REFALGO{alg:cbc:dec}
+      respectively:
+      note that it uses {\em both} AES encryption {\em and} decryption.
+\item Encryption
+      and 
+      decryption
+      using
+      Counter               (CTR) mode
+      ~\cite[Section 6.5]{NIST:sp.800.38a}
+      is outlined in
+      \REFALGO{alg:ctr:enc}
+      and
+      \REFALGO{alg:ctr:dec}
+      respectively:
+      note that it uses {\em only} AES encryption, and that suitable choices of 
+      the $iv$ and increment function~\cite[Appendix B]{NIST:sp.800.38a} $f$ are
+      required.
+\end{itemize}
 
 % -----------------------------------------------------------------------------
 
@@ -85,71 +82,61 @@ ARM   via \VERB{PMULL} and \VERB{PMULL2}~\cite[Section C7.2.215]{ARMv8-A:20},
 and
 SPARC via \VERB{XMULX} and \VERB{XMULXHI}~\cite[Section 7.143]{SPARC:16}.
 
-\paragraph{GCM.}
-
-The Galois/Counter Mode (GCM)
-~\cite{NIST:sp.800.38d}
-supports authenticated encryption, using a parameterisable block cipher,
-e.g., as AES-GCM when using AES.
-AES-GCM is comprised of two components:
-
-\begin{enumerate}
-
-\item \ALG{GCTR}
-      is responsible for 
-          encryption,
-      using AES; 
-      a simplified description of
-      ~\cite[Algorithm 3]{NIST:sp.800.38d}
-      is presented in
-      \REFALGO{alg:gctr}
-      for completeness.
-
-\item \ALG{GHASH}
-      is responsible for
-      authentication,
-      using operations in $\F_{2^{128}}$;
-      a simplified description of
-      ~\cite[Algorithm 2]{NIST:sp.800.38d}
-      is presented in
-      \REFALGO{alg:ghash}
-      for completeness,
-      where the so-called hash key is
+\begin{itemize}
+\item The Galois/Counter Mode (GCM)
+      ~\cite{NIST:sp.800.38d}
+      supports authenticated encryption, using a parameterisable block cipher,
+      e.g., as AES-GCM when using AES.
+      AES-GCM is comprised of two components:
+      1)    \ALG{GCTR}
+            is responsible for 
+                encryption,
+            using AES; 
+            a simplified description of
+            ~\cite[Algorithm 3]{NIST:sp.800.38d}
+            is presented in
+            \REFALGO{alg:gctr}
+            for completeness.
+      2)    \ALG{GHASH}
+            is responsible for
+            authentication,
+            using operations in $\F_{2^{128}}$;
+            a simplified description of
+            ~\cite[Algorithm 2]{NIST:sp.800.38d}
+            is presented in
+            \REFALGO{alg:ghash}
+            for completeness,
+            where the so-called hash key is
+            $
+            h = \SCOPE{\ID{AES}}{\ALG{Enc}}( k, 0 ) .
+            $
+\item The XTS-AES mode 
+      ~\cite{NIST:sp.800.38e}
+      is an AES-specific instantiation of the XEX (XOR Encrypt XOR) tweakable
+      block cipher of Rogaway~\cite{Rogaway:04};
+      rather than ``data in transit'', XTS-AES is designed to support access
+      to ``data at rest'' on some block-addressable storage medium.
+      \REFALGO{alg:xts:enc}
+      and
+      \REFALGO{alg:xts:dec}
+      capture XTS-AES encryption and decryption respectively, noting that 
       $
-      h = \SCOPE{\ID{AES}}{\ALG{Enc}}( k, 0 ) .
+      \alpha = \IND{x} .
       $
-
-\end{enumerate}
-
-\paragraph{XTS-AES.}
-
-The XTS-AES mode 
-~\cite{NIST:sp.800.38e}
-is an AES-specific instantiation of the XEX (XOR Encrypt XOR) tweakable
-block cipher of Rogaway~\cite{Rogaway:04};
-rather than ``data in transit'', XTS-AES is designed to support access
-to ``data at rest'' on some block-addressable storage medium.
-\REFALGO{alg:xts:enc}
-and
-\REFALGO{alg:xts:dec}
-capture XTS-AES encryption and decryption respectively, noting that 
-$
-\alpha = \IND{x} .
-$
+\end{itemize}
 
 % -----------------------------------------------------------------------------
 
 \subsubsection{Other}
 
-Various other constructions use components {\em in} AES, rather than AES
-{\em itself}.
+Some constructions use components {\em in} AES, rather than AES {\em itself}.
 For example,
 the Gr{\o}stl~\cite{GKMMRST:11} hash function
 (a SHA-3  candidate; see also~\cite{BBGR:09})
-uses the AES S-box~\cite[Section 4.3]{GKMMRST:11},
+uses the S-box~\cite[Section 4.3]{GKMMRST:11},
 and
 the YAES~\cite{BosVer:14} authenticated encryption scheme
 (a CAESAR candidate; see also~\cite[Section 4.1]{AnkAnk:16})
-uses the full AES round~\cite[Section 1.3]{BosVer:14}.
+uses a full round~\cite[Section 1.3]{BosVer:14}.
 
 % =============================================================================
