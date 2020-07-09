@@ -44,7 +44,11 @@ is used: this allows $\ALG{Dec-KeyExp}$ to
 1) call $\ALG{Enc-KeyExp}$,
    then
 2) perform some additional post processing,
-with the quoted footprint therefore reflecting the latter only.
+with the quoted footprint therefore reflecting the latter only.  
+%Where the entry is empty
+%$\ALG{Enc-KeyExp} = \ALG{Dec-KeyExp}$,
+%meaning there is no additional implementation and so no overhead.
+
 \REFTAB{tab:eval:sw:perf:scarv}
 and
 \REFTAB{tab:eval:sw:perf:rocket}
