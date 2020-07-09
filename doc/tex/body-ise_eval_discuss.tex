@@ -4,7 +4,7 @@
 \centering
 \begin{tabular}{|c@{\;}c|rr|rr|rr|}
 \hline
-  \multicolumn{1}{|c}{Variant}
+  \multicolumn{1}{|c }{Variant}
 & \multicolumn{1}{ c|}{(Goal)}
 & \multicolumn{1}{ c|}{             ISE area}
 & \multicolumn{1}{ c|}{             ISE LTP }
@@ -13,7 +13,7 @@
 \\
 \hline
 \hline
- Baseline &     &$          $&$          $&$     37375 $&$     (1.00\times) $&$           $&$                  $ \\
+          &     &$          $&$          $&$     37375 $&$     (1.00\times) $&$           $&$                  $ \\
 \hline
  \ISE{1}  & (L) &$     3472 $&${\bf   19}$&$     41723 $&$     (1.12\times) $&$           $&$                  $ \\
  \ISE{1}  & (A) &$     2174 $&$       22 $&$     40161 $&$     (1.07\times) $&$           $&$                  $ \\
@@ -35,32 +35,26 @@
 
 \begin{table}[p]
 \centering
-\begin{tabular}{|c|r|r|r|r|r|}
+\begin{tabular}{|c|c|r|r|r|r|r|}
 \hline
-  \multicolumn{1}{|c|}{} 
-& \multicolumn{1}{ c|}{Block}
-& \multicolumn{1}{ c|}{Block}
-& \multicolumn{1}{ c|}{Key schedule}
-& \multicolumn{1}{ c|}{Key schedule} 
-& \multicolumn{1}{ c|}{} 
-\\
-  \multicolumn{1}{|c|}{Variant}
-& \multicolumn{1}{ c|}{Encrypt}
-& \multicolumn{1}{ c|}{Decrypt}
-& \multicolumn{1}{ c|}{Encrypt}
-& \multicolumn{1}{ c|}{Decrypt}
+  \multicolumn{1}{|c|}{ISE}
+& \multicolumn{1}{ c|}{Variant}
+& \multicolumn{1}{ c|}{$\ALG{Enc}$}
+& \multicolumn{1}{ c|}{$\ALG{Dec}$}
+& \multicolumn{1}{ c|}{$\ALG{Enc-KeyExp}$}
+& \multicolumn{1}{ c|}{$\ALG{Dec-KeyExp}$}
 & \multicolumn{1}{ c|}{.data} 
 \\
 \hline
 \hline
-%Byte    &$         $&$         $&$     312 $&$        $&$ 522$ \\
- T-table &$     804 $&$     804 $&$     154 $&$174\star$&$5120$ \\
+%RV32IMC & Byte    &$         $&$         $&$     312 $&$        $&$ 522$ \\
+ RV32IMC & T-table &$     804 $&$     804 $&$     154 $&$174\star$&$5120$ \\
 \hline
- \ISE{1} &$     424 $&$     424 $&${\bf  68}$&$        $&$  10$ \\
- \ISE{2} &${\bf 234}$&${\bf 238}$&${\bf  68}$&$ 62\star$&$  10$ \\
- \ISE{3} &$     290 $&$     290 $&$      86 $&$ 64\star$&$  10$ \\
- \ISE{4} &$     268 $&$     268 $&$     168 $&$100\star$&$   0$ \\
- \ISE{5} &$     266 $&$     278 $&$  82+208 $&$        $&$  10$ \\
+ RV32IMC & \ISE{1} &$     424 $&$     424 $&${\bf  68}$&$        $&$  10$ \\
+ RV32IMC & \ISE{2} &${\bf 234}$&${\bf 238}$&${\bf  68}$&$ 62\star$&$  10$ \\
+ RV32IMC & \ISE{3} &$     290 $&$     290 $&$      86 $&$ 64\star$&$  10$ \\
+ RV64IMC & \ISE{4} &$     268 $&$     268 $&$     168 $&$100\star$&$   0$ \\
+ RV32IMC & \ISE{5} &$     266 $&$     278 $&$     290 $&$        $&$  10$ \\
 \hline
 \end{tabular}
 \caption{
@@ -77,21 +71,14 @@
 \hline
 &
 &
-& \multicolumn{2}{ c|}{Block}
-& \multicolumn{2}{ c|}{Block}
-& \multicolumn{2}{ c|}{Key schedule}
-& \multicolumn{2}{ c|}{Key schedule} 
-\\
-&
-&
-& \multicolumn{2}{ c|}{Encrypt}
-& \multicolumn{2}{ c|}{Decrypt}
-& \multicolumn{2}{ c|}{Encrypt}
-& \multicolumn{2}{ c|}{Decrypt}
+& \multicolumn{2}{ c|}{$\ALG{Enc}$}
+& \multicolumn{2}{ c|}{$\ALG{Dec}$}
+& \multicolumn{2}{ c|}{$\ALG{Enc-KeyExp}$}
+& \multicolumn{2}{ c|}{$\ALG{Dec-KeyExp}$}
 \\
 \hline
   \multicolumn{1}{|c|}{ISA}
-& \multicolumn{1}{|c }{Variant}
+& \multicolumn{1}{ c }{Variant}
 & \multicolumn{1}{ c|}{(Goal)}
 & \multicolumn{1}{ c|}{iret}
 & \multicolumn{1}{ c|}{cycles}
@@ -104,16 +91,16 @@
 \\
 \hline
 \hline
-%RV32I & Byte    &     &$          $&$          $&$          $&$          $&$          $&$          $&$          $&$          $\\
- RV32I & T-table &     &$      998 $&$     1076 $&$      998 $&$     1103 $&$      466 $&$      554 $&$     1747 $&$     2346 $\\ 
+%RV32IMC & Byte    &     &$          $&$          $&$          $&$          $&$          $&$          $&$          $&$          $\\
+ RV32IMC & T-table &     &$      998 $&$     1076 $&$      998 $&$     1103 $&$      466 $&$      554 $&$     1747 $&$     2346 $\\ 
 \hline
- RV32I & \ISE{1} & (L) &$      518 $&$      593 $&$      518 $&$      607 $&${\bf  198}$&${\bf  291}$&${\bf  204}$&${\bf  310}$\\
- RV32I & \ISE{1} & (A) &$      518 $&$      753 $&$      518 $&$      775 $&${\bf  198}$&$      331 $&${\bf  204}$&$      350 $\\
- RV32I & \ISE{2} & (L) &${\bf  221}$&$      301 $&${\bf  222}$&$      303 $&${\bf  198}$&$      302 $&$      335 $&$      616 $\\
- RV32I & \ISE{2} & (A) &$      221 $&$      538 $&$      222 $&$      540 $&${\bf  198}$&$      332 $&$      335 $&$      754 $\\
- RV32I & \ISE{3} &     &$      238 $&${\bf  291}$&$      238 $&${\bf  286}$&$      219 $&$      312 $&$      659 $&$     1118 $\\
- RV32I & \ISE{5} & (L) &$      233 $&$      304 $&$      233 $&$      309 $&$      332 $&$      447 $&$      338 $&$      466 $\\
- RV32I & \ISE{5} & (A) &$      233 $&$      556 $&$      233 $&$      550 $&$      332 $&$      477 $&$      338 $&$      496 $\\
+ RV32IMC & \ISE{1} & (L) &$      518 $&$      593 $&$      518 $&$      607 $&${\bf  198}$&${\bf  291}$&${\bf  204}$&${\bf  310}$\\
+ RV32IMC & \ISE{1} & (A) &$      518 $&$      753 $&$      518 $&$      775 $&${\bf  198}$&$      331 $&${\bf  204}$&$      350 $\\
+ RV32IMC & \ISE{2} & (L) &${\bf  221}$&$      301 $&${\bf  222}$&$      303 $&${\bf  198}$&$      302 $&$      335 $&$      616 $\\
+ RV32IMC & \ISE{2} & (A) &${\bf  221}$&$      538 $&${\bf  222}$&$      540 $&${\bf  198}$&$      332 $&$      335 $&$      754 $\\
+ RV32IMC & \ISE{3} &     &$      238 $&${\bf  291}$&$      238 $&${\bf  286}$&$      219 $&$      312 $&$      659 $&$     1118 $\\
+ RV32IMC & \ISE{5} & (L) &$      233 $&$      304 $&$      233 $&$      309 $&$      332 $&$      447 $&$      338 $&$      466 $\\
+ RV32IMC & \ISE{5} & (A) &$      233 $&$      556 $&$      233 $&$      550 $&$      332 $&$      477 $&$      338 $&$      496 $\\
 \hline
 \end{tabular}                
 \caption{                    
@@ -130,21 +117,14 @@
 \hline
 &
 &
-& \multicolumn{2}{ c|}{Block}
-& \multicolumn{2}{ c|}{Block}
-& \multicolumn{2}{ c|}{Key schedule}
-& \multicolumn{2}{ c|}{Key schedule} 
-\\
-&
-&
-& \multicolumn{2}{ c|}{Encrypt}
-& \multicolumn{2}{ c|}{Decrypt}
-& \multicolumn{2}{ c|}{Encrypt}
-& \multicolumn{2}{ c|}{Decrypt}
+& \multicolumn{2}{ c|}{$\ALG{Enc}$}
+& \multicolumn{2}{ c|}{$\ALG{Dec}$}
+& \multicolumn{2}{ c|}{$\ALG{Enc-KeyExp}$}
+& \multicolumn{2}{ c|}{$\ALG{Dec-KeyExp}$}
 \\
 \hline
   \multicolumn{1}{|c|}{ISA}
-& \multicolumn{1}{|c }{Variant}
+& \multicolumn{1}{ c }{Variant}
 & \multicolumn{1}{ c|}{(Goal)}
 & \multicolumn{1}{ c|}{iret}
 & \multicolumn{1}{ c|}{cycles}
@@ -157,17 +137,17 @@
 \\
 \hline
 \hline
-%Byte  &         &     &$          $&$          $&$          $&$          $&$          $&$          $&$          $&$          $\\
- RV32I & T-table &     &$      948 $&$     1143 $&$      949 $&$     1025 $&$      444 $&$      478 $&$     1726 $&$     1977 $\\
+%RV32IMC & Byte    &     &$          $&$          $&$          $&$          $&$          $&$          $&$          $&$          $\\
+ RV32IMC & T-table &     &$      948 $&$     1143 $&$      949 $&$     1025 $&$      444 $&$      478 $&$     1726 $&$     1977 $\\
 \hline
- RV32I & \ISE{1} & (L) &$      528 $&$      685 $&$      529 $&$      680 $&${\bf  212}$&$      341 $&${\bf  214}$&${\bf  290}$\\
- RV32I & \ISE{1} & (A) &$      528 $&$      804 $&$      529 $&$      744 $&$      212 $&$      357 $&$      214 $&$      335 $\\
- RV32I & \ISE{2} & (L) &${\bf  231}$&${\bf  359}$&${\bf  233}$&$      368 $&${\bf  212}$&${\bf  315}$&$      350 $&$      508 $\\
- RV32I & \ISE{2} & (A) &${\bf  231}$&$      511 $&${\bf  233}$&$      520 $&$      212 $&$      345 $&$      350 $&$      646 $\\
- RV32I & \ISE{3} &     &$      253 $&$      445 $&$      254 $&$      445 $&$      233 $&$      470 $&$      674 $&$     2425 $\\
- RV64I & \ISE{4} &     &$       81 $&$      119 $&$       82 $&$      125 $&$       66 $&$      204 $&$      136 $&$      306 $\\
- RV32I & \ISE{5} & (L) &$      243 $&$      414 $&$      244 $&${\bf  319}$&$      346 $&$      427 $&$      348 $&$      424 $\\
- RV32I & \ISE{5} & (A) &$      243 $&$      585 $&$      244 $&$      543 $&$      346 $&$      504 $&$      348 $&$      454 $\\
+ RV32IMC & \ISE{1} & (L) &$      528 $&$      685 $&$      529 $&$      680 $&${\bf  212}$&$      341 $&${\bf  214}$&${\bf  290}$\\
+ RV32IMC & \ISE{1} & (A) &$      528 $&$      804 $&$      529 $&$      744 $&${\bf  212}$&$      357 $&${\bf  214}$&$      335 $\\
+ RV32IMC & \ISE{2} & (L) &${\bf  231}$&${\bf  359}$&${\bf  233}$&$      368 $&${\bf  212}$&${\bf  315}$&$      350 $&$      508 $\\
+ RV32IMC & \ISE{2} & (A) &${\bf  231}$&$      511 $&${\bf  233}$&$      520 $&$      212 $&$      345 $&$      350 $&$      646 $\\
+ RV32IMC & \ISE{3} &     &$      253 $&$      445 $&$      254 $&$      445 $&$      233 $&$      470 $&$      674 $&$     2425 $\\
+ RV64IMC & \ISE{4} &     &$       81 $&$      119 $&$       82 $&$      125 $&$       66 $&$      204 $&$      136 $&$      306 $\\
+ RV32IMC & \ISE{5} & (L) &$      243 $&$      414 $&$      244 $&${\bf  319}$&$      346 $&$      427 $&$      348 $&$      424 $\\
+ RV32IMC & \ISE{5} & (A) &$      243 $&$      585 $&$      244 $&$      543 $&$      346 $&$      504 $&$      348 $&$      454 $\\
 \hline
 \end{tabular}
 \caption{
@@ -186,21 +166,14 @@
 \hline
 &
 &
-& \multicolumn{2}{ c|}{Block}
-& \multicolumn{2}{ c|}{Block}
-& \multicolumn{2}{ c|}{Key schedule}
-& \multicolumn{2}{ c|}{Key schedule} 
-\\
-&
-&
-& \multicolumn{2}{ c|}{Encrypt}
-& \multicolumn{2}{ c|}{Decrypt}
-& \multicolumn{2}{ c|}{Encrypt}
-& \multicolumn{2}{ c|}{Decrypt}
+& \multicolumn{2}{ c|}{$\ALG{Enc}$}
+& \multicolumn{2}{ c|}{$\ALG{Dec}$}
+& \multicolumn{2}{ c|}{$\ALG{Enc-KeyExp}$}
+& \multicolumn{2}{ c|}{$\ALG{Dec-KeyExp}$}
 \\
 \hline
   \multicolumn{1}{|c|}{ISA}
-& \multicolumn{1}{|c }{Variant}
+& \multicolumn{1}{ c }{Variant}
 & \multicolumn{1}{ c|}{(Goal)}
 & \multicolumn{1}{ c|}{iret}
 & \multicolumn{1}{ c|}{cycles}
@@ -213,14 +186,14 @@
 \\
 \hline
 \hline
-RV32I & \ISE{1} & (L) &$      4.61 $&$      4.34 $&$      4.61 $&$      4.35 $&$      5.39 $&$      6.06 $&$     20.50 $&$     18.12 $ \\
-RV32I & \ISE{1} & (A) &$      7.37 $&$      5.46 $&$      7.37 $&$      5.44 $&$      8.61 $&$      6.40 $&${\bf 32.74}$&${\bf 25.63}$ \\
-RV32I & \ISE{2} & (L) &$     10.58 $&$      8.38 $&$     10.53 $&$      8.53 $&$      5.28 $&$      4.30 $&$     12.22 $&$      8.92 $ \\
-RV32I & \ISE{2} & (A) &$     27.18 $&$     12.04 $&$     27.06 $&$     12.29 $&$     13.56 $&$     10.04 $&$     31.39 $&$     18.73 $ \\
-RV32I & \ISE{3} &     &${\bf 30.12}$&${\bf 26.56}$&${\bf 30.12}$&${\bf 27.71}$&${\bf 14.63}$&${\bf 12.76}$&$     19.04 $&$     15.08 $ \\
-RV64I & \ISE{4} &     &$     12.32 $&$      9.04 $&$     12.17 $&$      8.82 $&$      6.76 $&$      2.72 $&$     12.85 $&$      7.67 $ \\
-RV32I & \ISE{5} & (L) &$      8.64 $&$      7.14 $&$      8.64 $&$      7.20 $&$      2.71 $&$      2.50 $&$     10.43 $&$     10.15 $ \\
-RV32I & \ISE{5} & (A) &$     18.48 $&$      8.35 $&$     17.64 $&$      8.30 $&$      5.79 $&$      5.01 $&$     22.29 $&$     20.40 $ \\
+RV32IMC & \ISE{1} & (L) &$      4.61 $&$      4.34 $&$      4.61 $&$      4.35 $&$      5.39 $&$      6.06 $&$     20.50 $&$     18.12 $ \\
+RV32IMC & \ISE{1} & (A) &$      7.37 $&$      5.46 $&$      7.37 $&$      5.44 $&$      8.61 $&$      6.40 $&${\bf 32.74}$&${\bf 25.63}$ \\
+RV32IMC & \ISE{2} & (L) &$     10.58 $&$      8.38 $&$     10.53 $&$      8.53 $&$      5.28 $&$      4.30 $&$     12.22 $&$      8.92 $ \\
+RV32IMC & \ISE{2} & (A) &$     27.18 $&$     12.04 $&$     27.06 $&$     12.29 $&$     13.56 $&$     10.04 $&$     31.39 $&$     18.73 $ \\
+RV32IMC & \ISE{3} &     &${\bf 30.12}$&${\bf 26.56}$&${\bf 30.12}$&${\bf 27.71}$&${\bf 14.63}$&${\bf 12.76}$&$     19.04 $&$     15.08 $ \\
+RV64IMC & \ISE{4} &     &$     12.32 $&$      9.04 $&$     12.17 $&$      8.82 $&$      6.76 $&$      2.72 $&$     12.85 $&$      7.67 $ \\
+RV32IMC & \ISE{5} & (L) &$      8.64 $&$      7.14 $&$      8.64 $&$      7.20 $&$      2.71 $&$      2.50 $&$     10.43 $&$     10.15 $ \\
+RV32IMC & \ISE{5} & (A) &$     18.48 $&$      8.35 $&$     17.64 $&$      8.30 $&$      5.79 $&$      5.01 $&$     22.29 $&$     20.40 $ \\
 \hline
 \end{tabular}
 \caption{
@@ -231,6 +204,9 @@ RV32I & \ISE{5} & (A) &$     18.48 $&$      8.35 $&$     17.64 $&$      8.30 $&$
 \end{table}
 
 % -----------------------------------------------------------------------------
+
+For the Encrypt and Decrypt functions, all versions have similar
+static code size and negligable static data size.
 
 For the $32$-bit ISEs 
 (\ISE{1},\ISE{2},\ISE{3},\ISE{5})

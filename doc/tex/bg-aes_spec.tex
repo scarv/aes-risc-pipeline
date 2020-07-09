@@ -5,9 +5,9 @@ of AES; we note that an overview of related design rationale is offered in,
 e.g.,~\cite{DaeRij:02}.  We offer a summary in the following \SEC[s] for
 completeness, and to fix notation.
 
-\paragraph{Parameterisation.}
+\paragraph{Syntax.}
 
-As a block cipher, AES provides two algorithms
+As a block cipher, AES defines two algorithms
 \[
 \begin{array}{lcl}
 \ALG{Enc} &:& \SET{ 0, 1 }^{8 \cdot 4 \cdot Nk} \times \SET{ 0, 1 }^{8 \cdot 4 \cdot Nb} \rightarrow \SET{ 0, 1 }^{8 \cdot 4 \cdot Nb} \\
@@ -21,6 +21,28 @@ $
 That is, given a plaintext $m$ and cipher key $k$, \ALG{Enc} encrypts $m$ 
 under $k$; given the same $k$, \ALG{Dec} will invert \ALG{Enc} and so the
 {\em same} $m$ can be recovered from the associated ciphertext $c$.  
+In addition, it defines an algorithm
+\ALG{KeyExp}
+that expands~\cite[Section 5.2]{FIPS:197} the cipher key into a sequence 
+of round keys then used by
+\ALG{Enc}
+or
+\ALG{Dec};
+where appropriate, we use
+\[
+\begin{array}{lcl}
+\ALG{Enc-KeyExp} &:& \SET{ 0, 1 }^{8 \cdot 4 \cdot Nk} \rightarrow \SET{ 0, 1 }^{Nr \times ( 8 \cdot 4 \cdot Nb )} \\
+\ALG{Dec-KeyExp} &:& \SET{ 0, 1 }^{8 \cdot 4 \cdot Nk} \rightarrow \SET{ 0, 1 }^{Nr \times ( 8 \cdot 4 \cdot Nb )} \\
+\end{array}
+\]
+to denote the algorithm as specialised to suit
+\ALG{Enc}
+and
+\ALG{Dec}
+respectively.
+
+\paragraph{Parameterisation.}
+
 An AES parameter set~\cite[Figure 4]{FIPS:197}
 is a triple
 $
@@ -74,7 +96,7 @@ respectively,
 with the multiplication-by-$\IND{x}$ operation~\cite[Section 4.2.1]{FIPS:197} 
 denoted \AESFUNC{xtime}.
 Elements of $\F_{2^8}$ are collected into $( 4 \times 4 )$-element state
-and round-key matrices; the $i$-th row and $j$-th column of such a matrix 
+and round key matrices; the $i$-th row and $j$-th column of such a matrix 
 relating to round $r$ is denoted
 $\AESRND {s}{r}_{i,j}$
 and
@@ -90,8 +112,7 @@ as follows:
 2)    each $r$-th round, for $1 \leq r \leq Nr$, demands computation of
       $\AESRND {s}{r+1} = \ALG{P-layer}( \ALG{S-layer}( \AESRND{s}{r}                        ) ) \AESADD \AESRND{rk}{r}$,
       and therefore use of round key
-      $\AESRND{rk}{r  }$
-      derived from the cipher key $k$ via the key schedule (or expansion) process~\cite[Section 5.2]{FIPS:197},
+      $\AESRND{rk}{r  }$,
 3)    the output ciphertext is
       $c = \AESRND{s}{Nr}$.
 Note that an alternative round definition, namely

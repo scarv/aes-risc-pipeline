@@ -1,33 +1,42 @@
 % =============================================================================
 
-Each ISE variant was evaluated on the host cores
+Each ISE variant was implemented and integrated into the $3$ host cores 
 described in \REFSEC{sec:ise:imp}.
-The 32-bit designs 
-(\ISE{1},\ISE{2},\ISE{3},\ISE{5}) were implemented on both the
-\CORE{1} and \CORE{2} cores.
-The 64-bit design (\ISE{4}) was only evaluated on the 64-bit configuration
-of the \CORE{1} core.
-Table \ref{tab:eval:hw} shows the hardware implementation costs.
+The variants which assume  $w = 32$
+(\ISE{1}, \ISE{2}, \ISE{3}, and \ISE{5}) 
+were evaluated wrt.
+{\em both}
+on the
+$32$-bit \CORE{2} core
+{\em  and}
+$32$-bit \CORE{1} core;
+the variant  which assumes $w = 64$
+(\ISE{4})
+was  evaluated wrt.
+{\em only}
+on the
+$64$-bit \CORE{1} core.
+As noted, for \ISE{1}, \ISE{2} and \ISE{5} the potential for a trade-off
+between latency and area exists.  Each such case is catered for through
+the consideration of two optimisation goals:
+the (A)rea    goal
+instantiates $1$ S-box   and has a $n$-cycle execution latency,
+whereas
+the (L)atency goal
+instantiates $4$ S-boxes and has a $1$-cycle execution latency.
 
-For \ISE{1}, \ISE{2} and \ISE{5}, two implementations are evaluated.
-The {\em Size} optimised implementations instantiate only a single
-Forward/Inverse S-box circuit and take multiple cycles
-to produce a result.
-The {\em Latency} optimised implementations instantiate $4$ S-box
-\AESFUNC{MixColumn} circuits to produce their results in a single processor 
-clock cycle.
-
-The {\em Size} columns of Table \ref{tab:eval:hw} 
-record the number of NAND2 equivalent gates of each variant,
-instantiated independently from any wider system.
-The LTP column gives the Longest Topological Path of the synthesised
-functional unit circuit from input to combinatorial output.
-The \CORE{2} Size column gives the size in NAND2 equivalent gates of the
-\CORE{2}, with the AES functional units integrated.
-The ``Baseline'' row gives the size of the core without any of the
-ISEs integrated.
-We found that none of the proposed ISEs affected the critical
-path of the \CORE{2} or \CORE{1} cores.
-
+\REFTAB{tab:eval:hw} 
+records
+various metrics 
+associated with the hardware implementations, 
+arranged in two parts: 
+the  left-hand part relates to each ISE in isolation,
+whereas 
+the right-hand part relates to each ISE integrated with a given core
+(noting that the first row illustrates the baseline, with {\em no} ISE).
+Throughout, both area (measured in NAND2 equivalent gates) and Longest 
+Topological Path (LTP) are as reported by Yosys~\cite{yosys}.  We found 
+that none of the ISEs affected the critical path of either the \CORE{2} 
+or \CORE{1} core.
 
 % =============================================================================

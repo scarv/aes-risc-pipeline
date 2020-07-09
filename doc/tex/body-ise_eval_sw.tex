@@ -1,47 +1,56 @@
 % =============================================================================
 
-To evaluate the software performance, we implemented AES 128, and
-measure the static code size, instruction execution counts and cycle
-counts of the Key Schedule, Encrypt and Decrypt functions.
-We also separate generation of the KeySchedule for Encrypt and Decrypt.
-A T-table implementation of AES (See \REFSEC{sec:bg:aes_impl_sw})
-is used as a performance baseline.
+We evaluated each ISE variant by constructing an associated implementation
+of AES (recalling this means AES-128), including
+$\ALG{Enc}$
+and
+$\ALG{Dec}$,
+{\em plus}
+$\ALG{Enc-KeyExp}$
+and
+$\ALG{Dec-KeyExp}$;
+a set of reference, {\em non}-ISE 
+(e.g., T-table) 
+implementations were used as a baseline.
+The variants which assume  $w = 32$
+(\ISE{1}, \ISE{2},     \ISE{3}, and \ISE{5})
+uses an   rolled strategy wrt. loops:
+ \ISE{1}, \ISE{2},              and \ISE{5}
+use  $1$ round  per-iteration,
+whereas
+                       \ISE{3}
+uses $2$ rounds per-iteration
+to avoid needless register move operations.
+The variant  which assumes $w = 64$
+(\ISE{4})
+uses an unrolled strategy.
+In all cases the state is aligned\footnote{%
+RISC-V does not mandate support for misaligned loads and stores, so
+aligning the state this way ensures the best performance across all
+cores.
+} naturally, meaning any input (resp. output) can be loaded (resp. stored) 
+using 
+$4$ \VERB{lw} instructions on a $32$-bit core
+or
+$2$ \VERB{ld} instructions on a $64$-bit core.
 
-\REFTAB{tab:eval:sw:size} shows the static code size for each
-function.
-These are measured targeting the {\tt rv32imc} base ISA for all variants,
-except for V4, which targets {\tt rv64imc}.
-Decryption KeySchedule entries with a $\star$ indicate that the
-implementation uses the Equivalent Inverse Cipher construction
-\cite[Section 5.3.5, Page 23]{FIPS:197}, meaning that the
-Decrypt KeySchedule calls the Encrypt KeySchedule, then performs some
-additional post processing. The code size listed is for the post processing.
-The V5 Encrypt Key Schedule is split into the basic KeySchedule
-operation, plus a re-arrangement of the bytes in each word to make
-KeyAddition more efficient in subsequent encrypt/decrypt operations.
-
-For the Encrypt and Decrypt functions, all versions have similar
-static code size.
-The 32-bit variants (V1,V2,V3,V5) all use loop-based implementations.
-V1, V2, V5 implement one round per loop iteration. V3 implements two
-rounds per loop iteration to avoid needless register move operations.
-The 64-bit variant (V4) uses a completely un-rolled implementation.
-
+\REFTAB{tab:eval:sw:size} 
+records
+memory footprint (i.e., code footprint, and static data footprint)
+associated with the software implementations.
+Note that entries for $\ALG{Dec-KeyExp}$ marked with $\star$ indicate that 
+the equivalent inverse cipher construction~ \cite[Section 5.3.5]{FIPS:197}
+is used: this allows $\ALG{Dec-KeyExp}$ to
+1) call $\ALG{Enc-KeyExp}$,
+   then
+2) perform some additional post processing,
+with the quoted footprint therefore reflecting the latter only.
 \REFTAB{tab:eval:sw:perf:scarv}
 and
 \REFTAB{tab:eval:sw:perf:rocket}
-give cycle and instruction counts for each
-variant under the \CORE{2} and \CORE{1} cores respectively.
-Each implementation uses naturally-aligned state, meaning the input blocks
-can be loaded with $4$ load-word instructions on $32$-bit host cores,
-or $2$ load-double instructions on the $64$-bit host cores.\footnote{
-RISC-V does not mandate cores support misaligned loads and
-stores. Aligning the state this way ensures the best performance across
-the widest number of cores.}
-For the Encrypt/Decrypt columns, we show instruction execution counts
-and processor clock cycle measurements for a single block
-encryption of AES-128.
-Likewise, the KeySchedule columns are for a single AES-128 KeySchedule
-operation.
+record
+instruction (i.e., iret) cycle count
+associated with the software implementations,
+as executed on the \CORE{2} and \CORE{1} cores respectively.
 
 % =============================================================================
