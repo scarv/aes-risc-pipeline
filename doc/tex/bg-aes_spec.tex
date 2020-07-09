@@ -31,8 +31,8 @@ or
 where appropriate, we use
 \[
 \begin{array}{lcl}
-\ALG{Enc-KeyExp} &:& \SET{ 0, 1 }^{8 \cdot 4 \cdot Nk} \rightarrow \SET{ 0, 1 }^{Nr \times ( 8 \cdot 4 \cdot Nb )} \\
-\ALG{Dec-KeyExp} &:& \SET{ 0, 1 }^{8 \cdot 4 \cdot Nk} \rightarrow \SET{ 0, 1 }^{Nr \times ( 8 \cdot 4 \cdot Nb )} \\
+\ALG{Enc-KeyExp} &:& \SET{ 0, 1 }^{8 \cdot 4 \cdot Nk} \rightarrow \SET{ 0, 1 }^{( 8 \cdot 4 \cdot Nb ) \times Nr} \\
+\ALG{Dec-KeyExp} &:& \SET{ 0, 1 }^{8 \cdot 4 \cdot Nk} \rightarrow \SET{ 0, 1 }^{( 8 \cdot 4 \cdot Nb ) \times Nr} \\
 \end{array}
 \]
 to denote the algorithm as specialised to suit
@@ -74,14 +74,14 @@ use the term AES and AES-128 synonymously.
 AES is based on some underpinning Mathematics~\cite[Section 4]{FIPS:197},
 and, in particular, can be defined in terms of 
 operations in the finite field $\F_{2^{  8}}$ constructed as
-\[
+$
 \F_{2}[\IND{x}] / ( \IND{x}^{8} + \IND{x}^{4} + \IND{x}^{3} + \IND{x} + 1 ) .
-\]
+$
 A hexadecimal short-hand~\cite[Section 3.2]{FIPS:197} is used to represent 
 field literals, e.g.,
-\[
+$
 \AESCONST{13} ~\mapsto~ \RADIX{13}{16} ~\equiv~ \RADIX{00010011}{2} ~\mapsto~ \IND{x}^4 + \IND{x} + 1 .
-\]
+$
 Field 
       addition, 
 multiplication, 
