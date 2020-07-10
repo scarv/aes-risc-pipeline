@@ -1,6 +1,63 @@
 % =============================================================================
 
-\begin{table}[p]
+\REFTAB{tab:eval:hw}
+demonstrates that all ISE variants
+imply a modest area overhead relative to an associated core.
+\REFTAB{tab:eval:sw:size},
+demonstrates that all ISE variants
+imply a similar, low memory (i.e., both code and static data) footprint.
+Beyond this, and per 
+\REFSEC{sec:ise:design},
+the primary metric of interest is
+improvement in execution latency per area:
+this metric draws on data from
+\REFTAB{tab:eval:hw}
+plus either
+\REFTAB{tab:eval:sw:perf:2}
+or
+\REFTAB{tab:eval:sw:perf:1}
+for the \CORE{2} or \CORE{1} core respectively,
+and, for each variant, is computed by dividing the improvement in execution 
+latency (relative to the T-table baseline) by the normalised area (i.e., the 
+ISE area column of \REFTAB{tab:eval:hw}).  We deliberately omit the area of
+the host core, because this fixed overhead will always dominate: it detracts 
+from the comparison between ISEs themselves, therefore.
+
+\REFTAB{tab:eval:results} 
+captures the results for the \CORE{1} core, although the same conclusion can 
+be drawn for the \CORE{2} core.  Qualitatively, we place more of a weight on 
+\ALG{Enc} 
+and 
+\ALG{Dec} 
+vs.
+\ALG{Enc-KeyExp} 
+and 
+\ALG{Dec-KeyExp},
+because
+ (few) invocations of the latter 
+are usually amortised by 
+(many) invocations of the former.
+For a $32$-bit core, our conclusion is that
+\ISE{3} 
+is the best option;
+for a $64$-bit core,
+\ISE{4} 
+is the best option, which is somewhat obvious because it specifically makes
+use of the wider data-path.
+With reference to
+\REFTAB{tab:eval:sw:perf:1}, 
+note that the number of cycles per instruction executed is relatively low.
+This fact stems from use of the ROCC interface, in that forwarding of the 
+result from an ISE instruction (that uses the ROCC) incurs an overhead vs. 
+an ISE instruction; fine-grained integration of the AES-FU could therefore
+incrementally improve the results.
+
+% -----------------------------------------------------------------------------
+
+\begin{adjustbox}{center,caption={Hardware implementation metrics 
+                                  (e.g., area and LTP)
+                                  for each ISE variant.
+                                 },label={tab:eval:hw},float={table}[!p]}
 \centering
 \begin{tabular}{|c@{\;}c|rr|rr|rr|}
 \hline
@@ -25,15 +82,12 @@
  \ISE{5}  & (A) &$     1927 $&$       23 $&$     39251 $&$     (1.05\times) $&$           $&$                  $ \\
 \hline
 \end{tabular}
-\caption{
-  Hardware implementation metrics 
-  (e.g., area and LTP)
-  for each ISE variant.
-}
-\label{tab:eval:hw}
-\end{table}
+\end{adjustbox}
 
-\begin{table}[p]
+\begin{adjustbox}{center,caption={Software implementation metrics 
+                                  (i.e., memory footprint measured in bytes)
+                                  for each ISE variant.
+                                 },label={tab:eval:sw:size},float={table}[!p]}
 \centering
 \begin{tabular}{|c|c|r|r|r|r|r|}
 \hline
@@ -47,25 +101,22 @@
 \\
 \hline
 \hline
-%RV32IMC & Byte    &$         $&$         $&$     312 $&$        $&$ 522$ \\
- RV32IMC & T-table &$     804 $&$     804 $&$     154 $&$174\star$&$5120$ \\
+%RV32IMC & Byte    &$         $&$         $&$     312 $&$       0 $&$ 522$ \\
+ RV32IMC & T-table &$     804 $&$     804 $&$     154 $&$     174 $&$5120$ \\
 \hline
- RV32IMC & \ISE{1} &$     424 $&$     424 $&${\bf  68}$&$        $&$  10$ \\
- RV32IMC & \ISE{2} &${\bf 234}$&${\bf 238}$&${\bf  68}$&$ 62\star$&$  10$ \\
- RV32IMC & \ISE{3} &$     290 $&$     290 $&$      86 $&$ 64\star$&$  10$ \\
- RV64IMC & \ISE{4} &$     268 $&$     268 $&$     168 $&$100\star$&$   0$ \\
- RV32IMC & \ISE{5} &$     266 $&$     278 $&$     290 $&$        $&$  10$ \\
+ RV32IMC & \ISE{1} &$     424 $&$     424 $&${\bf  68}$&$       0 $&$  10$ \\
+ RV32IMC & \ISE{2} &${\bf 234}$&${\bf 238}$&${\bf  68}$&$      62 $&$  10$ \\
+ RV32IMC & \ISE{3} &$     290 $&$     290 $&$      86 $&$      64 $&$  10$ \\
+ RV64IMC & \ISE{4} &$     268 $&$     268 $&$     168 $&$     100 $&$   0$ \\
+ RV32IMC & \ISE{5} &$     266 $&$     278 $&$     290 $&$       0 $&$  10$ \\
 \hline
 \end{tabular}
-\caption{
-  Software implementation metrics 
-  (i.e., memory footprint measured in bytes)
-  for each ISE variant.
-}
-\label{tab:eval:sw:size}
-\end{table}
+\end{adjustbox}
 
-\begin{table}[p]
+\begin{adjustbox}{center,caption={Execution metrics
+                                  for each ISE variant on the \CORE{2} core.
+                                  Note that the $64$-bit \ISE{4} is absent, since there is no $64$-bit \CORE{2} core.
+                                 },label={tab:eval:sw:perf:2},float={table}[!p]}
 \centering
 \begin{tabular}{|c|c@{\;}c|rr|rr|rr|rr|}
 \hline
@@ -103,15 +154,12 @@
  RV32IMC & \ISE{5} & (A) &$      233 $&$      556 $&$      233 $&$      550 $&$      332 $&$      477 $&$      338 $&$      496 $\\
 \hline
 \end{tabular}                
-\caption{                    
-  Execution metrics
-  for each ISE variant on the \CORE{2} core.
-  Note that the $64$-bit \ISE{4} is absent, since there is no $64$-bit \CORE{2} core.
-}
-\label{tab:eval:sw:perf:scarv}
-\end{table}
+\end{adjustbox}
 
-\begin{table}[p]
+\begin{adjustbox}{center,caption={Execution metrics
+                                  for each ISE variant on the \CORE{1} core.
+                                  Note that the $64$-bit \ISE{4} uses the $64$-bit \CORE{1} core; all others use the $32$-bit \CORE{1} core.
+                                 },label={tab:eval:sw:perf:1},float={table}[!p]}
 \centering
 \begin{tabular}{|c|c@{\;}c|rr|rr|rr|rr|}
 \hline
@@ -150,17 +198,13 @@
  RV32IMC & \ISE{5} & (A) &$      243 $&$      585 $&$      244 $&$      543 $&$      346 $&$      504 $&$      348 $&$      454 $\\
 \hline
 \end{tabular}
-\caption{
-  Execution metrics
-  for each ISE variant on the \CORE{1} core.
-  Note that the $64$-bit \ISE{4} uses the $64$-bit \CORE{1} core; all others use the $32$-bit \CORE{1} core.
-}
-\label{tab:eval:sw:perf:rocket}
-\end{table}
+\end{adjustbox}
 
 % -----------------------------------------------------------------------------
 
-\begin{table}[p]
+\begin{adjustbox}{center,caption={Comparison of improvement per unit-area 
+                                  for each ISE variant. 
+                                 },label={tab:eval:results},float={table}[!t]}
 \centering
 \begin{tabular}{|c|c@{\;}c|rr|rr|rr|rr|}
 \hline
@@ -196,56 +240,6 @@ RV32IMC & \ISE{5} & (L) &$      8.64 $&$      7.14 $&$      8.64 $&$      7.20 $
 RV32IMC & \ISE{5} & (A) &$     18.48 $&$      8.35 $&$     17.64 $&$      8.30 $&$      5.79 $&$      5.01 $&$     22.29 $&$     20.40 $ \\
 \hline
 \end{tabular}
-\caption{
-  Comparison of improvement per unit-area 
-  for each ISE variant. 
-}
-\label{tab:eval:results}
-\end{table}
-
-% -----------------------------------------------------------------------------
-
-For the Encrypt and Decrypt functions, all versions have similar
-static code size and negligable static data size.
-
-For the $32$-bit ISEs 
-(\ISE{1},\ISE{2},\ISE{3},\ISE{5})
-our primary metric is
-performance/area efficiency, since these ISEs must be sensible to
-implement in small, embedded class cores.
-To this, end we calculate an efficiency score by calculating the speedup
-of each variant relative to the T-table baseline, and dividing it
-by the normalised size of each variant
-(see ``ISE Size'' column of \REFTAB{tab:eval:hw}).
-This is done separately for the $32$-bit and $64$-bit variants so as
-to compare like with like.
-
-\REFTAB{tab:eval:results} shows the performance / area efficiency results.
-The \CORE{2} core results were used for these numbers, but the
-same conclusions may be drawn from the \CORE{1} results.
-We deliberately omit the size of the host core from our calculation,
-as this dominates the total size of the system and detracts from
-the comparison.
-Qualitatively, we place more weight on the block encrypt/decrypt results
-than the KeySchedule results, as one typically performs many more
-block operations than KeySchedules.
-
-\ISE{3} gives the best performance per unit area
-for Encryption, Decryption and encrypt KeySchedule generation.
-Its decryption KeySchedule performance suffers slightly for needing
-to use the equivilent inverse cipher transform.
-Based on these results, we believe ISE \ISE{3} makes the best candidate for
-standardisationfor $32$-bit RISC-V cores,
-based on its efficiency, raw performance and simplicity to implement.
-
-For the $64$-bit case, \ISE{4} is an obvious choice for making
-sensible use of the wider data-path within the constraints of RISC-V.
-We note the relativley poor performance of \ISE{4} in terms of cycles
-per instruction executed for the Rocket core - a $50\%$ overhead for
-Encrypt/Decrypt.
-This is attributed to the forwarding behaviour of the \CORE{1}:
-ROCC instruction results are not
-forwarded to subsequent instructions as quickly as base ISA
-instructions.
+\end{adjustbox}
 
 % =============================================================================

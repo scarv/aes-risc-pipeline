@@ -1,6 +1,7 @@
 % =============================================================================
 
-\begin{table}[p]
+\begin{adjustbox}{center,caption={Instruction    counts for multiplication in $\F_{2^{128}}$ as used by \ALG{GHASH}.
+                                 },label={tab:gcm:instrs},float={table}[!t]}
 \centering
 \begin{tabular}{|c|c|c|rrrrrr|}
 \hline
@@ -23,13 +24,10 @@ RV64IB &       yes &    mul &$  2$&$ 14$&$  0$&$  5$&$  5$&$ 26$ \\
 RV64IB &       yes &  shift &$  2$&$ 24$&$ 12$&$  3$&$  3$&$ 44$ \\
 \hline
 \end{tabular}
-\caption{
-  Instruction    counts for multiplication in $\F_{2^{128}}$ as used by \ALG{GHASH}.
-}
-\label{tab:gcm:instrs}
-\end{table}
+\end{adjustbox}
 
-\begin{table}[p]
+\begin{adjustbox}{center,caption={Modelled cycle counts for multiplication in $\F_{2^{128}}$ as used by \ALG{GHASH}.
+                                 },label={tab:gcm:cycles},float={table}[!t]}
 \centering
 \begin{tabular}{|c|c|c|rrrr|}
 \hline
@@ -48,16 +46,12 @@ RV64IB &       yes &    mul &$            26 $&$      {\bf  36}$&$      {\bf  46
 RV64IB &       yes &  shift &$            44 $&$            50 $&$            56 $&$      {\bf  74}$\\
 \hline
 \end{tabular}
-\caption{
-  Modelled cycle counts for multiplication in $\F_{2^{128}}$ as used by \ALG{GHASH}.
-}
-\label{tab:gcm:cycles}
-\end{table}
+\end{adjustbox}
 
 % -----------------------------------------------------------------------------
 
 Per
-~\REFSEC{sec:bg:aes_usage},
+\REFSEC{sec:bg:aes_usage},
 The Galois/Counter Mode (GCM)
 ~\cite{NIST:sp.800.38d}
 is a block cipher mode of operation which 
@@ -66,94 +60,113 @@ AES-GCM refers to an instantiation using AES as the underlying block cipher,
 which is the only case mandated by TLS 1.3~\cite[Section 9.1]{rfc:8446}; the
 importance of this construction means GCM and AES are frequently considered 
 together from an implementation and evaluation perspective.
-
 Again 
 per
-~\REFSEC{sec:bg:aes_usage},
+\REFSEC{sec:bg:aes_usage},
 the computational core of AES-GCM is formed from 
 1) \ALG{GCTR}, i.e., AES encryption,
    and
 2) \ALG{GHASH}.
 Since we dealt with efficient implementation of AES and hence \ALG{GCTR} in
-\REFSEC{sec:ise}, we turn our attention to \ALG{GHASH}.  Rather than further 
-embelish the ISE for AES, we instead focus on use of the existing
+\REFSEC{sec:ise}, we turn our attention to \ALG{GHASH}.  
+Rather than further 
+embellish the ISE for AES, we instead focus on use of the existing
 standard 
 B~\cite[Section 17]{RV:ISA:I:19}
 extension.
 
 % -----------------------------------------------------------------------------
 
-\paragraph{An overview of           the B extension.}
+\paragraph{Implementation.}
 
-% TODO: brief overview of BitManip
+\ALG{GHASH}~\cite[Section 6.4]{NIST:sp.800.38d} is a universal hash defined 
+over $\F_{2^{128}}$.
+Conversion of the input into the correct endian'ness can be realised using
+the 
+\VERB{grev} (or generalised reverse)
+instruction,
+which reverses the bits in each byte of an input word:
+$4$ (resp. $2$) 
+\VERB{grev} 
+instructions are therefore required on RV32IB (resp. RV64IB).
+Beyond this, operations in $\F_{2^{128}}$ dominate.
+Addition       in $\F_{2^{128}}$ 
+is trivial, since addition modulo $2$ is equivalent to XOR: this
+$4$ (resp. $2$) 
+\VERB{xor} 
+instructions are therefore required on RV32IB (resp. RV64IB).
+Multiplication in $\F_{2^{128}}$ 
+can be decomposed into two steps:
+1) a $( 128 \time 128 )$-bit polynomial multiplication, 
+   followed by 
+2) a reduction of the $256$-bit result modulo
+   $
+   \IND{x}^{128} + \IND{x}^{7} + \IND{x}^{2} + \IND{x} + 1 .
+   $
+The first  step 
+can be realised using pairs of ``carry-less'' multiplication instructions
+\VERB{clmul} and \VERB{clmulh}.
+These instructions compute the least-significant (resp. most-significant) 
+half of a carry-less product (i.e., product over $\F_2$); pairs of 
+\VERB{clmul} and \VERB{clmulh}
+should be scheduled adjacently, st. capable micro-architectures are able 
+to fuse them.
+Use of a school-book approach 
+requires
+$16$ (resp. $4$) such pairs 
+on RV32IB (resp. RV64IB);
+optimisation using the Karatsuba-Ofman method
+requires
+$ 9$ (resp. $3$) such pairs 
+on RV32IB (resp. RV64IB) 
+plus some additional \VERB{xor} instructions.
+The second step
+can be realised using two approaches:
+1) a          shift-based reduction, made possible by the low Hamming weight of the primitive polynomial,
+   or
+2) a multiplication-based reduction, analogous to the Montgomery or Barret methods.
+Overall, the most efficient approach on the relative execution latencies of
+\VERB{clmul} and \VERB{clmulh}
+vs.
+\VERB{xor} and \VERB{s[lr]li};
+We note that 
+\VERB{clmul} and \VERB{clmulh}
+{\em must} exhibit data-oblivious execution latency 
+(e.g., avoid data-dependent optimisations such as early-termination)
+to avoid associated side-channel attack (cf.~\cite{GOPT:09}).
 
 % -----------------------------------------------------------------------------
 
-\paragraph{Implementing GHASH using the B extension.}
+\paragraph{Discussion.}
 
-GHASH~\cite[Section 6.4]{NIST:sp.800.38d} is a universal hash defined over the binary field $\F_{2^{128}}$.
-
-Converting the inputs to a little-endian representation is achieved
-using the 
-{\tt grev} (Generalised Reverse)
-instruction to reverse all of the bits in each byte
-of an input word.
-On RV32, this requires four {\tt grev} instructions, while RV64 requires
-only two.
-
-Addition in the field is simply the {\tt xor} operation, i.e. addition
-modulo $2$.
-Multiplication is more complex, requiring ``carry-less multiply''
-{\tt clmul[h]} instructions to implement efficiently.
-The {\tt clmul} instruction computes the carry-less product of two source
-registers and writes back the low half
-(i.e. $32$-bits on RV32, $64$-bits on RV64)
-of the result.
-The {\tt clmulh} instruction does the same, but writes the {\em high}
-half of the result.
-Pairs of {\tt clmulh/clmul} instructions
-should be scheduled adjacently, so that micro-architectures can employ
-macro-op fusion to compute both results at once.
-
-Computing the $256$-bit result of the $128*128$-bit multiplication
-on RISC-V with the Bit-manipulation extension requires
-four {\tt clmulh/clmul} pairs for RV64,
-and $16$ pairs on RV32.
-This may be sped up asymptotically using the Karatsuba method,
-resulting in $3$ pairs on RV64 and $9$ pairs on RV32
-at the cost of additional {\tt xor} operations.
-
-Reducing the $256$-bit multiplication result back to $128$-bits
-can generally be done in one of two ways:
-1) A shift reduction, made possible by the low hamming weight of
-the primitive polynomial
-or
-2) a multiplication reduction; analogous to the Montgomery or
-Barret methods.
-The fastest method depends on the relative speed of
-the carry-less multiply instructions compared to the basic
-shift and {\tt xor} instructions.
-
-\REFTAB{tab:gcm:instrs} shows instruction counts for the GHASH multiplication
-operation implemented using the different combinations of base architecture,
-multiplication and reduction methods.
-\REFTAB{tab:gcm:cycles} then estimates the execution time in cycles
-for a scalar CPU assuming that {\tt grev}, {\tt xor}, and shifts take a
-single cycle.
-We can see that if the {\tt clmul} instructions take twice the time
-of a shift/{\tt xor}, then the Karatsuba method is worthwhile.
-If the {\tt clmul} instructions are six or more times slower than
-a shift/{\tt xor}, then it is worthwhile to implement a shift/{\tt xor}
-based reduction.
-These tables inform developers as to the {\em fastest} way to implement
-the GHASH multiplication in a scalar CPU.
-This may not be the only concern, for example embedded applications may
-prefer the smaller code size or lower instruction counts (and hence
-lower energy consumption) over raw performance.
-
-We also note that in order to be usable for cryptographic purposes, the
-{\tt clmul} implementation {\em must} be constant time with respect
-to its inputs.
-An early-out implementaiton will result in a timing channel (cf.~\cite{GOPT:09}).
+\REFTAB{tab:gcm:instrs} 
+lists instruction counts for 
+multiplication in $\F_{2^{128}}$,
+as implemented using different combinations of the base ISA, and approaches
+for the polynomial multiplication and reduction steps.
+\REFTAB{tab:gcm:cycles} 
+then model the execution latency 
+(measured in cycles)
+assuming that \VERB{grev}, \VERB{xor}, and \VERB{s[lr]li} take $1$ cycle.
+Although the model only considers an in-order core in line with those used
+in \REFSEC{sec:ise} and is focused on execution latency
+(vs. other pertinent metrics, such as code footprint),
+there are two obvious conclusions:
+1) iff.
+   \VERB{clmul} and \VERB{clmulh}
+   have $2$ (or more) times the latency of
+   \VERB{xor} and \VERB{s[lr]li},
+   a 
+   Karatsuba-Ofman 
+   polynomial multiplication
+   is preferable,
+   and
+2) if
+   \VERB{clmul} and \VERB{clmulh}
+   have $6$ (or more) times the latency of
+   \VERB{xor} and \VERB{s[lr]li},
+   a shift-based 
+   reduction 
+   is preferable.
 
 % =============================================================================
