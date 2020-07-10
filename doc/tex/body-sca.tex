@@ -25,25 +25,24 @@ $1$'st order DPA side-channel resistance.
 
 \subsection{Design and implementation}
 
-We base our design on boolean-masking, and represents the secret
+We base our design on boolean-masking, and represent the secret
 key as two boolean masked shares.
 
 An implementation of the AES block encrypt/decrypt function 
 using \ISE{3} requires eight registers:
 four for the current round state,
-four to load the next round key into and then accumulate the next round state.
+four to load the next round key into
+and
+then accumulate the next round state.
 See \REFFIG{fig:v3:round} for an AES round function implementation
 using \ISE{3}
 
 Storing shares of each secret variable
-in the General Purpose Register (GPR) file is un-reasonable.
-It would require drastic modifications to the instruction definitions and
+in the General Purpose Register (GPR) file is un-reasonable,
+requiring drastic modifications to the instruction definitions and
 register file to read four registers (two sources, of two shares each) and
 write two registers.
-While this is not insurmountable for a more general purpose ISE
-(especially where adjacent register pairs are used to store corresponding
-shares),
-it would break the RISC-V $2$-read-$1$-write principle.
+This would break the RISC-V $2$-read-$1$-write principle.
 Storing corresponding shares in the GPRs is also a security
 risk, as they may be accidentally combined due to
 careless instruction use, or implicit register accesses by the
@@ -112,8 +111,7 @@ This means that any accidental multiplexing between pipeline operand
 registers causes toggles between non-corresponding bits of each share.
 Share $1$ is only un-reversed immediately prior to entering the
 AES functional unit, and is re-reversed before exiting it.
-Bit-reversal has zero logic gate cost, but adds some minor routing
-complexity.
+Bit-reversal has zero logic gate cost and some minor routing complexity.
 
 While the architectural state stores a $2$-share representation
 of the secret material, we use a $3$-share implementation of the
@@ -157,7 +155,7 @@ a  PicoScope 5000 series oscilloscope.
 The oscilloscope uses a 250 MHz sample rate, with a 12-bit resolution.
 The capture process is coordinated using a laptop.
 
-We performed a generic Test Vector Leakage Assessment (TVLA) \cite{TVLA}
+We performed a generic Test Vector Leakage Assessment (TVLA) \cite{TVLA:13}
 flow to evaluate
 the effectivness of the side-channel hardened implementation;
 using the AES-128 block encrypt function as the target operation.
@@ -174,7 +172,7 @@ of the side-channel hardening.
 The ISE Size/LTP rows are inclusive of the S-box Size/LTP rows.
 Likewise, the CPU Size rows are inclusive of the ISE Size rows.
 For software, the static code size and executed instructions overheads are
-$~20\%$; considerably less than a non-ISE based software masking approach.
+$\approx 20\%$; considerably less than a non-ISE based software masking approach.
 The hardware overheads are dominated by the increased size of the
 S-box (owing to the 3-share design), and the MRF.
 Although the overhead to the dedicated
@@ -185,20 +183,24 @@ are modest when compared with a dedicated masked AES accelerator.
 
 \begin{table}[]
 \centering
-\begin{tabular}{lrrr}
+\begin{tabular}{|l|r|r|r|}
+\hline
 Metric  & Un-protected & Protected  & Overhead \\
 \hline
-Static Code Size      & 290         & 358    & $1.23\times$x        \\
-Instructions Executed & 238         & 287    & $1.21\times$x        \\
-CPU Clock Cycles      & 291         & 331    & $1.14\times$x        \\
-S-box Size (NAND2)    & 554         & 3245   & $5.86\times$x        \\
-S-box LTP             & 19          & 22     & $1.16\times$x        \\
-ISE Size (NAND2)      & 1157        & 4616   & $3.99\times$x        \\
-ISE LTP               & 30          & 37     & $1.23\times$x        \\
-CPU Size (NAND2)      & 38610       & 45141  & $1.16\times$x        \\
-CPU Size  LUTs        & 4017        & 4956   & $1.23\times$x        \\
-CPU Size  FFs         & 2078        & 2420   & $1.16\times$x        \\
-Timing Slack @50MHz   & 8.12ns      & 7.05ns & $0.87\times$x
+\hline
+Static Code Size (Bytes)        & 290         & 358    & $1.23\times$   \\
+Instructions Executed           & 238         & 287    & $1.21\times$   \\
+CPU Clock Cycles                & 291         & 331    & $1.14\times$   \\
+\hline
+S-box Size (NAND2 Equivalent)   & 554         & 3245   & $5.86\times$   \\
+S-box LTP                       & 19          & 22     & $1.16\times$   \\
+ISE Size (NAND2 Equivalent)     & 1157        & 4616   & $3.99\times$   \\
+ISE LTP                         & 30          & 37     & $1.23\times$   \\
+CPU Size (NAND2 Equivalent)     & 38610       & 45141  & $1.16\times$   \\
+CPU Size  LUTs                  & 4017        & 4956   & $1.23\times$   \\
+CPU Size  FFs                   & 2078        & 2420   & $1.16\times$   \\
+FPGA Timing Slack @50MHz        & 8.12ns      & 7.05ns & $0.87\times$   \\
+\hline
 \end{tabular}
 \caption{
 Software and hardware overheads for the protected ISE implementation

@@ -6,7 +6,7 @@ options that we {\em could} consider.  To narrow the design space into
 those we {\em do} consider, we use the requirements outlined below:
 
 \begin{requirement}\label{req:1}
-The ISE should support
+The ISE must support
 1) AES encryption {\em and} decryption,
    and
 2) {\em all} parameter sets, i.e., AES-128, AES-192, and AES-256.
@@ -16,7 +16,7 @@ are deemed an advantage but not a requirement per se.
 \end{requirement}
 
 \begin{requirement}\label{req:2}
-The ISE should align with the wider RISC-V ethos and design principles.
+The ISE must align with the wider RISC-V ethos and design principles.
 Foremost, this means it should 
 1) favour simple building-block operations,
    and
@@ -26,7 +26,7 @@ Foremost, this means it should
 \end{requirement}
 
 \begin{requirement}\label{req:3}
-The ISE should operate on 
+The ISE must operate on 
 the RISC-V general-purpose scalar register file 
 (i.e., st. $w \in \SET{ 32, 64 }$),
 vs. 
@@ -37,7 +37,7 @@ this requirement excludes the majority of standard ISEs outlined in
 \end{requirement}
 
 \begin{requirement}\label{req:4}
-The ISE should introduce no
+The ISE must not introduce
 special-purpose       architectural state, 
 nor rely on
 special-purpose micro-architectural state
@@ -45,8 +45,8 @@ special-purpose micro-architectural state
 \end{requirement}
 
 \begin{requirement}\label{req:5}
-The ISE should afford data-oblivious execution of AES, and thus prevent 
-(digital) side-channel attacks based on execution time 
+The ISE must afford data-oblivious execution of AES, and so prevent 
+side-channel attacks based on execution time 
 (e.g., stemming from accesses to the S-box).
 \end{requirement}
 
