@@ -3,6 +3,9 @@
 \REFTAB{tab:eval:hw}
 demonstrates that all ISE variants
 imply a modest area overhead relative to an associated core.
+The RV32 \CORE{1} results are not listed, as the ISE overhead compared to
+the area of a synthesised Rocket Tile with caches was less than $1\%$ in all
+cases.
 \REFTAB{tab:eval:sw:size},
 demonstrates that all ISE variants
 imply a similar, low memory (i.e., both code and static data) footprint.
@@ -59,7 +62,7 @@ incrementally improve the results.
                                   for each ISE variant.
                                  },label={tab:eval:hw},float={table}[!p]}
 \centering
-\begin{tabular}{|c|c@{\;}c|rr|rr|rr|}
+\begin{tabular}{|c|c@{\;}c|rr|rr|}
 \hline
   \multicolumn{1}{|c|}{ISA}
 & \multicolumn{1}{ c }{Variant}
@@ -67,21 +70,29 @@ incrementally improve the results.
 & \multicolumn{1}{ c|}{             ISE area}
 & \multicolumn{1}{ c|}{             ISE LTP }
 & \multicolumn{2}{ c|}{\CORE{2} $+$ ISE area}
-& \multicolumn{2}{ c|}{\CORE{1} $+$ ISE area}
 \\
 \hline
 \hline
- RV32IMC &          &     &$          $&$          $&$     37375 $&$     (1.00\times) $&$ 3501577   $&$ (1.0\times)      $ \\
- RV32IMC & \ISE{1}  & (L) &$     3472 $&${\bf   19}$&$     41723 $&$     (1.12\times) $&$ 3508448   $&$ (1.001\times)    $ \\
- RV32IMC & \ISE{1}  & (A) &$     2174 $&$       22 $&$     40161 $&$     (1.07\times) $&$ 3506695   $&$                  $ \\
- RV32IMC & \ISE{2}  & (L) &$     3547 $&${\bf   19}$&$     41199 $&$     (1.10\times) $&$ 3508946   $&$                  $ \\
- RV32IMC & \ISE{2}  & (A) &$     1381 $&$       21 $&$     38885 $&$     (1.04\times) $&$ 3506591   $&$                  $ \\
- RV32IMC & \ISE{3}  &     &${\bf 1157}$&$       30 $&${\bf 38610}$&${\bf (1.03\times)}$&$ 3506761   $&$                  $ \\
- RV32IMC & \ISE{5}  & (L) &$     4121 $&$       22 $&$     42070 $&$     (1.13\times) $&$ 3510056   $&$                  $ \\
- RV32IMC & \ISE{5}  & (A) &$     1927 $&$       23 $&$     39251 $&$     (1.05\times) $&$           $&$                  $ \\
+ RV32IMC &          &     &$          $&$          $&$     37375 $&$     (1.00\times) $ \\
+ RV32IMC & \ISE{1}  & (L) &$     3472 $&${\bf   19}$&$     41723 $&$     (1.12\times) $ \\
+ RV32IMC & \ISE{1}  & (A) &$     2174 $&$       22 $&$     40161 $&$     (1.07\times) $ \\
+ RV32IMC & \ISE{2}  & (L) &$     3547 $&${\bf   19}$&$     41199 $&$     (1.10\times) $ \\
+ RV32IMC & \ISE{2}  & (A) &$     1381 $&$       21 $&$     38885 $&$     (1.04\times) $ \\
+ RV32IMC & \ISE{3}  &     &${\bf 1157}$&$       30 $&${\bf 38610}$&${\bf (1.03\times)}$ \\
+ RV32IMC & \ISE{5}  & (L) &$     4121 $&$       22 $&$     42070 $&$     (1.13\times) $ \\
+ RV32IMC & \ISE{5}  & (A) &$     1927 $&$       23 $&$     39251 $&$     (1.05\times) $ \\
 \hline
- RV64IMC &          &     &$          $&$          $&$           $&$                  $&$ 3717607   $&$ (1.0\times)      $ \\
- RV64IMC & \ISE{4}  &     &$     8312 $&$       27 $&$           $&$                  $&$ 3733786   $&$                  $ \\
+\hline
+  \multicolumn{1}{|c|}{ISA}
+& \multicolumn{1}{ c }{Variant}
+& \multicolumn{1}{ c|}{(Goal)}
+& \multicolumn{1}{ c|}{             ISE area}
+& \multicolumn{1}{ c|}{             ISE LTP }
+& \multicolumn{2}{ c|}{\CORE{1} $+$ ISE area}
+\\
+\hline
+ RV64IMC &          &     &$          $&$          $&$   3717607 $&$     (1.000\times)$ \\
+ RV64IMC & \ISE{4}  &     &$     8312 $&$       27 $&$   3733786 $&$     (1.004\times)$ \\
 \hline
 \end{tabular}
 \end{adjustbox}

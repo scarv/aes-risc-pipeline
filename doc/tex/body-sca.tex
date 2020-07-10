@@ -17,6 +17,8 @@ attractive targets for DPA attacks.
 This stems from there being only one way to sensibly implement
 AES using the ISE, thus reducing the number of target variables an
 attacker needs to consider.
+It is hence important to consider how an implementer might
+further extend an cryptographic ISE to secure it against DPA attacks.
 
 Having identified ISE \ISE{3} as a strong standardisation candidate
 for embedded $32$-bit RISC-V cores, we now show a possible
@@ -128,8 +130,6 @@ Subsequent \AESFUNC{MixColumns} logic is only implemented using $2$ shares.
 
 \subsection{Evaluation}
 
-We used a standard experiment plaform to evaluate the power side-channel
-hardened AES \ISE{3} instructions.
 The modified \CORE{2} core was implemented on a
 Sasebo GIII \cite{HKSS:12}
 side-channel analysis platform, containing two Xilinx FPGAs:
@@ -142,7 +142,6 @@ a supporting Spartan-6
 Only the Kintex-7 was used.
 The design was synthesised using Xilinx Vivado 2019.2 with
 default synthesis and implementaiton strategies.
-No effort was spent on optimising the synthesis or routing.
 The Kintex-7 FPGA uses a 200MHz differential external clock source, which is
 transformed into a 50MHz internal clock used by the entire
 design.
@@ -167,19 +166,18 @@ order side-channel leakage upto $100$K traces.
 The peaks at the beginning and end of \REFFIG{fig:sca:protected}
 are caused by the un-masked block input and output data being loaded/stored.
 
-\REFTAB{tab:sca:sw-hw} show the impact on hardware and software cost
-of the side-channel hardening.
+\REFTAB{tab:sca:sw-hw} show the hardware and software overheads.
 The ISE Size/LTP rows are inclusive of the S-box Size/LTP rows.
 Likewise, the CPU Size rows are inclusive of the ISE Size rows.
-For software, the static code size and executed instructions overheads are
-$\approx 20\%$; considerably less than a non-ISE based software masking approach.
+The static code size and instruction count overheads are
+$\approx 20\%$; considerably less than a non-ISE based software masking
+approach.
 The hardware overheads are dominated by the increased size of the
 S-box (owing to the 3-share design), and the MRF.
 Although the overhead to the dedicated
 ISE logic is $~4x$, this drops to $~1.2x$ when the entire
 CPU sub-system is considered.
-In the context of an entire SoC, the additional logic requirements
-are modest when compared with a dedicated masked AES accelerator.
+Measured against an entire SoC, the overheads are modest.
 
 \begin{table}[]
 \centering
