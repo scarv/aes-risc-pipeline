@@ -1,12 +1,33 @@
 % =============================================================================
 
-We have surveyed and evaluated several ISEs for accelerating
-the AES block cipher in the context of RISC-V.
-We find that \ISE{3} has clear advantages for embedded class
-$32$-bit cores, while \ISE{4} is a natural choice for taking
-advantage of the wider data-path on $64$-bit systems.
-For the $32$-bit case, we have also shown that with reasonable additional
-hardware, it is possible to create a $1$'st order masked implementation with
-modest performance and resource overheads.
+Although differing in nature, both AES and RISC-V represent important
+standards.  In this paper, we have addressed the challenge of secure, 
+efficient implementation of AES on RISC-V: our approach harnesses the
+modularity afforded by RISC-V, through a focus on the use of ISEs.
+
+Specifically, and motivated by ongoing efforts to standardise support 
+for AES in RISC-V, we have implemented and evaluated five ISE designs 
+on two different RISC-V compliant base micro-architectures:
+our conclusion is that
+1) \ISE{3}
+   is the best option for 
+   AES on $32$-bit cores,
+2) \ISE{4}
+   is the best option for 
+   AES on $64$-bit cores,
+3) the
+   standard 
+   B~\cite[Section 17]{RV:ISA:I:19}
+   extension
+   can combine with either option to support AES-GCM.
+Furthermore, we demonstrated that, with reasonable alterations to the
+base micro-architecture, our implementation of \ISE{3} can be hardened
+(via masking) to prevent $1$-st order DPA-style attacks.
+
+% TODO: maybe try to add some insight into ISA design constraints ...
+%
+%The requirement for $3$-address (i.e., $2$ source and $1$ destination)
+%instruction format prevented some further optimisations, 
+%e.g., the integration of \AESFUNC{AddRoundKey} in \ISE{4}.
 
 % =============================================================================

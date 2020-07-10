@@ -38,20 +38,24 @@ $2$ \VERB{ld} instructions on a $64$-bit core.
 records
 memory footprint (i.e., code footprint, and static data footprint)
 associated with the software implementations.
-Note that entries for $\ALG{Dec-KeyExp}$ marked with $\star$ indicate that 
-the equivalent inverse cipher construction~ \cite[Section 5.3.5]{FIPS:197}
+Where an entry for
+\ALG{Dec-KeyExp}
+is     zero, this implies that
+$\ALG{Enc-KeyExp} =    \ALG{Dec-KeyExp}$
+so there is no additional implementation and so no overhead.
+Where an entry for
+\ALG{Dec-KeyExp}
+is non-zero, this implies that
+$\ALG{Enc-KeyExp} \neq \ALG{Dec-KeyExp}$,
+and, in particular, that the equivalent inverse cipher construction~\cite[Section 5.3.5]{FIPS:197}
 is used: this allows $\ALG{Dec-KeyExp}$ to
 1) call $\ALG{Enc-KeyExp}$,
    then
 2) perform some additional post processing,
 with the quoted footprint therefore reflecting the latter only.  
-%Where the entry is empty
-%$\ALG{Enc-KeyExp} = \ALG{Dec-KeyExp}$,
-%meaning there is no additional implementation and so no overhead.
-
-\REFTAB{tab:eval:sw:perf:scarv}
+\REFTAB{tab:eval:sw:perf:2}
 and
-\REFTAB{tab:eval:sw:perf:rocket}
+\REFTAB{tab:eval:sw:perf:1}
 record
 instruction (i.e., iret) cycle count
 associated with the software implementations,
