@@ -1,45 +1,40 @@
 
-Embedded implementations often consider power side-channels in their threat
-model.
+In embedded, IoT class devices to which an attacker may have
+physical access,
+Differential Power Analysis (DPA) attacks on cryptographic implementations
+\cite{KJJ:99} can be devastating.
+DPA attacks rely on the power consumption of an attacked device being
+corrolated with secret values (i.e. cryptographic keys) being manipulated.
+By observing the power consumption of the device while processing
+attacker controlled inputs (plaintexts), one can model the {\em expected}
+power consumption based on simple hamming-weight or hamming-distance
+calculations of expected instruction results.
+The secret value is recovered by correlating the predicted power
+consumption with the observed traces.
+
+While ISEs give a notable increase in efficiency, they can also create
+attractive targets for DPA attacks.
+This stems from there being only one way to sensibly implement
+AES using the ISE, thus reducing the number of target variables an
+attacker needs to consider.
+
 Having identified ISE \ISE{3} as a strong standardisation candidate
 for embedded $32$-bit RISC-V cores, we now show a possible
-way of extending the ISE further to add power side-channel resistance
-with minimal area and performance overheads.
-We aim for $1$'st order side-channel security.
-
-As described in \cite{TilGro:07}, there are several broad approaches
-to adding power side-channel security to ISEs which we summarise here:
-
-1) The data path can be implemented in a secure logic style, which always
-consumes energy at the same rate, regardless of the values being computed on.
-This comes with a significant silicon area and gate-level performance
-overheads.
-It also requires secret values only be stored in secure logic
-elements.
-This can be undermined when loading keys from memory, since they must
-pass through any register stages in the memory hierarchy, which are
-unlikely to be implemented in a secure logic style.
-
-2) Random pre-charging involves sandwiching every instruction which
-manipulates a secret value with instructions which operate on random values.
-As the authors of \cite{TilGro:07} note, it provides only a modest
-improvement in security, and comes with a $100\%$ performance overhead;
-since every secret manipulating instruction must be accompanied by
-a random-pre-charging partner.
-
-3) The authors also describe a small ``secure zone'' within the processor,
-implemented in a secure logic style and responsible for
-mask storage, generation and all computations on secret data.
-The aim is to keep the secure zone as small and separate from the main
-processor data-path as possible.
+way of extending the ISE further to add 
+$1$'st order DPA side-channel resistance.
 
 \subsection{Design and Implementation}
 
-We extend ISE \ISE{3} to support 1'st order masking.
-To this end, the secret key is represented as two boolean masked shares.
-An implementation of the AES block encrypt/decrypt function requires
-eight registers: four for the current round state, four to load the
-next round key into and then accumulate the next round state.
+We base our design on boolean-masking, and represents the secret
+key as two boolean masked shares.
+
+An implementation of the AES block encrypt/decrypt function 
+using \ISE{3} requires eight registers:
+four for the current round state,
+four to load the next round key into and then accumulate the next round state.
+See \REFFIG{fig:v3:round} for an AES round function implementation
+using \ISE{3}
+
 Storing shares of each secret variable
 in the General Purpose Register (GPR) file is un-reasonable.
 It would require drastic modifications to the instruction definitions and
@@ -48,16 +43,21 @@ write two registers.
 While this is not insurmountable for a more general purpose ISE
 (especially where adjacent register pairs are used to store corresponding
 shares),
-it wouldbreak the RISC-V $2$-read-$1$-write principle.
+it would break the RISC-V $2$-read-$1$-write principle.
+Storing corresponding shares in the GPRs is also a security
+risk, as they may be accidentally combined due to
+careless instruction use, or implicit register accesses by the
+CPU micro-architecture.
 
 Instead, we define a new, $8$-element ``Mask Register File'' (MRF).
-Each mask register $M_i$ is $32$-bits wide, and stores the mask for
+Each mask register $M_i$ is $w=32$-bits wide, and stores the mask for
 one of the GPRs.
 We use a fixed mapping between GPRs and mask registers;
 not all GPRs have a corresponding mask register.
 We use the mapping $\{a0..a3,t0..t4\} \Rightarrow \{m0..m7\}$.
 
-Share $0$ of each secret value is loaded into the GPRs.
+Share $0$ of each secret value is loaded into the GPRs using the
+standard RISC-V Load Word ({\tt lw}) instruction.
 We define a new Load Mask instruction {\tt lm rd, imm(rs1)} which
 loads {\em the mask for GPR {\tt rd}}
 (i.e. Share $1$)
@@ -91,7 +91,7 @@ GPRs and MRF.
 This is necessary, because \ISE{3} instructions are designed
 such that {\tt rs1=rd} for all use cases.
 Without re-masking, overwriting a source with the result could cause 
-$1$'st order leakage.
+$1$'st order hamming-distance leakage.
 
 If the destination GPR has a corresponding
 mask register, share $0$ is stored in the GPRs and share $1$ in the MRF.
@@ -105,7 +105,7 @@ We used the \CORE{2} core as the basis for our side-channel secure
 implementation of \ISE{3}.
 \REFFIG{fig:core:2:secure} shows a block diagram of the modifications
 made to the core, and which data-paths carry masked data.
-To avoid accidental combining (un-masking) of the two shares,
+To avoid accidental un-masking of the two shares,
 Share $1$ is stored in {\em bit-reversed} form in the MRF and pipeline
 stage registers.
 This means that any accidental multiplexing between pipeline operand
@@ -131,9 +131,7 @@ Subsequent \AESFUNC{MixColumns} logic is only implemented using $2$ shares.
 \subsection{Evaluation}
 
 We used a standard experiment plaform to evaluate the power side-channel
-hardened AES \ISE{3} instructions, the details of which are found
-below.
-
+hardened AES \ISE{3} instructions.
 The modified \CORE{2} core was implemented on a
 Sasebo GIII \cite{HKSS:12}
 side-channel analysis platform, containing two Xilinx FPGAs:
@@ -151,18 +149,16 @@ The Kintex-7 FPGA uses a 200MHz differential external clock source, which is
 transformed into a 50MHz internal clock used by the entire
 design.
 
-Trace capture uses a standard pipeline of components, including:
+Trace capture uses a standard pipeline of components:
 a MiniCircuits BLK+89 D/C blocker,
 an Agilent 8447D amplifier (with a $\SI{100}{\kilo\hertz}$ to $\SI{1.3}{\giga\hertz}$ range, and $\SI{25}{\decibel}$ gain),
 and
 a  PicoScope 5000 series oscilloscope.
-The oscilloscope uses a 250 MHz sample rate, with a 12-bit sample resolution.
-The capture process is coordinated using a laptop, which is responsible for:
-1) configuring the target device with the correct experiment program,
-2) uploading and retrieving experiment input and output values,
-3) recording oscilloscope trace data and packaging it for storage.
+The oscilloscope uses a 250 MHz sample rate, with a 12-bit resolution.
+The capture process is coordinated using a laptop.
 
-We performed a generic Test Vector Leakage Assessment (TVLA) flow to evaluate
+We performed a generic Test Vector Leakage Assessment (TVLA) \cite{TVLA}
+flow to evaluate
 the effectivness of the side-channel hardened implementation;
 using the AES-128 block encrypt function as the target operation.
 The un-protected and protected implementation results are shown in
@@ -177,11 +173,12 @@ are caused by the un-masked block input and output data being loaded/stored.
 of the side-channel hardening.
 The ISE Size/LTP rows are inclusive of the S-box Size/LTP rows.
 Likewise, the CPU Size rows are inclusive of the ISE Size rows.
-For software, the static code size and executed instructions overheads are $~20\%$; considerably less than a non-ISE based software masking approach.
+For software, the static code size and executed instructions overheads are
+$~20\%$; considerably less than a non-ISE based software masking approach.
 The hardware overheads are dominated by the increased size of the
-S-box (owing to the 3-share design), and the Mask Register File.
-It is important to note that although the overhead to the dedicated
-ISE logic is $~4x$, this drops to only $~1.2x$ when the entire
+S-box (owing to the 3-share design), and the MRF.
+Although the overhead to the dedicated
+ISE logic is $~4x$, this drops to $~1.2x$ when the entire
 CPU sub-system is considered.
 In the context of an entire SoC, the additional logic requirements
 are modest when compared with a dedicated masked AES accelerator.
@@ -191,17 +188,17 @@ are modest when compared with a dedicated masked AES accelerator.
 \begin{tabular}{lrrr}
 Metric  & Un-protected & Protected  & Overhead \\
 \hline
-Static Code Size      & 290                  & 358    & $1.23$x        \\
-Instructions Executed & 238                  & 287    & $1.21$x        \\
-CPU Clock Cycles      & 291                  & 331    & $1.14$x        \\
-S-box Size (NAND2)     & 554                  & 3245   & $5.86$x        \\
-S-box LTP              & 19                   & 22     & $1.16$x        \\
-ISE Size (NAND2)      & 1157                 & 4616   & $3.99$x        \\
-ISE LTP               & 30                   & 37     & $1.23$x        \\
-CPU Size (NAND2)      & 38610                & 45141  & $1.16$x        \\
-CPU Size  LUTs        & 4017                 & 4956   & $1.23$x        \\
-CPU Size  FFs         & 2078                 & 2420   & $1.16$x        \\
-Timing Slack @50MHz   & 8.12ns               & 7.05ns & $0.87$x
+Static Code Size      & 290         & 358    & $1.23\times$x        \\
+Instructions Executed & 238         & 287    & $1.21\times$x        \\
+CPU Clock Cycles      & 291         & 331    & $1.14\times$x        \\
+S-box Size (NAND2)    & 554         & 3245   & $5.86\times$x        \\
+S-box LTP             & 19          & 22     & $1.16\times$x        \\
+ISE Size (NAND2)      & 1157        & 4616   & $3.99\times$x        \\
+ISE LTP               & 30          & 37     & $1.23\times$x        \\
+CPU Size (NAND2)      & 38610       & 45141  & $1.16\times$x        \\
+CPU Size  LUTs        & 4017        & 4956   & $1.23\times$x        \\
+CPU Size  FFs         & 2078        & 2420   & $1.16\times$x        \\
+Timing Slack @50MHz   & 8.12ns      & 7.05ns & $0.87\times$x
 \end{tabular}
 \caption{
 Software and hardware overheads for the protected ISE implementation
