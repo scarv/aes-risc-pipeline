@@ -50,27 +50,10 @@ RV64IB &       yes &  shift &             44  &             50  &             56
 
 % -----------------------------------------------------------------------------
 
-Per
-\REFSEC{sec:modes},
-The Galois/Counter Mode (GCM)
-~\cite{NIST:sp.800.38d}
-is a block cipher mode of operation which 
-supports authenticated encryption.
-AES-GCM refers to an instantiation using AES as the underlying block cipher, 
-which is the only case mandated by TLS 1.3~\cite[Section 9.1]{rfc:8446}; the
-importance of this construction means GCM and AES are frequently considered 
-together from an implementation and evaluation perspective.
-Again 
-per
-\REFSEC{sec:bg:aes_usage},
-the computational core of AES-GCM is formed from 
-1) \ALG{GCTR}, i.e., AES encryption,
-   and
-2) \ALG{GHASH}.
-Since we dealt with efficient implementation of AES and hence \ALG{GCTR} in
+Having dealt with efficient implementation of AES and hence \ALG{GCTR} in
 \REFSEC{sec:ise}, we turn our attention to \ALG{GHASH}.  
 Rather than further 
-embellish the ISE for AES, we instead focus on use of the existing
+embellish the ISE for AES, we instead focus on re-use of the existing
 standard 
 B~\cite[Section 17]{RV:ISA:I:19}
 extension.
@@ -168,5 +151,12 @@ there are two obvious conclusions:
    a shift-based 
    reduction 
    is preferable.
+
+The authors recommend the carry-less multiply instructions
+specified in the proposed RISC-V B extension also be included in the
+RISC-V cryptography extension.
+Implementers would otherwise need to implement (a subset of) the B
+extension, potentially adding functionality and cost that is not
+nessesary.
 
 % =============================================================================
