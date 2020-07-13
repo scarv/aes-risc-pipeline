@@ -12,7 +12,7 @@ $\ALG{Dec-KeyExp}$.
 Aset of reference, {\em non}-ISE 
 (e.g., T-table) 
 implementations were used as a baseline.
-The variants which assume  $w = 32$
+The variants which assume  $\RVXLEN = 32$
 (\ISE{1}, \ISE{2},     \ISE{3}, and \ISE{5})
 uses an   rolled strategy wrt. loops:
  \ISE{1}, \ISE{2},              and \ISE{5}
@@ -21,7 +21,7 @@ whereas
                        \ISE{3}
 uses $2$ rounds per-iteration
 to avoid needless register move operations.
-The variant  which assumes $w = 64$
+The variant  which assumes $\RVXLEN = 64$
 (\ISE{4})
 uses an unrolled strategy.
 In all cases the state is aligned\footnote{%
