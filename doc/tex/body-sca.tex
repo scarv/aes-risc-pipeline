@@ -16,7 +16,7 @@ for embedded $32$-bit RISC-V cores, we take a hardware/software co-design
 approach to extending the ISE, adding $1$'st order DPA side-channel
 resistance.
 
-\subsection{Design and implementation}
+\subsection{Design}
 
 We base our design on Boolean-masking, and represent the secret
 key as two Boolean masked shares.
@@ -92,6 +92,8 @@ to the GPR un-masked.
 This means that in the final encrypt/decrypt round, we can obtain
 the un-masked results without having to store the shares to memory,
 load them back and un-mask them.
+
+\subsection{Implementation}
 
 We used the \CORE{2} core as the basis for our side-channel secure
 implementation of \ISE{3}.
