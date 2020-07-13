@@ -1,0 +1,70 @@
+
+\paragraph{Remit and organisation.}
+
+In this paper we address the challenge of supporting AES on the RISC-V base
+ISA
+(see, e.g.,~\cite{riscv:1,riscv:2}),
+and therefore inform on-going efforts to standardise cryptographic ISEs for 
+RISC-V.  In specific terms, our contributions are as follows:
+
+\begin{enumerate}
+
+\item In 
+      \REFSEC{sec:bg}
+      we capture some background, including a limited form of
+      Systematisation of Knowledge (SoK)
+      wrt. ISEs for AES.
+
+\item In 
+      \REFSEC{sec:ise}
+      we implement and evaluate five different ISEs for AES on two different 
+      RISC-V compliant base micro-architectures.
+      As well as exploring existing ISE designs, 
+      \REFSEC{sec:ise:design:v5}
+      introduces what is, to the best of our knowledge, a novel ISE design 
+      that leverages a quadrant-packed representation of the state.
+
+\item In
+      \REFSEC{sec:gcm}
+      we evaluate how the
+      standard 
+      B 
+      extension~\cite[Section 21]{RV:ISA:I:19}
+      to RISC-V can be harnessed for efficient implementation of AES-GCM.
+
+\item In
+      \REFSEC{sec:sca}
+      we select one candidate ISE design from 
+      \REFSEC{sec:ise},
+      and demonstrate how the associated implementation can be hardened
+      against DPA-style attacks.
+
+\end{enumerate}
+
+\noindent
+On one hand, 
+RISC-V represents an excellent vehicle for such work:
+extensibility is a by-design feature in the ISA, whose open nature renders
+exploration of such extensions easier by virtue of the range of associated 
+(often open-source) implementations.  
+Increased commercial deployment of such implementations suggests that work 
+on RISC-V timely, and potentially of high impact.
+On the other hand, however,
+RISC-V also presents some unique challenges vs. previous work.
+For example,
+RISC-V could in fact be viewed as {\em three} related base ISAs,
+ RV32I~\cite[Section 2]{RV:ISA:I:19},
+ RV64I~\cite[Section 5]{RV:ISA:I:19},
+and
+RV128I~\cite[Section 6]{RV:ISA:I:19},
+that each support a different word size:
+designing ISEs that are applicable (or scale) across these options is a
+complicating factor.
+
+\ifbool{submission}{%
+Note that in order to satisfy the TCHES submission guidelines, we have 
+anonymised various resources and references.  We intend to open-source 
+such resources post-submission, but could provide them to reviewers, 
+if required, to facilitate the review process.
+}{}%
+
