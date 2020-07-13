@@ -32,15 +32,14 @@ associated with the hardware implementations,
 arranged in two parts: 
 the  left-hand part relates to each ISE in isolation,
 whereas 
-the right-hand part relates to each ISE integrated with a given core
-(noting that the first row illustrates the baseline, with {\em no} ISE).
+the right-hand part relates to each ISE integrated with a given core.
 Throughout, both area (measured in NAND2 equivalent gates) and Longest 
 Topological Path (LTP) are as reported by Yosys~\cite{yosys}.  We found 
 that none of the ISEs affected the critical path of either the \CORE{2} 
 or \CORE{1} core.
 % TODO: address the issue re. Rocket area (i.e., the caches dominating)
-Considering each as implemented on \CORE{1} core, we note the overhead
-wrt. area is marginal: this stems from the fact that the baseline area
-of \CORE{1} includes the data and instruction caches.
+Considering each ISE as implemented on the \CORE{1} core, we note the 
+overhead wrt. area is marginal: this stems from the fact that the 
+baseline area of \CORE{1} includes the data and instruction caches.
 
 % =============================================================================

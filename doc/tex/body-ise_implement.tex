@@ -47,6 +47,7 @@ micro-architectures, which constitute two different host cores:
       and so
       support  the 
       RV32IMC 
+      (resp. RV64IMC)
       instruction set, i.e.,
       the 
              $32$-bit~\cite[Section 2]{RV:ISA:I:19} 
@@ -81,7 +82,7 @@ To support a given ISE, two modifications were made to each host core:
    interface.
 Due to \REFREQ{req:2}, 
 specifically that each instruction uses at most $2$ source and $1$ destination register, 
-neither micro-architecture required further structural alteration, so
+neither micro-architecture required further structural alteration so
 a synthesis-time parameter was sufficient to switch between different 
 ISEs.
 

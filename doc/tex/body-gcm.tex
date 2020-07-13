@@ -97,7 +97,7 @@ $4$ (resp. $2$)
 instructions are therefore required on RV32IB (resp. RV64IB).
 Multiplication in $\F_{2^{128}}$ 
 can be decomposed into two steps:
-1) a $( 128 \time 128 )$-bit polynomial multiplication, 
+1) a $( 128 \times 128 )$-bit polynomial multiplication, 
    followed by 
 2) a reduction of the $256$-bit result modulo
    $
@@ -118,19 +118,19 @@ on RV32IB (resp. RV64IB);
 optimisation using the Karatsuba-Ofman method
 requires
 $ 9$ (resp. $3$) such pairs 
-on RV32IB (resp. RV64IB) 
+on RV32IB (resp. RV64IB),
 plus some additional \VERB{xor} instructions.
 The second step
 can be realised using two approaches:
 1) a          shift-based reduction, made possible by the low Hamming weight of the primitive polynomial,
    or
 2) a multiplication-based reduction, analogous to the Montgomery or Barret methods.
-Overall, the most efficient approach on the relative execution latencies of
-\VERB{clmul} and \VERB{clmulh}
+Overall, the most efficient approach on the relative execution latency of
+\VERB{clmul[h]}
 vs.
 \VERB{xor} and \VERB{s[lr]li};
 We note that 
-\VERB{clmul} and \VERB{clmulh}
+\VERB{clmul[h]}
 {\em must} exhibit data-oblivious execution latency 
 (e.g., avoid data-dependent optimisations such as early-termination)
 to avoid associated side-channel attack (cf.~\cite{GOPT:09}).
@@ -153,8 +153,8 @@ in \REFSEC{sec:ise} and is focused on execution latency
 (vs. other pertinent metrics, such as code footprint),
 there are two obvious conclusions:
 1) iff.
-   \VERB{clmul} and \VERB{clmulh}
-   have $2$ (or more) times the latency of
+   \VERB{clmul[h]}
+   has $2$ (or more) times the latency of
    \VERB{xor} and \VERB{s[lr]li},
    a 
    Karatsuba-Ofman 
@@ -162,8 +162,8 @@ there are two obvious conclusions:
    is preferable,
    and
 2) if
-   \VERB{clmul} and \VERB{clmulh}
-   have $6$ (or more) times the latency of
+   \VERB{clmul[h]}
+   has $6$ (or more) times the latency of
    \VERB{xor} and \VERB{s[lr]li},
    a shift-based 
    reduction 

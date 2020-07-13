@@ -22,7 +22,7 @@ with at least two dimensions.
 First,
 cryptography often represents an enabling technology vs. a feature: it will
 likely be viewed as overhead, therefore, when viewed from the perspective 
-of a user.  Put another way,  (even {\em perceived}) {\em in}efficiency may
+of a user.  Put another way,  even {\em perceived} {\em in}efficiency may
 be problematic in terms of fitness for purpose.  Addressing this is further 
 complicated by any constraints associated with the context, e.g., a demand 
 for
@@ -41,7 +41,7 @@ of higher efficiency offers greater margin within which to deliver suitable
 countermeasures against attack.
 
 AES represents an interesting case-study wrt. techniques which attempt to 
-address the challenge of efficient, secure implementation.  For example,
+address the challenge of secure, efficient implementation.  For example,
 per the request for candidates announcement\footnote{%
 \url{https://www.govinfo.gov/content/pkg/FR-1997-09-12/pdf/97-24214.pdf}
 }, the AES process was instrumental in popularising a model in which
@@ -56,7 +56,7 @@ techniques for higher quality {\em implementations} of it.
 In addition,
 both the design {\em and} implementations of it are long-lived.
 From a positive perspective, 
-the central importance of AES has yielded special emphasis on related
+the central importance of AES has led to special emphasis on related
 research and development effort before, during, and, most significantly, 
 after the AES process.
 From a negative perspective, however,
@@ -153,7 +153,7 @@ Advanced Encryption Standard New Instructions (AES-NI)~\cite{Gueron:09,DruGueKra
 ISE
 supports AES: it significantly improves latency and throughput
 (see, e.g.,~\cite{FazLopOli:18}),
-and represents a pertinent case-study wrt. the guidelines above by
+and represents a pertinent case-study wrt. the design goals above by
 a) adding just $6$ additional (vs. $1500+$ total) instructions,
 b) reducing overhead by, e.g., sharing the XMM register file,
 c) facilitating compatibility via the
@@ -189,13 +189,13 @@ RISC-V.  In specific terms, our contributions are as follows:
       As well as exploring existing ISE designs, 
       \REFSEC{sec:ise:design:v5}
       introduces what is, to the best of our knowledge, a novel ISE design 
-      that leverages a tiled representation of the state.
+      that leverages a quadrant-packed representation of the state.
 
 \item In
       \REFSEC{sec:gcm}
       we evaluate how the
-      standard B 
-      (or bit manipulation) 
+      standard 
+      B 
       extension~\cite[Section 21]{RV:ISA:I:19}
       to RISC-V can be harnessed for efficient implementation of AES-GCM.
 
@@ -226,7 +226,7 @@ and
 RV128I~\cite[Section 6]{RV:ISA:I:19},
 that each support a different word size:
 designing ISEs that are applicable (or scale) across these options is a
-complicating factor, yet an important design goal.
+complicating factor.
 
 \ifbool{submission}{%
 Note that in order to satisfy the TCHES submission guidelines, we have 

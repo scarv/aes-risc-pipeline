@@ -33,11 +33,11 @@ or
 where appropriate, we use
 \[
 \begin{array}{lcl}
-\ALG{Enc-KeyExp} &:& \SET{ 0, 1 }^{8 \cdot 4 \cdot Nk} \rightarrow \SET{ 0, 1 }^{( 8 \cdot 4 \cdot Nb ) \times Nr} \\
-\ALG{Dec-KeyExp} &:& \SET{ 0, 1 }^{8 \cdot 4 \cdot Nk} \rightarrow \SET{ 0, 1 }^{( 8 \cdot 4 \cdot Nb ) \times Nr} \\
+\ALG{Enc-KeyExp} &:& \SET{ 0, 1 }^{8 \cdot 4 \cdot Nk} \rightarrow \SET{ 0, 1 }^{( 8 \cdot 4 \cdot Nb ) \times ( Nr + 1 )} \\
+\ALG{Dec-KeyExp} &:& \SET{ 0, 1 }^{8 \cdot 4 \cdot Nk} \rightarrow \SET{ 0, 1 }^{( 8 \cdot 4 \cdot Nb ) \times ( Nr + 1 )} \\
 \end{array}
 \]
-to denote the algorithm as specialised to suit
+to denote said algorithm as specialised to suit
 \ALG{Enc}
 and
 \ALG{Dec}
@@ -64,14 +64,13 @@ $Nr$ dictates the number of rounds.  The standard AES parameter sets are
 \mbox{AES-256} &\mapsto& \TUPLE{ 8, 4, 14 } \\
 \end{array}
 \]
-noting that the number of bits in a plaintext (resp. ciphertext) block is
-fixed to 
+st. the number of bits in a plaintext (resp. ciphertext) block is fixed to 
 $
 8 \cdot 4 \cdot Nb = 128 .
 $
 From here on, we focus wlog. on encryption using AES-128 (other parameter 
 sets are catered for naturally, and decryption with minor differences) so
-use the term AES and AES-128 synonymously.
+use the terms AES and AES-128 synonymously.
 
 % -----------------------------------------------------------------------------
 
@@ -107,7 +106,7 @@ relating to round $r$ is denoted
 $\AESRND {s}{r}_{i,j}$
 and
 $\AESRND{rk}{r}_{i,j}$
-respectively, with super- and/or subscripts dropped whenever irrelevant.
+respectively, with super- and/or subscripts omitted whenever irrelevant.
 
 At a high(er) level, 
 AES is an iterative block cipher, based on a substitution-permutation network.
@@ -129,8 +128,8 @@ into an analogous
 post-whitening step {\em  after} 2)
 to yield an equivalent result.
 At a  low(er) level,
-the computation of each round is specified as the composition of four 
-round functions (each of which has an inverse, to support decryption):
+the computation of each round is specified via four round functions (each of 
+which has an inverse, to support decryption):
 
 \begin{itemize}
 

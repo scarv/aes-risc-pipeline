@@ -27,8 +27,8 @@ $1$'st order DPA side-channel resistance.
 
 \subsection{Design and implementation}
 
-We base our design on boolean-masking, and represent the secret
-key as two boolean masked shares.
+We base our design on Boolean-masking, and represent the secret
+key as two Boolean masked shares.
 
 An implementation of the AES block encrypt/decrypt function 
 using \ISE{3} requires eight registers:
@@ -85,7 +85,7 @@ read simultaneously and fed to the AES functional unit.
 If any GPR source does not map to an MRF register, we assume that
 operand is un-masked and represent the other share as $0$.
 
-Within the AES FU the instruction result is computed entirely in it's
+Within the AES-FU the instruction result is computed entirely in it's
 masked representation.
 The result shares are then re-masked before being written back to the
 GPRs and MRF.
