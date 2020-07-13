@@ -35,15 +35,15 @@ ISA    & Karatsuba & Reduce & $1$-cycle       & $2$-cycle       & $3$-cycle     
        &           &        & \VERB{clmul[h]} & \VERB{clmul[h]} & \VERB{clmul[h]} & \VERB{clmul[h]} \\
 \hline
 \hline
-RV32IB &        no &    mul &$      {\bf  80}$&$           120 $&$           160 $&$           280 $\\
-RV32IB &        no &  shift &$           116 $&$           148 $&$           180 $&$           276 $\\
-RV32IB &       yes &    mul &$            82 $&$      {\bf 108}$&$      {\bf 134}$&$           212 $\\
-RV32IB &       yes &  shift &$           118 $&$           136 $&$           154 $&$      {\bf 208}$\\
+RV32IB &        no &    mul &     \bftab  80  &            120  &            160  &            280  \\
+RV32IB &        no &  shift &            116  &            148  &            180  &            276  \\
+RV32IB &       yes &    mul &             82  &    \bftab  108  &     \bftab 134  &            212  \\
+RV32IB &       yes &  shift &            118  &            136  &            154  &     \bftab 208  \\
 \hline
-RV64IB &        no &    mul &$      {\bf  24}$&$      {\bf  36}$&$            48 $&$            84 $\\
-RV64IB &        no &  shift &$            42 $&$            50 $&$            58 $&$            82 $\\
-RV64IB &       yes &    mul &$            26 $&$      {\bf  36}$&$      {\bf  46}$&$            76 $\\
-RV64IB &       yes &  shift &$            44 $&$            50 $&$            56 $&$      {\bf  74}$\\
+RV64IB &        no &    mul &     \bftab  24  &    \bftab   36  &             48  &             84  \\
+RV64IB &        no &  shift &             42  &             50  &             58  &             82  \\
+RV64IB &       yes &    mul &             26  &    \bftab   36  &     \bftab  46  &             76  \\
+RV64IB &       yes &  shift &             44  &             50  &             56  &     \bftab  74  \\
 \hline
 \end{tabular}
 \end{adjustbox}
