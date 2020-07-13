@@ -3,27 +3,18 @@ In embedded, IoT class devices to which an attacker may have
 physical access,
 Differential Power Analysis (DPA) attacks on cryptographic implementations
 \cite{KJJ:99} can be devastating.
-DPA attacks rely on the power consumption of an attacked device being
-corrolated with secret values (i.e. cryptographic keys) being manipulated.
-By observing the power consumption of the device while processing
-attacker controlled inputs (plaintexts), one can model the {\em expected}
-power consumption based on simple hamming-weight or hamming-distance
-calculations of expected instruction results.
-The secret value is recovered by correlating the predicted power
-consumption with the observed traces.
-
 While ISEs give a notable increase in efficiency, they can also create
 attractive targets for DPA attacks.
 This stems from there being only one way to sensibly implement
-AES using the ISE, thus reducing the number of target variables an
-attacker needs to consider.
-It is hence important to consider how an implementer might
-further extend an cryptographic ISE to secure it against DPA attacks.
+AES using the ISE, thus reducing the number of target variables or
+implementation choices an attacker needs to consider.
+It is then important to consider how an implementer might
+further extend a cryptographic ISE to secure it against DPA attacks.
 
 Having identified ISE \ISE{3} as a strong standardisation candidate
-for embedded $32$-bit RISC-V cores, we now show a possible
-way of extending the ISE further to add 
-$1$'st order DPA side-channel resistance.
+for embedded $32$-bit RISC-V cores, we take a hardware/software co-design
+approach to extending the ISE, adding $1$'st order DPA side-channel
+resistance.
 
 \subsection{Design and implementation}
 
@@ -143,20 +134,18 @@ Only the Kintex-7 was used.
 The design was synthesised using Xilinx Vivado 2019.2 with
 default synthesis and implementaiton strategies.
 The Kintex-7 FPGA uses a 200MHz differential external clock source, which is
-transformed into a 50MHz internal clock used by the entire
-design.
+transformed into a 50MHz internal clock used by the entire design.
 
 Trace capture uses a standard pipeline of components:
 a MiniCircuits BLK+89 D/C blocker,
 an Agilent 8447D amplifier (with a $\SI{100}{\kilo\hertz}$ to $\SI{1.3}{\giga\hertz}$ range, and $\SI{25}{\decibel}$ gain),
 and
-a  PicoScope 5000 series oscilloscope.
-The oscilloscope uses a 250 MHz sample rate, with a 12-bit resolution.
-The capture process is coordinated using a laptop.
+a  PicoScope 5000 series oscilloscope using a
+250 MHz sample rate, with a 12-bit resolution.
 
-We performed a generic Test Vector Leakage Assessment (TVLA) \cite{TVLA:13}
-flow to evaluate
-the effectivness of the side-channel hardened implementation;
+We performed a generic randomised plaintext
+Test Vector Leakage Assessment (TVLA) \cite{TVLA:13}
+flow to evaluate the effectivness of the side-channel hardened implementation;
 using the AES-128 block encrypt function as the target operation.
 The un-protected and protected implementation results are shown in
 \REFFIG{fig:sca:unprotected} and
@@ -166,7 +155,7 @@ order side-channel leakage upto $100$K traces.
 The peaks at the beginning and end of \REFFIG{fig:sca:protected}
 are caused by the un-masked block input and output data being loaded/stored.
 
-\REFTAB{tab:sca:sw-hw} show the hardware and software overheads.
+\REFTAB{tab:sca:sw-hw} shows the hardware and software overheads.
 The ISE Size/LTP rows are inclusive of the S-box Size/LTP rows.
 Likewise, the CPU Size rows are inclusive of the ISE Size rows.
 The static code size and instruction count overheads are
@@ -204,9 +193,9 @@ FPGA Timing Slack @50MHz        & 8.12ns      & 7.05ns & $0.87\times$   \\
 Software and hardware overheads for the protected ISE implementation
 of AES-128 block encryption.
 The ``ISE Size'' row does not include the cost of the mask register file
-for the protected implementation.
-This is included in the CPU size measurements, since the exact method
-of mask delivery and storage is an implmentation option.
+for the protected implementation;
+this is included in the CPU size measurements, since the exact method
+of mask delivery and storage is an implementation option.
 }
 \label{tab:sca:sw-hw}
 \end{table}
