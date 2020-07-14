@@ -36,8 +36,7 @@ but was not designed
       depending on the (e.g., XMM- vs. AVX-based) variant,
       and operate on data housed in the pre-existing
       vector 
-      register file:
-      this implies $w = 128$.
+      register file, implying $w = 128$.
       AES is implemented by
       1) adopting a 
           fully-packed
@@ -74,8 +73,7 @@ but was not designed
       format,
       and operate on data housed in the pre-existing
       vector 
-      register file:
-      this implies $w = 128$.
+      register file, implying $w = 128$.
       AES is implemented by
       1) adopting a 
           fully-packed
@@ -110,8 +108,7 @@ but was not designed
       format,
       and operate on data housed in the pre-existing
       vector 
-      register file:
-      this implies $w = 128$.
+      register file, implying $w = 128$.
       AES is implemented by
       1) adopting a 
           fully-packed
@@ -150,8 +147,7 @@ but was not designed
       format,
       and operate on data housed in the pre-existing
       general-purpose
-      register file:
-      this implies $w =  64$.
+      register file, implying $w =  64$.
       AES is implemented by
       1) using a 
          column-packed
@@ -163,7 +159,7 @@ but was not designed
              \VERB{AES_EROUND23}     ~\cite[Page 109]{SPARC:16}
          to construct a round implementation as
          \[
-         ( \VERB{AES_EROUND01} \circ \VERB{AES_EROUND23} ) \mapsto \AESFUNC{AddRoundKey} \circ \AESFUNC{MixColumns} \circ \AESFUNC{ShiftRows} \circ \AESFUNC{SubBytes} 
+         ( \VERB{AES_EROUND01};\VERB{AES_EROUND23} ) \mapsto \AESFUNC{AddRoundKey} \circ \AESFUNC{MixColumns} \circ \AESFUNC{ShiftRows} \circ \AESFUNC{SubBytes} 
          \]
          in two steps:
          the first  step processes columns $0$ and $1$ via \VERB{AES_EROUND01}
@@ -215,8 +211,9 @@ but was not designed
          and
       b) \VERB{SBOX},
          which performs
-         extraction of elements to form of look-up table offsets; in one
-         configuration, the resulting memory accesses are supported by a
+         extraction of elements to form look-up table offsets.
+         In one configuration,
+         the resulting memory accesses are supported by a
          set of special-purpose ``S-box caches''.
 
 \item Fiskiran and Lee~\cite{FisLee:05}
@@ -228,7 +225,7 @@ but was not designed
       this acts to accelerate implementations based on T-tables 
       by affording an addressing mode that
       a) integrates 
-         extraction of elements to form of look-up table offsets,
+         extraction of elements to form look-up table offsets,
          and
       b) performs the associated table look-ups in parallel, supported by
          a dedicated scratch-pad memory.
@@ -245,8 +242,8 @@ but was not designed
       Boolean functions, vs. 
       {\em fixed}        $2$-input, $1$-output alternatives such as NOT, AND, OR, and XOR.
       Sequences of native Boolean instructions, which dominate bit-sliced
-      implementations, can thereby be ``compressed'' into use of the ISE;
-      doing so improves both latency and footprint.
+      implementations, can thereby be ``compressed'' into use of the ISE.
+      Doing so improves both latency and footprint.
       \cite[Section 4]{GraGroPag:08} details the application to AES.
 
 % kernel-specific
@@ -262,8 +259,8 @@ but was not designed
       The ISE constitutes a single instruction
       $\VERB{AESENC} \mapsto T_i$,
       supported by a dedicated hardware module
-      (see~\cite[Figure 6]{NadIkeKur:04}):
-      instances of \VERB{AESENC}
+      (see~\cite[Figure 6]{NadIkeKur:04}).
+      Instances of \VERB{AESENC}
       1) extract an   input element from a 
          packed  input column
       2) use the input to compute an output element equivalent to a
@@ -282,14 +279,14 @@ but was not designed
       The ISE constitutes a single instruction
       $\VERB{sbox} \mapsto \AESFUNC{SubBytes}$,
       supported by a dedicated hardware module
-      (see~\cite[Figure 1]{TilGroSze:05}):
-      instances of \VERB{sbox}
+      (see~\cite[Figure 1]{TilGroSze:05}).
+      Instances of \VERB{sbox}
       1) extract an   input element from a packed  input row or column,
       2) use the input to compute an output element equivalent to a
          look-up from the S-box,
          and
-      3)  insert the output element into a packed output row or column;
-         by using insert vs. overwrite semantics, allow 
+      3)  insert the output element into a packed output row or column.
+         By using insert vs. overwrite semantics, allow 
          a zero-overhead implementation of \AESFUNC{ShiftRows} to be realised.
 
 \item Bertoni et al.~\cite{BBFR:06}

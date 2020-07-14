@@ -108,15 +108,16 @@ can be realised using two approaches:
 1) a          shift-based reduction, made possible by the low Hamming weight of the primitive polynomial,
    or
 2) a multiplication-based reduction, analogous to the Montgomery or Barret methods.
-Overall, the most efficient approach on the relative execution latency of
+Overall, the most efficient approach depends on the relative execution 
+latency of
 \VERB{clmul[h]}
 vs.
-\VERB{xor} and \VERB{s[lr]li};
+\VERB{xor} and \VERB{s[lr]li}.
 We note that 
 \VERB{clmul[h]}
 {\em must} exhibit data-oblivious execution latency 
 (e.g., avoid data-dependent optimisations such as early-termination)
-to avoid associated side-channel attack (cf.~\cite{GOPT:09}).
+to avoid associated side-channel attacks (cf.~\cite{GOPT:09}).
 
 % -----------------------------------------------------------------------------
 

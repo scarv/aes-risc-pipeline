@@ -13,7 +13,7 @@ Since AES is an important target, a significant body of literature exists
 wrt. implementation attacks on it: this includes both
  active (e.g., fault injection)
 or
-passive (i.e., side-channel),
+passive (i.e., side-channel monitoring),
 attack techniques,
 with the latter sub-divided into those dependent on
 analogue,
@@ -28,20 +28,20 @@ From a positive perspective, use of ISEs
 For example,
 ISEs typically yield constant (i.e., data-oblivious) execution latency,
 so prevent some classes of time- or micro-architectural
-(see, e.g.,~\cite[Section 4]{Szefer:19} and ~\cite[Section 4]{GYCH:18})
 attack techniques.
-From a negative perspective, however,
+(See ~\cite[Section 4]{Szefer:19} and ~\cite[Section 4]{GYCH:18})
+From a negative perspective however,
 use of ISEs presents some unique challenges.
 For example, 
 Saab et al.\cite{SaaRohHam:16}
-discuss power-based attacks on ISEs, AES-NI specifically; they conclude
+discuss power-based attacks on ISEs, AES-NI specifically; concluding
 that naive use of AES-NI will yield exploitable leakage.  Mitigation of
 such leakage demands the ISE is flexible enough to 
 a) cater for instances where the leakage stems from ``inside'' the ISE,
    and, either way,
 b) compose with an appropriate
-   (e.g., hiding~\cite[Chapter 7]{ManOswPop:07} or masking~\cite[Chapter 10]{ManOswPop:07})
    countermeasure.
+   (e.g., hiding~\cite[Chapter 7]{ManOswPop:07} or masking~\cite[Chapter 10]{ManOswPop:07})
 Tillich et al.~\cite{TilHerMan:07}
 consider this problem to some extent, including an ISE-based option in
 their investigation of hardened AES implementations, but the challenge

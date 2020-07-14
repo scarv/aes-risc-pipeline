@@ -5,12 +5,13 @@
 
 RISC-V is a (relatively) new ISA, with academic origins~\cite{riscv:1,riscv:2}.
 Unlike alternatives such as x86 or ARMv8-A, RISC-V is a free to use, 
-open standard: this is managed by the independent RISC-V Foundation.
+open standard: this is managed by the independent
+RISC-V International Foundation.
 The base ISA is extremely simple, consisting of only $50$ instructions,
 and adopts {\em strongly} RISC-oriented design principles.  However, it
 is also highly modular: a general-purpose base ISA can (optionally) be
-supplemented using set of special-purpose, standard or non-standard (or
-custom) extensions to
+supplemented using sets of special-purpose, standard or non-standard
+extensions to
 support additional functionality 
 (e.g., floating-point, 
        via the 
@@ -24,8 +25,10 @@ satisfy specific optimisation goals
        via the 
        standard C~\cite[Section 16]{RV:ISA:I:19}
        extension).
-The RISC-V Foundation delegates the development of such extensions to a
-dedicated task group.  The Cryptographic Extensions Task Group\footnote{
+The RISC-V International Foundation delegates the development of
+extensions to a dedicated task group.
+The Cryptographic Extensions Task
+Group\footnote{
   \url{https://lists.riscv.org/g/tech-crypto-ext}
 } provides some specific context for this paper, through their remit to 
 develop scalar and vector extensions to support cryptography.

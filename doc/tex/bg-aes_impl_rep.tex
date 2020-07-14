@@ -5,7 +5,7 @@ $8$-bit byte:
 $
 x_i \in \SET{ 0, 1 } ,
 $
-the $i$-th bit of $x$ for $0 \leq i < 8$, naturally represents the $i$-th 
+the $i$-th bit of $x$ for $0 \leq i < 8$ naturally represents the $i$-th 
 polynomial coefficient.
 
 Beyond this, however, several options exist for representing the state and
@@ -14,9 +14,9 @@ round key matrices.  The most direct option would be termed
 one simply represents the matrix as a $16$-element array of $8$-bit bytes, 
 each of which represents a field element.
 Although FIPS-197~\cite{FIPS:197} defines a word to be st. $w = 32$, let
-$w$ generally denote the natural word size, measured in bits, of whatever
-platform the implementation is based on.
-Where $w >     16$,
+$w$ be the word size in bits of the platform the implementation is based on.
+In our case, this is \RVXLEN.
+Where $w \geq  16$,
 it is plausible to pack
 more than one field element 
 into each word.  
