@@ -5,7 +5,7 @@ $8$-bit byte
 where the $i$-th bit of $x$ for $0 \leq i < 8$ represents the $i$-th 
 polynomial coefficient.
 
-Beyond this, the state and round key matricies can be represented in
+Beyond this, the state and round key matrices can be represented in
 several ways.
 The most direct option would be termed
 array-based (or unpacked):
@@ -15,7 +15,7 @@ FIPS-197~\cite{FIPS:197} defines a word to be st. $w = 32$.
 We use $R$ to refer to the register width of a target platform.
 For RISC-V, $R = \RVXLEN$ where we consider $\RVXLEN \in {32,64}$.
 Where $R \geq  32$,
-An entire row or column of the AES state matrix can be packed into each 
+an entire row or column of the AES state matrix can be packed into each 
 register:
 we term these
    row-packed  

@@ -32,7 +32,7 @@ but was not designed
       or
       non-destructive $3$-address ($2$ source, $1$        destination)
       format
-      depending on the (e.g., XMM- vs. AVX-based) variant,
+      depending on the variant (e.g., XMM- vs. AVX-based),
       and operate on data housed in the pre-existing
       vector 
       register file, implying $R = 128$.
@@ -45,7 +45,7 @@ but was not designed
              \VERB{AESENC}         ~\cite[Page 3-54]{X86:2:18}
          to construct a round implementation as
          \[
-         \VERB{AESENC} \mapsto \AESFUNC{AddRoundKey} \circ \AESFUNC{MixColumns} \circ \AESFUNC{SubBytes} \circ \AESFUNC{ShiftRows} ,
+         \VERB{AESENC} \mapsto \AESFUNC{AddRoundKey} \circ \AESFUNC{MixColumns} \circ \AESFUNC{SubBytes} \circ \AESFUNC{ShiftRows}
          \]
 %     Note that
 %            \VERB{AESENCLAST}     ~\cite[Page 3-56]{X86:2:18}
@@ -82,7 +82,7 @@ but was not designed
              \VERB{vcipher}     ~\cite[Page 304]{POWER:18}
          to construct a round implementation as
          \[
-         \VERB{vcipher} \mapsto \AESFUNC{AddRoundKey} \circ \AESFUNC{MixColumns} \circ \AESFUNC{ShiftRows} \circ \AESFUNC{SubBytes} .
+         \VERB{vcipher} \mapsto \AESFUNC{AddRoundKey} \circ \AESFUNC{MixColumns} \circ \AESFUNC{ShiftRows} \circ \AESFUNC{SubBytes}
          \]
 %     Note that
 %            \VERB{vcipherlast} ~\cite[Page 304]{POWER:18}
@@ -205,8 +205,8 @@ but was not designed
          left- and right-rotate,
          and
       b) \VERB{SBOX},
-         which performs
-         extraction of elements to form look-up table offsets.
+         which 
+         extracts elements to form look-up table offsets.
          In one configuration,
          the resulting memory accesses are supported by a
          set of special-purpose ``S-box caches''.
@@ -231,8 +231,8 @@ but was not designed
       Grabher et al.~\cite{GraGroPag:08}
       explore  (in practice)
       a workload-agnostic ISE
-      that supports bit-sliced implementations.  The ISE allows the
-      configuration of and computation using 
+      that supports bit-sliced implementations.
+      The ISE allows computation using 
       {\em configurable} $4$-input, $2$-output 
       Boolean functions, vs. 
       {\em fixed}        $2$-input, $1$-output alternatives such as NOT, AND, OR, and XOR.
@@ -281,8 +281,8 @@ but was not designed
          look-up from the S-box,
          and
       3)  insert the output element into a packed output row or column.
-         By using insert vs. overwrite semantics, allow 
-         a zero-overhead implementation of \AESFUNC{ShiftRows} to be realised.
+         Using insert vs. overwrite semantics allows
+         \AESFUNC{ShiftRows} to be computed {\em for free}.
 
       Bertoni et al.~\cite{BBFR:06}
       propose 
@@ -290,9 +290,9 @@ but was not designed
        that could be described as 
       ``hardware-assisted round functions''.
       Per~\cite[Section 4]{BBFR:06}, the ISE includes
-      a) zero-overhead rotation (a la ARM),
+      1) zero-overhead rotation (similar to ARM),
          and
-      b) byte- and word-oriented variants of
+      2) byte- and word-oriented variants of
          $\VERB{SMix} \mapsto \AESFUNC{MixColumn} \circ \AESFUNC{SubBytes}$.
       
       Tillich and Gro{\ss}sch\"{a}dl~\cite{TilGro:06}

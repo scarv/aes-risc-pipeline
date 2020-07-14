@@ -55,7 +55,7 @@ micro-architectures, which constitute two different host cores:
       and
       Compressed ~\cite[Section 16]{RV:ISA:I:19}
       extensions.
-      Each varient is configured to support
+      Each variant is configured to support
       an instruction cache, 
       a  data        cache,
       and
@@ -66,7 +66,7 @@ micro-architectures, which constitute two different host cores:
 \end{itemize}
 
 \noindent
-To support a each ISE, two modifications were made to each host core:
+To support each ISE, two modifications were made to each host core:
 the instruction decoder was modified to support
 operand selection
 and
@@ -74,7 +74,7 @@ an AES Functional Unit (AES-FU) was added to support execution of
 ISE instructions.
 The \CORE{2} core integrates the AES-FU directly into the pipeline,
 while
-the \CORE{1} core accesses   the AES-FU via the
+the \CORE{1} core accesses the AES-FU via the
 Rocket Custom Coprocessor (RoCC)~\cite[Section 4]{rocket:16}
 interface.
 Due to \REFREQ{req:2}, 

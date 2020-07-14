@@ -5,16 +5,17 @@ standards.  In this paper, we have addressed the challenge of secure,
 efficient implementation of AES on RISC-V: our approach harnesses the
 modularity afforded by RISC-V, through a focus on the use of ISEs.
 
-Specifically, and motivated by on-going efforts to standardise support 
+Specifically, and motivated by ongoing efforts to standardise support 
 for AES in RISC-V, we have implemented and evaluated five ISE designs 
-on two different RISC-V compliant base micro-architectures:
-our conclusion is that
+on two different RISC-V compliant base micro-architectures.
+Our conclusion is that
 1) \ISE{3}
    is the best option for 
    AES on $32$-bit cores,
 2) \ISE{4}
    is the best option for 
    AES on $64$-bit cores,
+   and
 3) the
    standard 
    B~\cite[Section 17]{RV:ISA:I:19}
@@ -22,7 +23,7 @@ our conclusion is that
    can combine with either option to support AES-GCM.
 Furthermore, we demonstrated that, with reasonable alterations to the
 base micro-architecture, our implementation of \ISE{3} can be hardened
-(via masking) to prevent $1$-st order DPA-style attacks.
+(via masking) to prevent $1$st order DPA-style attacks.
 
 % TODO: maybe try to add some insight into ISA design constraints ...
 %

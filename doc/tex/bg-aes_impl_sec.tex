@@ -1,7 +1,7 @@
 % =============================================================================
 
 While the security of AES against a cryptanalytic attack is defined by
-the design, and so out of scope, implementation attacks are
+the design, and so is out of scope, implementation attacks are
 of central importance.
 An implementation attack focuses on the concrete instance of a construct
 rather than the abstract specification.
@@ -11,14 +11,14 @@ As AES is an important target, a significant body of literature exists
 around implementation attacks on it, including both
  active (e.g., fault injection)
 or
-passive (i.e., side-channel monitoring),
+passive (i.e., side-channel monitoring)
 attack techniques.
 The latter can be sub-divided into those dependent on
-analogue,
-(power-based~\cite{ManOswPop:07}),
+analogue
+(power-based~\cite{ManOswPop:07})
 or
-discrete, 
-(time-based~\cite{KoeQui:99}),
+discrete 
+(time-based~\cite{KoeQui:99})
 leakage.
 
 Use of ISEs
@@ -28,16 +28,16 @@ ISEs typically yield constant time execution,
 preventing some classes of timing or micro-architectural
 attack techniques.
 (See ~\cite[Section 4]{Szefer:19} and ~\cite[Section 4]{GYCH:18})
-Unfortunatly,
+Unfortunately,
 use of ISEs also presents some unique challenges.
 For example, 
-Saab et al.\cite{SaaRohHam:16}
+Saab et al. ~ ~\cite{SaaRohHam:16}
 discuss power-based attacks on AES-NI; concluding
 that naive use of AES-NI yields exploitable information leakage.
 Mitigation of such leakage demands the ISE
 address instances where the leakage stems from ``inside'' the ISE,
-and compose with appropriate countermeasures.
-   (e.g., hiding~\cite[Chapter 7]{ManOswPop:07} or masking~\cite[Chapter 10]{ManOswPop:07})
+and work with appropriate countermeasures
+(e.g., hiding~\cite[Chapter 7]{ManOswPop:07} or masking~\cite[Chapter 10]{ManOswPop:07}).
 Tillich et al.~\cite{TilHerMan:07}
 consider this problem to an extent, including an ISE-based option in
 their investigation of hardened AES implementations, but the challenge

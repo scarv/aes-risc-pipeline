@@ -17,12 +17,12 @@ similar techniques to DPA.
 
 Having identified ISE \ISE{3} as a strong standardisation candidate
 for embedded $32$-bit RISC-V cores, we take a hardware/software co-design
-approach to extending the ISE, adding $1$'st order DPA side-channel
+approach to extending the ISE, adding $1$st order DPA side-channel
 resistance.
 
 \subsection{Design}
 
-We base our design on Boolean-masking, and represent the secret
+We base our design on boolean masking, and represent the secret
 key as two Boolean masked shares.
 
 An implementation of the AES block encrypt/decrypt function 
@@ -30,9 +30,9 @@ using \ISE{3} requires eight $\GPR$s:
 four for the current round state and
 four to load the next round key
 and
-then accumulate the next round state into.
+then accumulate the next round state.
 See \REFFIG{fig:v3:round} for an AES round function implementation
-using \ISE{3}
+using \ISE{3}.
 Storing shares of each secret variable
 in the General Purpose Register (GPR) file is un-reasonable,
 requiring drastic modifications to the instruction definitions and
@@ -63,21 +63,21 @@ The {\tt sm} instruction is only used for context switches, and
 destructively reads the MRF register value to prevent it being
 leaked to other applications running on the same core.\footnote{
     In this case, destructive could mean set to zero (which could
-    leak the hamming weight of the mask) or randomising it's value.}
+    leak the hamming weight of the mask) or randomising its value.}
 We require the secret values be stored in shared form in memory
 (rather than splitting them into shares upon being loaded)
 to extend the SCA protection boundary outside the CPU.
-Otherwise, the hamming weight of un-masked secret values would be
+Otherwise, the hamming weight of unmasked secret values would be
 leaked by memory-hierarchy registers outside the CPU.
 Executing an {\tt lm} instruction such that {\tt rd} does not map to
 a mask register raises an illegal opcode exception.
 Likewise for {\tt sm} and {\tt rs2}.
 
-When an ISE instruction is executed and its $\GPR$source
+When an ISE instruction is executed and its $\GPR$ source
 registers map to an MRF register, both the $\GPR$s and MRF are
 read simultaneously and fed to the AES functional unit.
 If any $\GPR$ source does not map to an MRF register, we assume that
-operand is un-masked and represent the other share as $0$.
+operand is unmasked and represent the other share as $0$.
 
 Within the AES-FU the instruction result is computed entirely in a
 masked representation.
@@ -91,10 +91,10 @@ $1$'st order hamming-distance leakage.
 If the destination $\GPR$ has a corresponding
 mask register, share $0$ is stored in the $\GPR$s and share $1$ in the MRF.
 If the destination $\GPR$ does not map to a mask register, the result is
-written to the GPR un-masked.
+written to the GPR unmasked.
 This means that in the final encrypt/decrypt round, we can optionally obtain
-the un-masked results without having to store the shares to memory,
-load them back and un-mask them.
+the unmasked results without having to store the shares to memory,
+load them back and unmask them.
 
 \subsection{Implementation}
 
@@ -102,7 +102,7 @@ We used the \CORE{2} core as the basis for our side-channel secure
 implementation of \ISE{3}.
 \REFFIG{fig:core:2:secure} shows a block diagram of the modifications
 made to the core, and which data-paths carry masked data.
-To avoid accidental un-masking of the two shares,
+To avoid accidental unmasking of the two shares,
 Share $1$ is stored in {\em bit-reversed} form in the MRF and pipeline
 registers.
 This means that any accidental multiplexing between pipeline operand
@@ -137,7 +137,7 @@ a supporting Spartan-6
 (model {\tt xc6slx45}).
 Only the Kintex-7 was used.
 The design was synthesised using Xilinx Vivado 2019.2 with
-default synthesis and implementaiton strategies.
+default synthesis and implementation strategies.
 The Kintex-7 FPGA uses a 200MHz differential external clock source, which is
 transformed into a 50MHz internal clock used by the entire design.
 
@@ -150,21 +150,21 @@ a  PicoScope 5000 series oscilloscope using a
 
 We performed a generic randomised plaintext
 Test Vector Leakage Assessment (TVLA) \cite{TVLA:13}
-flow to evaluate the effectivness of the side-channel hardened implementation;
+flow to evaluate the effectiveness of the side-channel hardened implementation,
 using the AES-128 block encrypt function as the target operation.
-The un-protected and protected implementation results are shown in
+The unprotected and protected implementation results are shown in
 \REFFIG{fig:sca:unprotected} and
-\REFFIG{fig:sca:protected} respectivley.
-The protected implementaiton is effective at removing $1$'st
-order side-channel leakage upto $100$K traces.
+\REFFIG{fig:sca:protected} respectively.
+The protected implementation is effective at removing $1$st
+order side-channel leakage up to $100$K traces.
 The peaks at the beginning and end of \REFFIG{fig:sca:protected}
-are caused by the un-masked block input and output data being loaded/stored.
+are caused by the unmasked block input and output data being loaded/stored.
 
 \REFTAB{tab:sca:sw-hw} shows the hardware and software overheads.
 The ISE Size/LTP rows are inclusive of the S-box Size/LTP rows.
 Likewise, the CPU Size rows are inclusive of the ISE Size rows.
 The static code size and instruction count overheads are
-$\approx 20\%$; considerably less than a non-ISE based software masking
+$\approx 20\%$: considerably less than a non-ISE-based software masking
 approach.
 The hardware overheads are dominated by the increased size of the
 S-box (owing to the 3-share design), and the MRF.
@@ -177,7 +177,7 @@ Measured against an entire SoC, the overheads are modest.
 \centering
 \begin{tabular}{|l|r|r|r|}
 \hline
-Metric  & Un-protected & Protected  & Overhead \\
+Metric  & Unprotected & Protected  & Overhead \\
 \hline
 \hline
 Static Code Size (Bytes)        & 290         & 358    & $1.23\times$   \\
@@ -225,7 +225,7 @@ of mask delivery and storage is an implementation option.
 \end{subfigure}
 \caption{
 TVLA results for the baseline and protected implementations.
-The blue trace is the absoloute result of the TVLA evaluation, the green
+The blue trace is the absolute result of the TVLA evaluation, the green
 trace is the average power consumption for each TVLA trace set.
 }
 \end{figure}

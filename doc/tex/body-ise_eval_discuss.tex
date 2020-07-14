@@ -6,9 +6,9 @@ imply a modest area overhead relative to their host core.
 The RV32 \CORE{1} area results are not listed, as the ISE overhead compared to
 the area of a synthesised Rocket Tile with caches was less than $1\%$ in all
 cases.
-\REFTAB{tab:eval:sw:size},
+\REFTAB{tab:eval:sw:size}
 shows all ISE variants
-having similarly small memory footprints in terms of both instruciton code and
+having similarly small memory footprints in terms of both instruction code and
 data.
 Beyond this, and per 
 \REFSEC{sec:ise:design},
@@ -24,7 +24,7 @@ for the \CORE{2} or \CORE{1} core respectively,
 and, for each variant, is computed by dividing the improvement in execution 
 latency (relative to the T-table baseline) by the normalised area (i.e., the 
 ISE area column of \REFTAB{tab:eval:hw}). We deliberately omit the area of
-the host core form this calculation, as this fixed overhead dominates the
+the host core from this calculation, as this fixed overhead dominates the
 final value and detracts from the comparison between ISEs themselves.
 
 \REFTAB{tab:eval:results} 
@@ -62,12 +62,12 @@ incrementally improve the results.
 
 We believe it is sensible to standardise different ISEs for the
 RV32 and RV64 base ISAs.
-This allows each ISE design to better suite the constraints of each
+This allows each ISE design to better suit the constraints of each
 base ISA.
 In the RV32 case, this acknowledges that such cores will most often
-appear in resource constrained, embedded or IoT class devices.
+appear in resource-constrained, embedded or IoT class devices.
 Hence, the most efficient ISE design is appropriate.
-For nessesarily larger RV64 based designs, it makes sense to take advantage
+For necessarily larger RV64-based designs, it makes sense to take advantage
 of the wider data-path, and acknowledge that these are more likely to
 be application class cores. Hence, they will place a higher value
 on performance than area-efficiency.

@@ -42,10 +42,10 @@ Symbiotic EDA \\ \email{claire@symbioticeda.com}
 \begin{abstract}
 Secure, efficient execution of AES is an essential requirement for most
 computing platforms, often motivating inclusion of dedicated
-Instruciton Set Extensions (ISEs) for the purpose.
+Instruction Set Extensions (ISEs).
 RISC-V is a (relatively) new ISA that lacks such a standardised ISE.
 We survey the state-of-the-art industrial and academic ISEs for AES,
-implement and evaluate five different ISEs, one of which is novel
+implement and evaluate five different ISEs, one of which is novel,
 and make recommendations for standardisation.
 We consider the side-channel security implications of the ISE designs,
 demonstrating how an implementation of one candidate ISE can be hardened
@@ -71,9 +71,8 @@ process.
 
 FIPS-197~\cite{FIPS:197} represents the definitive specification
 of AES. 
-An overview of related design rationale is offered in,
-e.g.,~\cite{DaeRij:02}.
-We endevour to follow the notation set out in ~\cite{FIPS:197}
+An overview of related design rationale is offered in ~\cite{DaeRij:02}.
+We endeavour to follow the notation set out in ~\cite{FIPS:197}
 in referencing specific parts of AES functionality.
 
 % -----------------------------------------------------------------------------
@@ -85,14 +84,14 @@ in referencing specific parts of AES functionality.
 \subsection{AES implementation}
 \label{sec:bg:aes_impl}
 
-\paragraph{Representation}
+\paragraph{Representation.}
 \label{sec:bg:aes_impl_rep}
 \input{tex/bg-aes_impl_rep.tex}
 
-\paragraph{Hardware-only implementations}
+\paragraph{Hardware-only implementations.}
 \label{sec:bg:aes_impl_hw}
 \input{tex/bg-aes_impl_hw.tex}
-\paragraph{Software-only implementations}
+\paragraph{Software-only implementations.}
 \label{sec:bg:aes_impl_sw}
 \input{tex/bg-aes_impl_sw.tex}
 \subsection{Existing AES ISEs}
@@ -176,11 +175,11 @@ in referencing specific parts of AES functionality.
 \ifbool{anonymous}{}{%
 \section*{Acknowledgements}
 
-This work was undertaken as part of the on-going standardisation of
-RISC-V: we are grateful to {\em all} members of
+This work was undertaken as part of the ongoing standardisation of
+RISC-V. We are grateful to {\em all} members of
 the Cryptographic Extensions Task Group
 who contributed to related discussions.
-The opinions expressed in this paper are the authors alone; not
+The opinions expressed in this paper are the author's alone, not
 of their respective employers or the RISC-V International Foundation.
 The RISC-V cryptography extension is in the process of being standardised
 at the time of writing. The purpose of this work is to support that process.

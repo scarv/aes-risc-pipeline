@@ -23,7 +23,7 @@ form a central target in a complex attack surface.
 The demand for efficiency is a clear example in two ways.
 First,
 cryptography often represents an enabling technology vs. a feature and
-is often viewed as an overhead from a users perspective.
+is often viewed as an overhead from a user's perspective.
 Addressing this is
 complicated by constraints associated with the context, e.g., a demand 
 for
@@ -32,7 +32,8 @@ high-volume,
 high-throughput, 
  low-footprint, 
 and/or 
- low-power.
+ low-power
+ implementations.
 Second,
 although efficiency is a goal in itself, it {\em also} 
 acts as an enabler for security.
@@ -41,11 +42,11 @@ compromise security to meet efficiency requirements.
 Hence a more efficient implementation leaves greater margin to deliver
 countermeasures against attack.
 
-AES is an interesting case-study wrt. secure, efficient implementation.
+AES is an interesting casestudy wrt. secure, efficient implementation.
 For example,
-per the request for candidates announcement\footnote{%
+per the request for candidates announcement,\footnote{%
 \url{https://www.govinfo.gov/content/pkg/FR-1997-09-12/pdf/97-24214.pdf}
-}, the AES process was instrumental in popularising a model in which
+} the AES process was instrumental in popularising a model in which
 {\em both}
 ``security''
 (e.g., resilience against cryptanalytic attack)
@@ -58,7 +59,7 @@ the design {\em and} implementations of AES are long-lived.
 The importance of AES has led to special emphasis on related
 research and development effort before, during, and, most significantly, 
 after the AES process.
-The $20+$ years since standardisation has forced an evolution of 
+The $20+$ years since standardisation have forced an evolution of 
 implementation techniques, to match changes in the technology 
 and attack landscape.  For example,~\cite[Section 3.6]{NBBBDFR:01} covers
 implementation (e.g., side-channel) attacks: this field has become richer,
@@ -96,8 +97,8 @@ An ISE can be smaller and faster than a pure software implementation,
 and more efficient in terms of performance gain per additional logic gate
 than a hardware-only option.
 
-Abstractly an ISE design constitutes
-an {\em interface} to domain specific functionality through the
+Abstractly, an ISE design constitutes
+an {\em interface} to domain-specific functionality through the
 addition of instructions to a base ISA.
 As a fundamental and long-lived computer systems interface, the design
 and extension of an ISA demands careful consideration
@@ -105,19 +106,19 @@ and extension of an ISA demands careful consideration
 and the production of a concrete ISE design is not trivial.
 It must deliver a quantified improvement to the workload in 
 question (however measured) {\em and}
-consider numerous design goals including but not limited too:
+consider numerous design goals including but not limited to:
 
 \begin{itemize}
-\item Limiting the number and complexity of changes and interractions with the
+\item Limiting the number and complexity of changes and interactions with the
     parent ISA.
-\item Avoiding addition of too many instructions, or requiring large
+\item Avoiding the addition of too many instructions, or requiring large
     additional hardware modules to implement. This will hurt commercial
     adoption of the ISA.
 \item Adhering to the design constraints and philosophies of the base ISA.
-\item Maximising the utility of the additional functionality
+\item Maximising the utility of the additional functionality,
       i.e.,
       favour general-purpose over special-purpose functionality.
-      Special-purpose functions can be justified in terms of how frequent
+      Special-purpose functions can be justified in terms of how frequently
       the workload is required.
       For example, though an AES ISE might {\em only}
       be useful for AES, a webserver might execute AES millions of times
@@ -140,16 +141,16 @@ Advanced Encryption Standard New Instructions (AES-NI)~\cite{Gueron:09,DruGueKra
 ISE
 supports AES: it significantly improves latency and throughput
 (see, e.g.,~\cite{FazLopOli:18}),
-and represents a useful case-study in the design goals above:
-It adds just $6$ additional (vs. $1500+$ total) instructions,
+and represents a useful casestudy in the design goals above:
+it adds just $6$ additional (vs. $1500+$ total) instructions,
 reduces overhead by sharing the pre-existing XMM register file,
 and facilitates compatibility via the
 \VERB{CPUID}~\cite[Chapter 20]{X86:1:18}
 feature identification mechanism.
-It is also (sometimes un-expectedly) useful beyond AES.
-E.g., the Gr{\o}stl hash function ~\cite{GKMMRST:11} uses the S-box,
+It is also (sometimes un-expectedly) useful beyond AES:
+the Gr{\o}stl hash function ~\cite{GKMMRST:11} uses the S-box,
 and
 the YAES~\cite{BosVer:14} authenticated encryption scheme uses a full round.
-It can even be used to accelerate the Chinese SM4 block cipher\footnote{\url{https://github.com/mjosaarinen/sm4ni}}
+It can even be used to accelerate the Chinese SM4 block cipher.\footnote{\url{https://github.com/mjosaarinen/sm4ni}}
 
 % =============================================================================
