@@ -40,26 +40,20 @@ Symbiotic EDA \\ \email{claire@symbioticeda.com}
 \maketitle
 
 \begin{abstract}
-Secure, efficient execution of AES represents an vital, and therefore well
-studied requirement in many use-cases.  Use of an
-Instruction Set Extension (ISE)
-is one approach to addressing this requirement, and, as a result, ISEs for 
-AES exist in many base ISAs.  
-However, RISC-V is a (relatively) new ISA that lacks such an ISE: this gap
-motivates our work.  In specific terms, and set against on-going effort to 
-standardise cryptographic ISEs for RISC-V, we
-1) survey the state-of-the-art wrt. ISEs for AES,
-2) implement and evaluate five different ISEs for AES,
-   one of which is novel,
-3) explore how the 
-   standard
-   B 
-   (or bit manipulation) 
-   extension
-   to RISC-V can be harnessed for efficient implementation of AES-GCM,
-   and
-4) demonstrate how an implementation of one candidate ISE from 2) can be 
-   hardened against DPA-style attacks.
+Secure, efficient execution of AES is an essential requirement for most
+computing platforms, often motivating inclusion of dedicated
+Instruciton Set Extensions (ISEs) for the purpose.
+RISC-V is a (relatively) new ISA that lacks such a standardised ISE.
+We survey the state-of-the-art industrial and academic ISEs for AES,
+implement and evaluate five different ISEs, one of which is novel
+and make recommendations for standardisation.
+We consider the side-channel security implications of the ISE designs,
+demonstrating how an implementation of one candidate ISE can be hardened
+against DPA-style attacks.
+We also explore how the proposed standard Bit-manipulation extension
+to RISC-V can be harnessed for efficient implementation of AES-GCM.
+Our work supports the ongoing RISC-V cryptography extension standardisation
+process.
 \end{abstract}
 
 % =============================================================================
@@ -75,30 +69,37 @@ standardise cryptographic ISEs for RISC-V, we
 \section{Background}
 \label{sec:bg}
 
+FIPS-197~\cite{FIPS:197} represents the definitive specification
+of AES. 
+An overview of related design rationale is offered in,
+e.g.,~\cite{DaeRij:02}.
+We endevour to follow the notation set out in ~\cite{FIPS:197}
+in referencing specific parts of AES functionality.
+
 % -----------------------------------------------------------------------------
 
-\subsection{AES specification}
-\label{sec:bg:aes_spec}
-\input{tex/bg-aes_spec.tex}
+%\subsection{AES specification}
+%\label{sec:bg:aes_spec}
+%\input{tex/bg-aes_spec.tex}
 
 \subsection{AES implementation}
 \label{sec:bg:aes_impl}
 
-\subsubsection{Representation}
+\paragraph{Representation}
 \label{sec:bg:aes_impl_rep}
 \input{tex/bg-aes_impl_rep.tex}
 
-\subsubsection{Hardware-only implementations}
+\paragraph{Hardware-only implementations}
 \label{sec:bg:aes_impl_hw}
 \input{tex/bg-aes_impl_hw.tex}
-\subsubsection{Software-only implementations}
+\paragraph{Software-only implementations}
 \label{sec:bg:aes_impl_sw}
 \input{tex/bg-aes_impl_sw.tex}
 \subsection{Existing AES ISEs}
 \label{sec:bg:aes_impl_ise}
 \input{tex/bg-aes_impl_ise.tex}
 
-\subsubsection{Security}
+\paragraph{Security}
 \label{sec:bg:aes_impl_sec}
 \input{tex/bg-aes_impl_sec.tex}
 
@@ -109,24 +110,23 @@ standardise cryptographic ISEs for RISC-V, we
 
 % -----------------------------------------------------------------------------
 
-\subsection{Design}
 \label{sec:ise:design}
 
 \input{tex/body-ise_intro.tex}
 
-\subsubsection{Variant 1 (\ISE{1}): \AESFUNC{SubBytes} $+$ \AESFUNC{MixColumn} $+$ explicit \AESFUNC{ShiftRows}}
+\subsection{Variant 1 (\ISE{1}): \AESFUNC{SubBytes} $+$ \AESFUNC{MixColumn} $+$ explicit \AESFUNC{ShiftRows}}
 \label{sec:ise:design:v1}
 \input{tex/body-ise_design_v1.tex}
-\subsubsection{Variant 2 (\ISE{2}): \AESFUNC{SubBytes} $+$ \AESFUNC{MixColumn} $+$ implicit \AESFUNC{ShiftRows}}
+\subsection{Variant 2 (\ISE{2}): \AESFUNC{SubBytes} $+$ \AESFUNC{MixColumn} $+$ implicit \AESFUNC{ShiftRows}}
 \label{sec:ise:design:v2}
 \input{tex/body-ise_design_v2.tex}
-\subsubsection{Variant 3 (\ISE{3}): hardware-assisted T-tables}
+\subsection{Variant 3 (\ISE{3}): hardware-assisted T-tables}
 \label{sec:ise:design:v3}
 \input{tex/body-ise_design_v3.tex}
-\subsubsection{Variant 4 (\ISE{4}): SPARC-like}
+\subsection{Variant 4 (\ISE{4}): $64$-bit data-path}
 \label{sec:ise:design:v4}
 \input{tex/body-ise_design_v4.tex}
-\subsubsection{Variant 5 (\ISE{5}): quadrant-packed}
+\subsection{Variant 5 (\ISE{5}): quadrant-packed}
 \label{sec:ise:design:v5}
 \input{tex/body-ise_design_v5.tex}
 
@@ -140,22 +140,22 @@ standardise cryptographic ISEs for RISC-V, we
 
 \subsection{Evaluation}
 
-\subsubsection{Hardware}
+\paragraph{Hardware}
 \label{sec:ise:eval:hw}
 \input{tex/body-ise_eval_hw.tex}
 
-\subsubsection{Software}
+\paragraph{Software}
 \label{sec:ise:eval:sw}
 \input{tex/body-ise_eval_sw.tex}
 
-\subsubsection{Discussion}
+\paragraph{Discussion}
 \label{sec:ise:eval:discuss}
 \input{tex/body-ise_eval_discuss.tex}
 
 % =============================================================================
 
 \section{Using ISEs to implement AES-GCM}
-\label{sec:modes}
+\label{sec:gcm}
 %\input{tex/body-modes.tex}
 \input{tex/body-modes-gcm.tex}
 

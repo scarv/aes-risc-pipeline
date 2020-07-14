@@ -20,14 +20,11 @@ micro-architectures, which constitute two different host cores:
       extensions.
       Per the block diagram shown in~\REFFIG{fig:core:2:normal},
       the core 
-      executes instructions using a $5$-stage, in-order pipeline;
-      no mechanism for
-      branch prediction
-      is supported.
-      Although there are two memory interfaces, one for (instruction) fetch and one for (data) memory access stages,
-      no
-      instruction or data caches 
-      are supported.
+      executes instructions using a $5$-stage, in-order pipeline.
+      No branch prediction is supported.
+      There are two memory interfaces for instruction fetch and data memory
+      accesses.
+      No instruction or data caches are supported.
       The core implements various performance counters,
       and
       elements of the
@@ -38,8 +35,8 @@ micro-architectures, which constitute two different host cores:
         core
       executes instructions using a $5$-stage, in-order pipeline
       which is highly configurable.
-      We take advantage of this, considering two variants whose configuration
-      is outlined in
+      We take advantage of this, considering two variants whose
+      exact configuration is outlined in
       \REFFIG{fig:rocket:32} 
       and 
       \REFFIG{fig:rocket:64}:
@@ -69,21 +66,21 @@ micro-architectures, which constitute two different host cores:
 \end{itemize}
 
 \noindent
-To support a given ISE, two modifications were made to each host core:
-1) the instruction decoder was modified to support identification and 
-   operand selection for instructions in the ISE,
-   and
-2) an AES Functional Unit (AES-FU) was added to support execution of
-   (i.e., ISE-specific computation by) those instructions:
-   the \CORE{2} core integrates the AES-FU directly into the pipeline,
-   whereas
-   the \CORE{1} core accesses   the AES-FU via the
-   Rocket Custom Coprocessor (RoCC)~\cite[Section 4]{rocket:16}
-   interface.
+To support a each ISE, two modifications were made to each host core:
+the instruction decoder was modified to support
+operand selection
+and
+an AES Functional Unit (AES-FU) was added to support execution of
+ISE instructions.
+The \CORE{2} core integrates the AES-FU directly into the pipeline,
+while
+the \CORE{1} core accesses   the AES-FU via the
+Rocket Custom Coprocessor (RoCC)~\cite[Section 4]{rocket:16}
+interface.
 Due to \REFREQ{req:2}, 
 specifically that each instruction uses at most $2$ source and $1$ destination register, 
-neither micro-architecture required further structural alteration so
-a synthesis-time parameter was sufficient to switch between different 
+neither micro-architecture required further structural alteration.
+A synthesis-time parameter was used to switch between different 
 ISEs.
 
 % =============================================================================

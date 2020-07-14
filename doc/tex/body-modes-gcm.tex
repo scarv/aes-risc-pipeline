@@ -50,8 +50,7 @@ RV64IB &       yes &  shift &             44  &             50  &             56
 
 % -----------------------------------------------------------------------------
 
-The Galois/Counter Mode (GCM)
-~\cite{NIST:sp.800.38d}
+The Galois/Counter Mode (GCM) ~\cite{NIST:sp.800.38d}
 is a block cipher mode of operation which 
 supports authenticated encryption.
 AES-GCM refers to an instantiation using AES as the underlying block cipher, 
@@ -70,9 +69,9 @@ The computational core of AES-GCM is formed from two components:
 Having dealt with efficient implementation of AES and hence \ALG{GCTR} in
 \REFSEC{sec:ise}, we turn our attention to \ALG{GHASH}.  
 Rather than further 
-embellish the ISE for AES, we instead focus on re-use of the existing
+embellish the ISE for AES, we instead focus on re-use of the proposed
 standard 
-B~\cite[Section 17]{RV:ISA:I:19}
+Bit-manipulation ~\cite[Section 17]{RV:ISA:I:19}
 extension.
 
 % -----------------------------------------------------------------------------
@@ -88,55 +87,57 @@ Conversion of the input into the correct endian'ness can be realised using
 the 
 \VERB{grev} (or generalised reverse)
 instruction,
-which reverses the bits in each byte of an input word:
+which can reverse the bits in each byte of an input word:
 $4$ (resp. $2$) 
 \VERB{grev} 
 instructions are therefore required on RV32IB (resp. RV64IB).
 Beyond this, operations in $\F_{2^{128}}$ dominate.
 Addition       in $\F_{2^{128}}$ 
-is trivial, since addition modulo $2$ is equivalent to XOR: this
+is is equivalent to XOR: thus
 $4$ (resp. $2$) 
 \VERB{xor} 
-instructions are therefore required on RV32IB (resp. RV64IB).
+instructions are required on RV32IB (resp. RV64IB).
 Multiplication in $\F_{2^{128}}$ 
 can be decomposed into two steps:
-1) a $( 128 \times 128 )$-bit polynomial multiplication, 
-   followed by 
-2) a reduction of the $256$-bit result modulo
-   $
-   \IND{x}^{128} + \IND{x}^{7} + \IND{x}^{2} + \IND{x} + 1 .
-   $
+a $( 128 \times 128 )$-bit polynomial multiplication, 
+followed by 
+a reduction of the $256$-bit result modulo
+$
+\IND{x}^{128} + \IND{x}^{7} + \IND{x}^{2} + \IND{x} + 1 .
+$
 The first  step 
 can be realised using pairs of ``carry-less'' multiplication instructions
 \VERB{clmul} and \VERB{clmulh}.
-These instructions compute the least-significant (resp. most-significant) 
-half of a carry-less product (i.e., product over $\F_2$); pairs of 
+These compute the least-significant (resp. most-significant) 
+half of a carry-less product (i.e., product over $\F_2$).
+Pairs of 
 \VERB{clmul} and \VERB{clmulh}
-should be scheduled adjacently, st. capable micro-architectures are able 
+should be scheduled adjacently, allowing capable micro-architectures
 to fuse them.
 Use of a school-book approach 
 requires
-$16$ (resp. $4$) such pairs 
-on RV32IB (resp. RV64IB);
-optimisation using the Karatsuba method
+$16$ (resp. $4$) pairs 
+on RV32IB (resp. RV64IB).
+Optimisation using the Karatsuba method
 requires
 $ 9$ (resp. $3$) such pairs 
 on RV32IB (resp. RV64IB),
 plus some additional \VERB{xor} instructions.
 The second step
-can be realised using two approaches:
-1) a          shift-based reduction, made possible by the low Hamming weight of the primitive polynomial,
-   or
-2) a multiplication-based reduction, analogous to the Montgomery or Barret methods.
-Overall, the most efficient approach depends on the relative execution 
+can be implemented in two ways:
+a shift-based reduction, made possible by the low Hamming weight of the
+primitive polynomial,
+or
+a multiplication-based reduction, analogous to the Montgomery or Barret
+methods.
+The most efficient approach depends on the relative execution 
 latency of
 \VERB{clmul[h]}
 vs.
 \VERB{xor} and \VERB{s[lr]li}.
-We note that 
 \VERB{clmul[h]}
 {\em must} exhibit data-oblivious execution latency 
-(e.g., avoid data-dependent optimisations such as early-termination)
+(e.g., avoid data-dependent optimisations like early-termination)
 to avoid associated side-channel attacks (cf.~\cite{GOPT:09}).
 
 % -----------------------------------------------------------------------------
@@ -146,36 +147,35 @@ to avoid associated side-channel attacks (cf.~\cite{GOPT:09}).
 \REFTAB{tab:gcm:instrs} 
 lists instruction counts for 
 multiplication in $\F_{2^{128}}$,
-as implemented using different combinations of the base ISA, and approaches
+implemented using combinations of the base ISA, and approaches
 for the polynomial multiplication and reduction steps.
 \REFTAB{tab:gcm:cycles} 
-then model the execution latency 
+then models the execution latency 
 (measured in cycles)
-assuming that \VERB{grev}, \VERB{xor}, and \VERB{s[lr]li} take $1$ cycle.
+assuming \VERB{grev}, \VERB{xor}, and \VERB{s[lr]li} take $1$ cycle.
 Although the model only considers an in-order core in line with those used
 in \REFSEC{sec:ise} and is focused on execution latency
 (vs. other pertinent metrics, such as code footprint),
 there are two obvious conclusions:
-1) iff.
-   \VERB{clmul[h]}
-   has $2$ (or more) times the latency of
-   \VERB{xor} and \VERB{s[lr]li},
-   a 
-   Karatsuba-Ofman 
-   polynomial multiplication
-   is preferable,
-   and
-2) if
-   \VERB{clmul[h]}
-   has $6$ (or more) times the latency of
-   \VERB{xor} and \VERB{s[lr]li},
-   a shift-based 
-   reduction 
-   is preferable.
+If
+\VERB{clmul[h]}
+has $2$ (or more) times the latency of
+\VERB{xor} and \VERB{s[lr]li},
+a 
+Karatsuba
+polynomial multiplication
+is preferable.
+If
+\VERB{clmul[h]}
+has $6$ (or more) times the latency of
+\VERB{xor} and \VERB{s[lr]li},
+a shift-based 
+reduction 
+is preferable.
 
 The authors recommend the carry-less multiply instructions
-specified in the proposed RISC-V B extension also be included in the
-RISC-V cryptography extension.
+specified in the proposed RISC-V Bit-manipulation extension also be included
+in the RISC-V cryptography extension.
 Implementers would otherwise need to implement (a subset of) the B
 extension, potentially adding functionality and cost that is not
 nessesary.

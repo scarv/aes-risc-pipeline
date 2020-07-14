@@ -1,6 +1,6 @@
 % =============================================================================
 
-Each ISE variant was implemented and integrated into the $3$ host cores 
+Each ISE variant was integrated into the $3$ host cores 
 described in \REFSEC{sec:ise:imp}.
 The variants which assume  $\RVXLEN = 32$
 (\ISE{1}, \ISE{2}, \ISE{3}, and \ISE{5}) 
@@ -14,9 +14,9 @@ the variant  which assumes $\RVXLEN = 64$
 was  evaluated
 on {\em only} the
 $64$-bit \CORE{1} core.
-As noted, for \ISE{1}, \ISE{2} and \ISE{5} the potential for a trade-off
-between latency and area exists.  Each such case is catered for through
-the consideration of two optimisation goals:
+For \ISE{1}, \ISE{2} and \ISE{5} a trade-off
+between latency and area exists. 
+Each such case is considered through two optimisation goals:
 the (A)rea    goal
 instantiates $1$ S-box   and has a $n$-cycle execution latency,
 whereas
@@ -31,8 +31,8 @@ arranged in two parts:
 the  left-hand part relates to each ISE in isolation,
 whereas 
 the right-hand part relates to each ISE integrated with a given core.
-Throughout, both area (measured in NAND2 equivalent gates) and Longest 
-Topological Path (LTP) are as reported by Yosys~\cite{yosys}.  We found 
+Throughout, both area (measured in NAND2 equivalent gates) and Circuit
+Depth are as reported by Yosys~\cite{yosys}.  We found 
 that none of the ISEs affected the critical path of either the \CORE{2} 
 or \CORE{1} core.
 % TODO: address the issue re. Rocket area (i.e., the caches dominating)

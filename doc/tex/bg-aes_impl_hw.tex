@@ -2,33 +2,26 @@
 
 In a hardware-only implementation,
 execution of 
-AES         functionality
+AES
 is 
 performed by 
-a bespoke hardware module (e.g., a memory-mapped co-processor),
-whereas
-execution of 
-application functionality (i.e., whatever uses AES)
-is (typically)
-performed by 
-a general-purpose processor core.
-A large design space exists wrt. the former.
+a dedicated hardware module (e.g., a memory-mapped co-processor),
+while
+the software which uses AES is executed on
+a general-purpose CPU core.
+A large design space exists for hardware implementations of AES.
 Gaj and Chodowiec~\cite[Section 3.3]{GajCho:00}
-offer a reasonable overview, for example detailing
-1) iterative,
-2) combinatorial
-   (or unrolled),
-   and
-3) inter- or intra-round
-   pipelined
-   architectures.
-In the same way, a rich body of literature
-(see, e.g.,~\cite{PMDW:04,GooBen:05,GajCho:09})
-surveys concrete implementations on a variety of fabrics including both FPGA 
-and ASIC.
+give an overview, detailing
+iterative,
+combinatorial (unrolled),
+and
+pipelined architectures.
+Similarly, ~\cite{PMDW:04,GooBen:05,GajCho:09}
+survey concrete implementations on a variety of fabrics including FPGAs
+and ASICs.
 
-Although not our focus per se, associated techniques are important because
-they inform later content in (at least) two ways.
+Although hardware-only designs are not our focus, the associated techniques
+are useful in informing ISE related design choices.
 First,
 they inform the ISE interface.
 For example, some ISEs can be characterised as offering an interface to
@@ -37,7 +30,6 @@ hardware constituting one round
 Second,
 they inform the ISE implementation.
 For example, a significant body of work focuses on efficient hardware 
-implementation of the S-box
-(see, e.g.,~\cite{Canright:05,BoyPer:12,ReyTahAsh:18}).
+implementation of the S-box: ~\cite{Canright:05,BoyPer:12,ReyTahAsh:18}.
 
 % =============================================================================

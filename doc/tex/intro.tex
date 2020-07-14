@@ -2,29 +2,30 @@
 
 \paragraph{Implementing the Advanced Encryption Standard (AES).}
 
-In October $2000$, NIST pronounced Rijndael~\cite{DaeRij:98,DaeRij:02}, 
-a design due to Daemen and Rijmen, 
-as winner of a $5$-year standardisation process~\cite{NBBBDFR:01} instigated 
-to identify a replacement for the incumbent
-Data     Encryption Standard (DES)~\cite{FIPS:46} 
-block cipher; the resulting 
-Advanced Encryption Standard (AES)~\cite{FIPS:197} 
-was announced in $2001$.
+%
+% Commented out since CHES folks know the histories.
+%
+%In October $2000$, NIST pronounced Rijndael~\cite{DaeRij:98,DaeRij:02}, 
+%a design due to Daemen and Rijmen, 
+%as winner of a $5$-year standardisation process~\cite{NBBBDFR:01} instigated 
+%to identify a replacement for the incumbent
+%Data     Encryption Standard (DES)~\cite{FIPS:46} 
+%block cipher; the resulting 
+%Advanced Encryption Standard (AES)~\cite{FIPS:197} 
+%was announced in $2001$.
 
-Compared to more general cases, cryptographic algorithms such as AES present a
-significant challenge wrt. implementation, because they often
-a) involve computationally intensive, somewhat niche functionality,
-b) are deployed in a diverse range of contexts,
-   and
-c) form a central target in what is a complex attack surface.
-The demand for efficiency, however measured, forms an overarching example
-with at least two dimensions.
+Compared to more general workloads, cryptographic algorithms like AES
+present a significant implementation challenge.
+They involve computationally intensive and specialist functionality,
+are used in a wide range of contexts
+and
+form a central target in a complex attack surface.
+The demand for efficiency, is a clear example in two ways.
 First,
-cryptography often represents an enabling technology vs. a feature: it will
-likely be viewed as overhead, therefore, when viewed from the perspective 
-of a user.  Put another way,  even {\em perceived} {\em in}efficiency may
-be problematic in terms of fitness for purpose.  Addressing this is further 
-complicated by any constraints associated with the context, e.g., a demand 
+cryptography often represents an enabling technology vs. a feature and
+is often viewed as an overhead from a users perspective.
+Addressing this is
+complicated by constraints associated with the context, e.g., a demand 
 for
 high-volume, 
  low-latency, 
@@ -33,15 +34,15 @@ high-throughput,
 and/or 
  low-power.
 Second,
-and although efficiency is a goal in and of itself therefore, it {\em also} 
-acts as an enabler for security.  This is because one cannot 
-(or at least {\em should} not) 
-compromise security to meet efficiency requirements, implying that delivery 
-of higher efficiency offers greater margin within which to deliver suitable
+although efficiency is a goal in itself, it {\em also} 
+acts as an enabler for security.
+This is because one {\em should not}
+compromise security to meet efficiency requirements.
+Hence a more efficient implementation leaves greater margin to deliver
 countermeasures against attack.
 
-AES represents an interesting case-study wrt. techniques which attempt to 
-address the challenge of secure, efficient implementation.  For example,
+AES is an interesting case-study wrt. secure, efficient implementation.
+For example,
 per the request for candidates announcement\footnote{%
 \url{https://www.govinfo.gov/content/pkg/FR-1997-09-12/pdf/97-24214.pdf}
 }, the AES process was instrumental in popularising a model in which
@@ -50,28 +51,26 @@ per the request for candidates announcement\footnote{%
 (e.g., resilience against cryptanalytic attack)
 {\em and}
 ``algorithm and implementation characteristics''
-(e.g., computational efficiency, memory requirements, suitability for different platform classes)
 form important quality metrics for the {\em design}, in order to facilitate
 techniques for higher quality {\em implementations} of it.
-In addition,
-both the design {\em and} implementations of it are long-lived.
-From a positive perspective, 
-the central importance of AES has led to special emphasis on related
+Additionally,
+the design {\em and} implementations of AES are long-lived.
+The importance of AES has led to special emphasis on related
 research and development effort before, during, and, most significantly, 
 after the AES process.
-From a negative perspective, however,
-the $20+$ year period since standardisation has forced an evolution of 
-implementation technique, e.g., to match evolution of both the technology 
+The $20+$ years since standardisation has forced an evolution of 
+implementation techniques, to match changes in the technology 
 and attack landscape.  For example,~\cite[Section 3.6]{NBBBDFR:01} covers
 implementation (e.g., side-channel) attacks: this field has become richer,
-and the associated threat more potent during said period.
+and the associated threat more dangerous during said period.
 
 % -----------------------------------------------------------------------------
 
 \paragraph{Support via Instruction Set Extensions (ISEs).}
 
-A potentially large space of implementation techniques will often exist
-for a given cryptographic algorithm.  One could classify instances as being 
+A large space of implementation styles often exist
+for a given cryptographic algorithm.
+Techniques can be
    algorithm-agnostic
    or
    algorithm-specific,
@@ -79,68 +78,56 @@ and based on the use of
    hardware              only,
                 software only,
    or
-   hardware and software (i.e., a hybrid of the two).
-The latter class includes instances based on the concept of an
-Instruction Set Extension (ISE)~\cite{GalBer:11,BarGioMar:09,RegIen:16}.
-The idea is to identify, e.g., through benchmarking, a set of additional 
-instructions that allow the algorithm to leverage
-special-purpose, domain-specific functionality
-in the resulting ISE,
-vs. 
-general-purpose                  functionality
-in the base Instruction Set Architecture (ISA),
-and thereby deliver improvement wrt. pertinent quality metrics.  
-Although ISEs can be an effective option for {\em both}
-high(er)-end, performance-oriented
-and
- low(er)-end, constrained
-platforms, 
-they are particularly effective for the latter by 
-improving footprint and latency
-vs. a software-only option
-while also
-improving area      and flexibility
-vs. a hardware-only option.
+   a hybrid approach using ISEs ~\cite{GalBer:11,BarGioMar:09,RegIen:16}.
+For the ISE case, the aim is to identify through benchmarking, pieces of
+algorithm-specific functionality which are inefficiently represented in the
+base ISA.
+Said functions are then implemented in hardware, and exposed to the
+programmer via one or more new instructions.
 
-Abstractly, an ISE design constitutes
-1) an {\em interface},
-   i.e., 
-   addition of instructions to some 
-   base ISA
-   plus
-2) an {\em implementation},
-   i.e., 
-   support for execution of said instructions through changes or addition 
-   to a 
-   base micro-architecture.
-As a fundamental, long-lived computer systems interface, the design of or
-changes to an ISA demands careful consideration
-(cf.~\cite[Section 4]{Gueron:09}); this implies that the production of a 
-concrete ISE design is far from trivial.  
-Such a design must deliver a demonstrable improvement wrt. the algorithm in 
-question, {\em as well as} considering a (non-exhaustive) list of design 
-goals such as
+ISEs are an effective option for {\em both}
+high-end, performance-oriented
+and
+ low-end, constrained
+platforms. 
+They are particularly effective for the latter where resource constraints
+are tightest.
+An ISE can be smaller and faster than a pure software implementation,
+and more efficient in terms of performance gain per additional logic gate
+than a hardware-only option.
+
+Abstractly an ISE design constitutes
+an {\em interface} to domain specific functionality through the
+addition of instructions to a base ISA.
+As a fundamental and long-lived computer systems interface, the design
+and extension of an ISA demands careful consideration
+(cf.~\cite[Section 4]{Gueron:09}). 
+and the production of a concrete ISE design is not trivial.
+It must deliver a quantified improvement to the workload in 
+question (however measured) {\em and}
+consider numerous design goals including but not limited too:
 
 \begin{itemize}
-\item minimal invasiveness,
-      e.g.,
-      limit the number and scope (local vs. global) of changes,
-\item minimal overhead,
-      e.g.,
-      avoid too many instructions, and instructions which demand support via large or complex hardware components,
-\item maximal compatibility,
-      e.g.,
-      align with constraints in the base ISA, such as use of existing instruction formats,
-      and
-\item maximal       utility,
+\item Limiting the number and complexity of changes and interractions with the
+    parent ISA.
+\item Avoiding addition of too many instructions, or requiring large
+    additional hardware modules to implement. This will hurt commercial
+    adoption of the ISA.
+\item Adhering to the design constraints and philosophies of the base ISA.
+\item Maximising the utility of the additional functionality
       i.e.,
-      favour general- vs. {\em too} special-purpose functionality.
+      favour general-purpose over special-purpose functionality.
+      Special-purpose functions can be justified in terms of how frequent
+      the workload is required.
+      For example, though an AES ISE might {\em only}
+      be useful for AES, a webserver might execute AES millions of times
+      per day.
 \end{itemize}
 
 \noindent
-By extending x86, Intel provide archetypal examples and evidence in support 
-of ISEs.
-For example, various generations of
+The x86 architecture provides many examples of ISE design,
+having been extended numerous times by Intel and AMD.
+Various generations of
 non-cryptographic
 Multi-Media      eXtensions (MMX),
 Streaming SIMD  Extensions (SSE),
@@ -153,18 +140,16 @@ Advanced Encryption Standard New Instructions (AES-NI)~\cite{Gueron:09,DruGueKra
 ISE
 supports AES: it significantly improves latency and throughput
 (see, e.g.,~\cite{FazLopOli:18}),
-and represents a pertinent case-study wrt. the design goals above by
-a) adding just $6$ additional (vs. $1500+$ total) instructions,
-b) reducing overhead by, e.g., sharing the XMM register file,
-c) facilitating compatibility via the
-   \VERB{CPUID}~\cite[Chapter 20]{X86:1:18}
-   feature identification mechanism,
-   and
-d) offering utility beyond AES specifically:
-   it supports AES-specific functionality but is able to maximise utility 
-   through more AES-agnostic support of {\em other} constructions
-   (e.g., the Gr{\o}stl~\cite{GKMMRST:11} hash function uses the S-box,
-          and
-          the YAES~\cite{BosVer:14} authenticated encryption scheme uses a full round).
+and represents a useful case-study in the design goals above:
+It adds just $6$ additional (vs. $1500+$ total) instructions,
+reduces overhead by sharing the pre-existing XMM register file,
+and facilitates compatibility via the
+\VERB{CPUID}~\cite[Chapter 20]{X86:1:18}
+feature identification mechanism.
+It is also (sometimes un-expectedly) useful beyond AES.
+E.g., the Gr{\o}stl hash function ~\cite{GKMMRST:11} uses the S-box,
+and
+the YAES~\cite{BosVer:14} authenticated encryption scheme uses a full round.
+It can even be used to accelerate the Chinese SM4 block cipher\footnote{\url{https://github.com/mjosaarinen/sm4ni}}
 
 % =============================================================================

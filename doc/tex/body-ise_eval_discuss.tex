@@ -2,16 +2,17 @@
 
 \REFTAB{tab:eval:hw}
 demonstrates that all ISE variants
-imply a modest area overhead relative to an associated core.
-The RV32 \CORE{1} results are not listed, as the ISE overhead compared to
+imply a modest area overhead relative to their host core.
+The RV32 \CORE{1} area results are not listed, as the ISE overhead compared to
 the area of a synthesised Rocket Tile with caches was less than $1\%$ in all
 cases.
 \REFTAB{tab:eval:sw:size},
-demonstrates that all ISE variants
-imply a similar, low memory (i.e., both code and static data) footprint.
+shows all ISE variants
+having similarly small memory footprints in terms of both instruciton code and
+data.
 Beyond this, and per 
 \REFSEC{sec:ise:design},
-the primary metric of interest is
+the primary metric of interest is efficiency in terms of
 improvement in execution latency per area:
 this metric draws on data from
 \REFTAB{tab:eval:hw}
@@ -22,9 +23,9 @@ or
 for the \CORE{2} or \CORE{1} core respectively,
 and, for each variant, is computed by dividing the improvement in execution 
 latency (relative to the T-table baseline) by the normalised area (i.e., the 
-ISE area column of \REFTAB{tab:eval:hw}).  We deliberately omit the area of
-the host core, because this fixed overhead will always dominate: it detracts 
-from the comparison between ISEs themselves, therefore.
+ISE area column of \REFTAB{tab:eval:hw}). We deliberately omit the area of
+the host core form this calculation, as this fixed overhead dominates the
+final value and detracts from the comparison between ISEs themselves.
 
 \REFTAB{tab:eval:results} 
 captures the results for the \CORE{1} core, although the same conclusion can 
@@ -37,13 +38,17 @@ vs.
 and 
 \ALG{Dec-KeyExp},
 because
- (few) invocations of the latter 
-are usually amortised by 
-(many) invocations of the former.
+typically many \ALG{Enc} or \ALG{Dec} operations are performed per
+\ALG{KeyExp}.
 For a $32$-bit core, our conclusion is that
 \ISE{3} 
-is the best option;
-for a $64$-bit core,
+is the best option.
+Despite not being the fastest (by a small margin), it is the most efficient,
+and simplest to implement.
+The area optimised \ISE{2} implementation sometimes comes close in
+efficiency, but requires a more complex multi-cycle implementation
+in this case.
+For a $64$-bit core,
 \ISE{4} 
 is the best option, which is somewhat obvious because it specifically makes
 use of the wider data-path.
@@ -54,6 +59,18 @@ This fact stems from use of the ROCC interface, in that forwarding of the
 result from an ISE instruction (that uses the ROCC) incurs an overhead vs. 
 an ISE instruction; fine-grained integration of the AES-FU could therefore
 incrementally improve the results.
+
+We believe it is sensible to standardise different ISEs for the
+RV32 and RV64 base ISAs.
+This allows each ISE design to better suite the constraints of each
+base ISA.
+In the RV32 case, this acknowledges that such cores will most often
+appear in resource constrained, embedded or IoT class devices.
+Hence, the most efficient ISE design is appropriate.
+For nessesarily larger RV64 based designs, it makes sense to take advantage
+of the wider data-path, and acknowledge that these are more likely to
+be application class cores. Hence, they will place a higher value
+on performance than area-efficiency.
 
 % -----------------------------------------------------------------------------
 

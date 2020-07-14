@@ -9,26 +9,26 @@ In specific terms, our contributions are as follows:
 
 \item In 
       \REFSEC{sec:bg}
-      we capture some background, including a limited form of
+      we capture some background, including a limited
       Systematisation of Knowledge (SoK)
-      wrt. ISEs for AES.
+      for AES ISEs.
 
 \item In 
       \REFSEC{sec:ise}
       we implement and evaluate five different ISEs for AES on two different 
-      RISC-V compliant base micro-architectures.
-      As well as exploring existing ISE designs, 
-      \REFSEC{sec:ise:design:v5}
-      introduces what is, to the best of our knowledge, a novel ISE design 
-      that leverages a quadrant-packed representation of the state.
+      RISC-V CPU cores.
+      We exploring existing ISE designs, 
+      and introduces what is, to the best of our knowledge, a novel ISE design
+      in  \REFSEC{sec:ise:design:v5}
+      that uses a quadrant-packed state representation.
 
 \item In
       \REFSEC{sec:gcm}
       we evaluate how the
-      standard 
-      B 
+      proposed standard 
+      Bit-manipulation
       extension~\cite[Section 21]{RV:ISA:I:19}
-      to RISC-V can be harnessed for efficient implementation of AES-GCM.
+      to RISC-V can be used to efficiently implement AES-GCM.
 
 \item In
       \REFSEC{sec:sca}
@@ -41,9 +41,9 @@ In specific terms, our contributions are as follows:
 
 \noindent
 On one hand, 
-RISC-V represents an excellent vehicle for such work:
-extensibility is a by-design feature in the ISA, whose open nature renders
-exploration of such extensions easier by virtue of the range of associated 
+RISC-V represents an excellent target for such work:
+The ISA is extensible by design and its open nature makes
+exploration of extensions easier through the availability of
 (often open-source) implementations.  
 Increased commercial deployment of such implementations suggests that work 
 on RISC-V is timely and potentially of high impact.

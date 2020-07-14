@@ -1,26 +1,24 @@
 % =============================================================================
 
 In a software-only implementation,
-execution of 
-both
-AES         functionality
+execution
+AES
 and
-application functionality (i.e., whatever uses AES)
+the associated application program
 is 
 performed by 
-a general-purpose processor core, using features native to the associated base ISA.
+a general-purpose processor core, using only instructions in the base ISA.
 Since we only consider use of the RISC-V scalar base ISA, we exclude work on
 the use of vector-like extensions~\cite{Hamburg:09}.
 
-Although not our focus per se, associated techniques are important because, 
-e.g., many ISEs target specific feature(s) within a baseline software-only 
-implementation.
+Software-only techniques are important because 
+many ISEs are evaluated against baseline ISA implementaitons.
 Work such as that of
 Bernstein and Schwabe~\cite{BerSch:08},
 Osvik et al.~\cite{OBSC:10},
 and
 Schwabe and Stoffelen~\cite{SchSto:16}
-present and compare a range of techniques across a range of platforms, but,
+present and compare a multiple techniques across a range of platforms, but,
 for completeness, we present a (limited) survey in what follows.
 
 % -----------------------------------------------------------------------------
@@ -40,36 +38,29 @@ Following~\cite[Section 4.1]{DaeRij:02}, for example, the idea is to simply
    then
 2) construct a round implementation by following the algorithmic description
    of each round function in a direct manner.
-Addition in $\F_{2^8}$ can be realised using a native XOR instruction; this
-native support is seldom afforded to multiplication and inversion, however.
-As such, it is common to pre-compute the \ALG{S-box} and/or \AESFUNC{xtime} 
-functions:
-doing so demands pre-computation and storage of a
+Addition in $\F_{2^8}$ can be implemented with a base ISA XOR instruction.
+Base ISA support is rarely present for multiplication and inversion in
+$\F_{2^8}$ however.
+Hence it is common to pre-compute the \ALG{S-box} and/or \AESFUNC{xtime} 
+functions.
+This requires pre-computation and storage of a
 $
 \SI{256}{\byte}
 $
 look-up table per function, but significantly reduces execution latency.
 
-On platforms where $w = 32$,
+On platforms where $R = 32$,
 Bertoni et al.~\cite{BBFMM:02}
-further improve execution latency by exploiting the wider data-path.  Their
-idea is to
-1) adopt a 
-      row-packed
-   representation of state and round key matrices,
-2) implement
-   \AESFUNC{ShiftRows}
-   by using native rotation instructions to act on the packed
-   rows,
-3) implement
-   \AESFUNC{MixColumns}
-   by harnessing the SIMD Within A Register (SWAR) paradigm:
-   by applying
-   \AESFUNC{xtime}
-   across a packed row in parallel,
-   a carefully organised scheme for efficient evaluation of
-   \AESFUNC{MixColumns}
-   can be constructed.
+improve execution latency by exploiting the wider data-path.
+They adopt a row-packed representation of state and round key matrices,
+implementing
+\AESFUNC{ShiftRows}
+using native rotation instructions to act on the packed rows.
+\AESFUNC{MixColumns} is implemented
+using the SIMD Within A Register (SWAR) paradigm:
+applying
+\AESFUNC{xtime}
+across a packed row in parallel.
 
 % -----------------------------------------------------------------------------
 
@@ -77,17 +68,17 @@ idea is to
 
 A  table-oriented implementation of AES favours
 offline pre-computation,
-thus reducing 
+reducing 
 latency
-at the cost of increased 
+but increasing the
 memory footprint.
-The archetypal example of this technique is use of so-called
-T-tables~\cite[Section 4.2]{DaeRij:02}.
-In short, doing so means
-1) adopting a 
-   column-packed
-   representation of state and round key matrices,
-2) pre-computing
+The main example of this technique is the so-called
+T-tables~\cite[Section 4.2]{DaeRij:02} method.
+This involves
+adopting a 
+column-packed
+representation of state and round key matrices and
+pre-computing
    $
    \AESFUNC{MixColumn} \circ \AESFUNC{SubBytes}
    $
@@ -142,39 +133,39 @@ In short, doing so means
    where extraction of elements caters for \AESFUNC{ShiftRows}, then XOR'ing 
    the $j$-th column of $\AESRND{rk}{r}$ to cater for \AESFUNC{AddRoundKey}.
 
-As such, each round amounts to a sequence of look-ups into $T_i$, plus XORs 
-to combine their result; 
-doing so demands pre-computation and storage of a
+As such, each round becomes a sequence of look-ups into $T_i$, plus XORs 
+to combine their result.
+Doing so demands pre-computation and storage of a
 $
 256 \cdot \SI{4}{\byte} = \SI{1}{\kilo\byte}
 $
 look-up table per $T_i$.
-However, note that the overhead related to extraction of each element from 
+The overhead related to extraction of each element from 
 packed columns representing $\AESRND{s}{r}$ 
 (to form look-table offsets) 
-is not insignificant:
+can be significant:
 Fiskiran and Lee~\cite{FisLee:01}
 analyse the impact of different addressing modes on this issue, with
 Stoffelen~\cite[Section 3.1]{Stoffelen:19}
-concluding that RISC-V is (relatively) ill-equipped to reduce said overhead,
-due to the provision of a (relatively) sparse set of addressing modes.
+concluding that RISC-V is ill-equipped to reduce said overhead,
+due to the provision of a sparse set of addressing modes.
 
 % -----------------------------------------------------------------------------
 
 \paragraph{Bit-sliced.}
 
-The term bit-slicing refers to an implementation technique due to
+The term bit-slicing is an implementation technique due to
 Biham~\cite{Biham:97},
 which constitutes
 
 \begin{enumerate}
 \item a non-standard {\em representation}
-      of data:
-      each $w$-bit word $x$ is transformed into $\REP{x}$,
+      of data where
+      each $R$-bit word $x$ is transformed into $\REP{x}$,
       i.e.,
-      $w$ slices, say $\REP{x}[ i ]$ for
+      $R$ slices, say $\REP{x}[ i ]$ for
       $
-      0 \leq i < w ,
+      0 \leq i < R ,
       $
       where $\REP{x}[ i ]_j = x_i$ for some $j$,
       and
@@ -184,7 +175,7 @@ which constitutes
       $
           {r} =     {f}(     {x} )
       $
-      must be transformed into ``software circuit'' $\REP{f}$,
+      must be transformed into a ``software circuit'' $\REP{f}$,
       i.e.,
       a sequence of Boolean instructions acting on the slices st.
       $
@@ -193,20 +184,19 @@ which constitutes
 \end{enumerate}
 
 \noindent
-Using it introduces some overhead related to conversion of $x$ into
+Bit-slicing introduces some overhead related to conversion of $x$ into
 $\REP{x}$ and $\REP{r}$ into $r$, plus the (relative) inefficiency
-of $\REP{f}$ vs. $f$ (wrt. latency and footprint).
-Crucially, however, if each slice is itself a $w$-bit word, then it
-is possible to compute $w$ instances of $\REP{f}$ in {\em parallel}
+of $\REP{f}$ vs. $f$ wrt. latency and footprint.
+However, if each slice is itself a $R$-bit word, then it
+is possible to compute $R$ instances of $\REP{f}$ in {\em parallel}
 on suitably packed $\REP{x}$.
 A common analogy is that of bit-slicing transforming the 
-$w$-bit, $1$-way scalar processor 
+$R$-bit, $1$-way scalar processor 
 into a 
-$1$-bit, $w$-way SIMD   processor, 
-thus yielding (or recouping) up to a $w$-fold improvement in latency.
+$1$-bit, $R$-way SIMD   processor, 
+thus giving (or recouping) up to a $R$-fold improvement in latency.
 
-As evidenced by various work
-(see, e.g., \cite{MatNak:07,Konighofer:08,KasSch:09}),
+As evidenced by \cite{MatNak:07,Konighofer:08} and \cite{KasSch:09},
 the application of bit-slicing to AES can be very effective;
 Stoffelen~\cite[Section 3.1]{Stoffelen:19}
 specifically investigates this fact within the context of RISC-V.

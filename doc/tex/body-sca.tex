@@ -6,7 +6,8 @@ Differential Power Analysis (DPA) attacks on cryptographic implementations
 While ISEs give a notable increase in efficiency, they can also create
 attractive targets for DPA attacks.
 This stems from there being only one way to sensibly implement
-AES using the ISE, thus reducing the number of target variables or
+AES using the ISE and the ISE having very well defined behaviour.
+This reduces the number of target variables or
 implementation choices an attacker needs to consider.
 It is then important to consider how an implementer might
 further extend a cryptographic ISE to secure it against DPA attacks.
@@ -25,11 +26,11 @@ We base our design on Boolean-masking, and represent the secret
 key as two Boolean masked shares.
 
 An implementation of the AES block encrypt/decrypt function 
-using \ISE{3} requires eight registers:
-four for the current round state,
-four to load the next round key into
+using \ISE{3} requires eight $\GPR$s:
+four for the current round state and
+four to load the next round key
 and
-then accumulate the next round state.
+then accumulate the next round state into.
 See \REFFIG{fig:v3:round} for an AES round function implementation
 using \ISE{3}
 Storing shares of each secret variable
@@ -72,26 +73,26 @@ Executing an {\tt lm} instruction such that {\tt rd} does not map to
 a mask register raises an illegal opcode exception.
 Likewise for {\tt sm} and {\tt rs2}.
 
-When an ISE instruction is executed and its GPR source
-registers map to an MRF register, both the GPRs and MRF are
+When an ISE instruction is executed and its $\GPR$source
+registers map to an MRF register, both the $\GPR$s and MRF are
 read simultaneously and fed to the AES functional unit.
-If any GPR source does not map to an MRF register, we assume that
+If any $\GPR$ source does not map to an MRF register, we assume that
 operand is un-masked and represent the other share as $0$.
 
-Within the AES-FU the instruction result is computed entirely in it's
+Within the AES-FU the instruction result is computed entirely in a
 masked representation.
 The result shares are then re-masked before being written back to the
-GPRs and MRF.
+$\GPR$s and MRF.
 This is necessary, because \ISE{3} instructions are designed
 such that {\tt rs1=rd} for all use cases.
 Without re-masking, overwriting a source with the result could cause 
 $1$'st order hamming-distance leakage.
 
-If the destination GPR has a corresponding
-mask register, share $0$ is stored in the GPRs and share $1$ in the MRF.
-If the destination GPR does not map to a mask register, the result is written
-to the GPR un-masked.
-This means that in the final encrypt/decrypt round, we can obtain
+If the destination $\GPR$ has a corresponding
+mask register, share $0$ is stored in the $\GPR$s and share $1$ in the MRF.
+If the destination $\GPR$ does not map to a mask register, the result is
+written to the GPR un-masked.
+This means that in the final encrypt/decrypt round, we can optionally obtain
 the un-masked results without having to store the shares to memory,
 load them back and un-mask them.
 
@@ -103,7 +104,7 @@ implementation of \ISE{3}.
 made to the core, and which data-paths carry masked data.
 To avoid accidental un-masking of the two shares,
 Share $1$ is stored in {\em bit-reversed} form in the MRF and pipeline
-stage registers.
+registers.
 This means that any accidental multiplexing between pipeline operand
 registers causes toggles between non-corresponding bits of each share.
 Share $1$ is only un-reversed immediately prior to entering the

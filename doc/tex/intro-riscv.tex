@@ -4,12 +4,12 @@
 \label{sec:bg:riscv}
 
 RISC-V is a (relatively) new ISA, with academic origins~\cite{riscv:1,riscv:2}.
-Unlike alternatives such as x86 or ARMv8-A, RISC-V is a free to use, 
-open standard: this is managed by the independent
-RISC-V International Foundation.
+Unlike x86 or ARMv8-A, RISC-V is a free to use 
+open standard, managed by the independent RISC-V International Foundation.
 The base ISA is extremely simple, consisting of only $50$ instructions,
-and adopts {\em strongly} RISC-oriented design principles.  However, it
-is also highly modular: a general-purpose base ISA can (optionally) be
+and adopts {\em strongly} RISC-oriented design principles.
+RISC-V is also highly modular, having been {\em designed to be extended}.
+The general-purpose base ISA can (optionally) be
 supplemented using sets of special-purpose, standard or non-standard
 extensions to
 support additional functionality 
@@ -33,27 +33,20 @@ Group\footnote{
 } provides some specific context for this paper, through their remit to 
 develop scalar and vector extensions to support cryptography.
 
-We focus wlog. on extending either
+RISC-V uses $32$ general purpose registers
+denoted $\GPR[*][ i ]$, for $0 \leq i < 32$,
+and uses \RVXLEN to denote the register bit-width of the base ISA.
+Note that 
+$
+\GPR[*][ 0 ]
+$
+is fixed to $0$.
+We focus on extending the
 RV32I~\cite[Section 2]{RV:ISA:I:19}
-or
+and 
 RV64I~\cite[Section 5]{RV:ISA:I:19},
-i.e., the
-$32$-bit 
-or
-$64$-bit 
-integer RISC-V base ISA.
-Let $\GPR[*][ i ]$, for $0 \leq i < 32$, denote the $i$-th entry of the 
-General-Purpose Register (GPR) file.  Note that 
-$
-\GPR[*][ 0 ] = 0 ,
-$
-meaning the $0$-th register is fixed to $0$.
-RISC-V uses \RVXLEN to denote the word size; we adopt the same approach, 
-but by focusing on 
-RV32I 
-or
-RV64I 
-assume a focus on 
+integer RISC-V base ISA
+and hence focus on systems where 
 $\RVXLEN = 32$
 or
 $\RVXLEN = 64$.

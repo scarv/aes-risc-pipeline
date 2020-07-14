@@ -1,50 +1,47 @@
 % =============================================================================
 
-Although the security of AES against a cryptanalytic attack is defined by
-the design, and so out of scope, the concept of implementation attacks is
+While the security of AES against a cryptanalytic attack is defined by
+the design, and so out of scope, implementation attacks are
 of central importance.
-In essence, an implementation attack focuses on
-the concrete, in practice implementation
-rather than
-the abstract, on paper     specification:
-fundamentally, this suggests countermeasures against such attacks must be
-considered alongside the implementation they relate to.
-Since AES is an important target, a significant body of literature exists
-wrt. implementation attacks on it: this includes both
+An implementation attack focuses on the concrete instance of a construct
+rather than the abstract specification.
+Countermeasures against such attacks must therefore be
+considered alongside implementations they relate to.
+As AES is an important target, a significant body of literature exists
+around implementation attacks on it, including both
  active (e.g., fault injection)
 or
 passive (i.e., side-channel monitoring),
-attack techniques,
-with the latter sub-divided into those dependent on
+attack techniques.
+The latter can be sub-divided into those dependent on
 analogue,
-e.g., power-based~\cite{ManOswPop:07},
+(power-based~\cite{ManOswPop:07}),
 or
 discrete, 
-e.g.,  time-based~\cite{KoeQui:99},
+(time-based~\cite{KoeQui:99}),
 leakage.
 
-From a positive perspective, use of ISEs
+Use of ISEs
 {\em can} provide some inherent protection against certain attacks.
 For example,
-ISEs typically yield constant (i.e., data-oblivious) execution latency,
-so prevent some classes of time- or micro-architectural
+ISEs typically yield constant time execution,
+preventing some classes of timing or micro-architectural
 attack techniques.
 (See ~\cite[Section 4]{Szefer:19} and ~\cite[Section 4]{GYCH:18})
-From a negative perspective however,
-use of ISEs presents some unique challenges.
+Unfortunatly,
+use of ISEs also presents some unique challenges.
 For example, 
 Saab et al.\cite{SaaRohHam:16}
-discuss power-based attacks on ISEs, AES-NI specifically; concluding
-that naive use of AES-NI will yield exploitable leakage.  Mitigation of
-such leakage demands the ISE is flexible enough to 
-a) cater for instances where the leakage stems from ``inside'' the ISE,
-   and, either way,
-b) compose with an appropriate
-   countermeasure.
+discuss power-based attacks on AES-NI; concluding
+that naive use of AES-NI yields exploitable information leakage.
+Mitigation of such leakage demands the ISE
+address instances where the leakage stems from ``inside'' the ISE,
+and compose with appropriate countermeasures.
    (e.g., hiding~\cite[Chapter 7]{ManOswPop:07} or masking~\cite[Chapter 10]{ManOswPop:07})
 Tillich et al.~\cite{TilHerMan:07}
-consider this problem to some extent, including an ISE-based option in
+consider this problem to an extent, including an ISE-based option in
 their investigation of hardened AES implementations, but the challenge
 of developing suitable ISEs is under-studied in general.
+We investigate this further in \REFSEC{sec:sca}.
 
 % =============================================================================

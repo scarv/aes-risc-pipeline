@@ -1,18 +1,19 @@
 % =============================================================================
 
-In what follows, we survey AES-related ISE designs split into
+Here, we survey AES-related ISE designs split into
 1) industry-specified ISEs,
    which are {\em     standard} extensions,
    and
 2) academia-specified ISEs,
    which are {\em non-standard} extensions,
-wrt. a given base ISA; each ISE is classified as either
-   kernel-specific,
+wrt. a given base ISA.
+   Each ISE is classified as either
+   workload-specific,
    if it is only useful for AES,
    or
-   kernel-agnostic,
-   if it is      useful for AES plus other kernels.
-Note that we exclude work where an ISE for another kernel can be applied 
+   workload-agnostic,
+   if it is      useful for AES and other workloads.
+Note that we exclude work where an ISE for another workload can be applied 
 {\em  to} AES
 but was not designed 
 {\em for} AES
@@ -36,7 +37,7 @@ but was not designed
       depending on the (e.g., XMM- vs. AVX-based) variant,
       and operate on data housed in the pre-existing
       vector 
-      register file, implying $w = 128$.
+      register file, implying $R = 128$.
       AES is implemented by
       1) adopting a 
           fully-packed
@@ -73,7 +74,7 @@ but was not designed
       format,
       and operate on data housed in the pre-existing
       vector 
-      register file, implying $w = 128$.
+      register file, implying $R = 128$.
       AES is implemented by
       1) adopting a 
           fully-packed
@@ -108,7 +109,7 @@ but was not designed
       format,
       and operate on data housed in the pre-existing
       vector 
-      register file, implying $w = 128$.
+      register file, implying $R = 128$.
       AES is implemented by
       1) adopting a 
           fully-packed
@@ -122,9 +123,9 @@ but was not designed
          \[
          \VERB{AESMC} \circ \VERB{AESE} \mapsto \AESFUNC{MixColumns} \circ ( \AESFUNC{SubBytes} \circ \AESFUNC{ShiftRows} \circ \AESFUNC{AddRoundKey} ) ,
          \]
-         where the alternative round definition from 
-         \REFSEC{sec:bg:aes_spec} 
-         is assumed to cater for the order of application.
+%         where the alternative round definition from 
+%         \REFSEC{sec:bg:aes_spec} 
+%         is assumed to cater for the order of application.
 %     Note that
 %     additional instructions are provided to 
 %     support
@@ -147,7 +148,7 @@ but was not designed
       format,
       and operate on data housed in the pre-existing
       general-purpose
-      register file, implying $w =  64$.
+      register file, implying $R =  64$.
       AES is implemented by
       1) using a 
          column-packed
@@ -194,11 +195,11 @@ but was not designed
 
 \begin{itemize}
 
-% kernel-agnostic
+% workload-agnostic
 
 \item Burke et al.~\cite{BurMcDAus:00}
       propose 
-      a kernel-agnostic ISE
+      a workload-agnostic ISE
       based on workload characterisation.
       Per~\cite{BurMcDAus:00}, pertinent examples
       for AES
@@ -218,7 +219,7 @@ but was not designed
 
 \item Fiskiran and Lee~\cite{FisLee:05}
       propose 
-      a kernel-agnostic ISE
+      a workload-agnostic ISE
       that employs a so-called
       Parallel Table Lookup Module (PTLU).
       For AES, 
@@ -235,7 +236,7 @@ but was not designed
       and
       Grabher et al.~\cite{GraGroPag:08}
       explore  (in practice)
-      a kernel-agnostic ISE
+      a workload-agnostic ISE
       that supports bit-sliced implementations.  The ISE allows the
       configuration of and computation using 
       {\em configurable} $4$-input, $2$-output 
@@ -246,11 +247,11 @@ but was not designed
       Doing so improves both latency and footprint.
       \cite[Section 4]{GraGroPag:08} details the application to AES.
 
-% kernel-specific
+% workload-specific
 
 \item Nadehara et al.~\cite{NadIkeKur:04} 
       propose 
-      a kernel-specific ISE
+      a workload-specific ISE
        that could be described as 
       ``hardware-assisted T-tables'':
       observing that $\forall x, i \neq j$, $T_i[ x ]$ is a rotation of
@@ -268,12 +269,12 @@ but was not designed
          and
       3) store   the output element into a
          packed output column.
-      This approach was rediscovered by Saarinen~\cite{Saarinen:20}, set 
+      This approach was reapplied by Saarinen~\cite{Saarinen:20}
       within the context of RISC-V.
 
 \item Tillich et al.~\cite{TilGroSze:05}
       propose 
-      a kernel-specific ISE
+      a workload-specific ISE
        that could be described as 
       ``hardware-assisted S-box''.
       The ISE constitutes a single instruction
@@ -291,7 +292,7 @@ but was not designed
 
 \item Bertoni et al.~\cite{BBFR:06}
       propose 
-      a kernel-specific ISE
+      a workload-specific ISE
        that could be described as 
       ``hardware-assisted round functions''.
       Per~\cite[Section 4]{BBFR:06}, the ISE includes
@@ -302,7 +303,7 @@ but was not designed
       
 \item Tillich and Gro{\ss}sch\"{a}dl~\cite{TilGro:06}
       propose 
-      a kernel-specific ISE
+      a workload-specific ISE
        that could be described as 
       ``hardware-assisted round functions''.
       Per~\cite[Section 4]{TilGro:06}, the ISE includes

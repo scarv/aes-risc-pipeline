@@ -1,7 +1,7 @@
 % =============================================================================
 
 \REFSEC{sec:bg:aes_impl_ise}
-outlined a range of ISE designs, which constitute a large design space of
+outlined a range of ISE designs, demonstrating a large design space of
 options that we {\em could} consider.  To narrow the design space into
 those we {\em do} consider, we use the requirements outlined below:
 
@@ -12,27 +12,27 @@ The ISE must support
 2) {\em all} parameter sets, i.e., AES-128, AES-192, and AES-256.
 Support for 
 auxiliary operations, e.g., key schedule, 
-are deemed an advantage but not a requirement per se.
+are an advantage but not a requirement.
 \end{requirement}
 
 \begin{requirement}\label{req:2}
-The ISE must align with the wider RISC-V ethos and design principles.
-Foremost, this means it should 
-1) favour simple building-block operations,
-   and
-2) permit an instruction format with at most $2$ source and $1$ destination register address,
-   and therefore avoid demanding a general-purpose register file with more than $2$ read or
-   $1$ write port.
+The ISE must align with the wider RISC-V design principles.
+This means it should 
+favour simple building-block operations,
+and
+use instruction encodings with at most
+$2$ source registers and
+$1$ destination register.
+This avoids the cost of a general-purpose register file with more than $2$
+read ports or $1$ write port.
 \end{requirement}
 
 \begin{requirement}\label{req:3}
-The ISE must operate on 
+The ISE must use
 the RISC-V general-purpose scalar register file 
-(i.e., st. $w \in \SET{ 32, 64 }$),
-vs. 
-any                        vector register file
-(e.g., $w \ge 128$):
-this requirement excludes the majority of standard ISEs outlined in 
+to store operands and results, rather than
+any vector register file.
+This requirement excludes the majority of standard ISEs outlined in 
 \REFSEC{sec:bg:aes_impl_ise}.
 \end{requirement}
 
@@ -45,8 +45,8 @@ special-purpose micro-architectural state
 \end{requirement}
 
 \begin{requirement}\label{req:5}
-The ISE must afford data-oblivious execution of AES, and so prevent 
-side-channel attacks based on execution time 
+The ISE must enable data-oblivious execution of AES, preventing
+timing attacks based on execution latency
 (e.g., stemming from accesses to a pre-computed S-box).
 \end{requirement}
 
@@ -56,7 +56,7 @@ per area required: this balances the value in {\em both} metrics, vs. an
 exclusive preference for one or the other.
 Efficiency wrt. 
 auxiliary metrics, e.g., memory footprint or instruction encoding points,
-are deemed an advantage but not a requirement per se.
+are deemed an advantage but not a requirement.
 \end{requirement}
 
 \noindent
@@ -73,14 +73,14 @@ alternatives.
 
 We arrive at five ISE variants using the requirements, the description of 
 which is split into
-1) an 
-   intuitive 
-   description in one of the following \SEC[s],
-   plus
-2) a
-   technical
-   description
-   (e.g., a list of instructions and their semantics)
-   in an associated \APPX.
+an 
+intuitive 
+description in one of the following \SEC[s]
+and
+a
+technical
+description
+(e.g., a list of instructions and their semantics)
+in an associated \APPX.
 
 % =============================================================================
