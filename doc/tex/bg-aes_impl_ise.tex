@@ -21,11 +21,9 @@ but was not designed
 
 % =============================================================================
 
-\paragraph    {Standard, industry-specified ISEs.}
+\subsubsection{Standard, industry-specified ISEs.}
 
-\begin{itemize}
-
-\item Intel 
+\paragraph{Intel}
       introduced support for AES in 
       x86
       per~\cite[Section 12.13]{X86:1:18}.
@@ -65,7 +63,7 @@ but was not designed
 %            and
 %            \VERB{AESIMC}         ~\cite[Page 3-58]{X86:2:18}).
 
-\item IBM
+\paragraph {IBM}
       introduced support for AES in 
       POWER
       per~\cite[Section 6.11.1]{POWER:18}.
@@ -100,7 +98,7 @@ but was not designed
 %     key expansion
 %     (i.e., \VERB{vsbox}       ~\cite[Page 305]{POWER:18}).
 
-\item ARM
+\paragraph{ARM}
       introduced support for AES in 
       ARMv8-A
       per~\cite[Section A2.3]{ARMv8-A:20}.
@@ -139,7 +137,7 @@ but was not designed
 %     \VERB{AESE} obviously lacks \AESFUNC{MixColumns}, and the post-whitening 
 %     step is naturally supported via XOR. 
 
-\item Oracle
+\paragraph{Oracle}
       introduced support for AES in 
       SPARC 
       per~\cite[Sections 7.3+7.4]{SPARC:16}.
@@ -187,17 +185,13 @@ but was not designed
 %            and
 %            \VERB{AES_KEXPAND2}     ~\cite[Page 112]{SPARC:16}).
 
-\end{itemize}
-
 % -----------------------------------------------------------------------------
 
-\paragraph{Non-standard, academia-specified ISEs.}
-
-\begin{itemize}
+\subsubsection{Non-standard, academia-specified ISEs.}
 
 % workload-agnostic
 
-\item Burke et al.~\cite{BurMcDAus:00}
+      Burke et al.~\cite{BurMcDAus:00}
       propose 
       a workload-agnostic ISE
       based on workload characterisation.
@@ -217,7 +211,7 @@ but was not designed
          the resulting memory accesses are supported by a
          set of special-purpose ``S-box caches''.
 
-\item Fiskiran and Lee~\cite{FisLee:05}
+      Fiskiran and Lee~\cite{FisLee:05}
       propose 
       a workload-agnostic ISE
       that employs a so-called
@@ -231,7 +225,7 @@ but was not designed
       b) performs the associated table look-ups in parallel, supported by
          a dedicated scratch-pad memory.
 
-\item Biham et al.~\cite[Page 232]{BihAndKnu:98}
+      Biham et al.~\cite[Page 232]{BihAndKnu:98}
       propose (in theory)
       and
       Grabher et al.~\cite{GraGroPag:08}
@@ -249,7 +243,7 @@ but was not designed
 
 % workload-specific
 
-\item Nadehara et al.~\cite{NadIkeKur:04} 
+      Nadehara et al.~\cite{NadIkeKur:04} 
       propose 
       a workload-specific ISE
        that could be described as 
@@ -272,7 +266,7 @@ but was not designed
       This approach was reapplied by Saarinen~\cite{Saarinen:20}
       within the context of RISC-V.
 
-\item Tillich et al.~\cite{TilGroSze:05}
+      Tillich et al.~\cite{TilGroSze:05}
       propose 
       a workload-specific ISE
        that could be described as 
@@ -290,7 +284,7 @@ but was not designed
          By using insert vs. overwrite semantics, allow 
          a zero-overhead implementation of \AESFUNC{ShiftRows} to be realised.
 
-\item Bertoni et al.~\cite{BBFR:06}
+      Bertoni et al.~\cite{BBFR:06}
       propose 
       a workload-specific ISE
        that could be described as 
@@ -301,7 +295,7 @@ but was not designed
       b) byte- and word-oriented variants of
          $\VERB{SMix} \mapsto \AESFUNC{MixColumn} \circ \AESFUNC{SubBytes}$.
       
-\item Tillich and Gro{\ss}sch\"{a}dl~\cite{TilGro:06}
+      Tillich and Gro{\ss}sch\"{a}dl~\cite{TilGro:06}
       propose 
       a workload-specific ISE
        that could be described as 
@@ -315,6 +309,5 @@ but was not designed
       the most efficient variant allows
          a zero-overhead implementation of \AESFUNC{ShiftRows} to be realised.
 
-\end{itemize}
 
 % =============================================================================
