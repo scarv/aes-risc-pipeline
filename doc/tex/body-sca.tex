@@ -1,5 +1,5 @@
 
-In embedded, IoT class devices to which an attacker may have
+In embedded IoT class devices to which an attacker may have
 physical access,
 Differential Power Analysis (DPA) attacks on cryptographic implementations
 \cite{KJJ:99} can be devastating.
@@ -8,7 +8,7 @@ attractive targets for DPA attacks.
 This stems from there being only one way to sensibly implement
 AES using the ISE and the ISE having very well defined behaviour.
 This reduces the number of target variables or
-implementation choices an attacker needs to consider.
+implementation styles an attacker needs to consider.
 It is then important to consider how an implementer might
 further extend a cryptographic ISE to secure it against DPA attacks.
 While our focus here is on DPA attacks, we note that Differential
@@ -22,7 +22,7 @@ resistance.
 
 \subsection{Design}
 
-We base our design on boolean masking, and represent the secret
+We based our design on boolean masking, and represent the secret
 key as two Boolean masked shares.
 
 An implementation of the AES block encrypt/decrypt function 
@@ -34,7 +34,7 @@ then accumulate the next round state.
 See \REFFIG{fig:v3:round} for an AES round function implementation
 using \ISE{3}.
 Storing shares of each secret variable
-in the General Purpose Register (GPR) file is un-reasonable,
+in the General Purpose Register (GPR) file is unreasonable,
 requiring drastic modifications to the instruction definitions and
 register file to read four registers (two sources, of two shares each) and
 write two registers.
@@ -45,7 +45,7 @@ careless instruction use, or implicit register accesses by the
 CPU micro-architecture.
 
 Instead, we define a new, $8$-element ``Mask Register File'' (MRF).
-Each mask register $M_i$ is $w=32$-bits wide, and stores the mask for
+Each mask register $M_i$ is $R=32$-bits wide, and stores the mask for
 one of the GPRs.
 We use a fixed mapping between GPRs and mask registers;
 not all GPRs have a corresponding mask register.
@@ -161,7 +161,8 @@ The peaks at the beginning and end of \REFFIG{fig:sca:protected}
 are caused by the unmasked block input and output data being loaded/stored.
 
 \REFTAB{tab:sca:sw-hw} shows the hardware and software overheads.
-The ISE Size/LTP rows are inclusive of the S-box Size/LTP rows.
+The ISE Size/Circuit Depth rows are inclusive of the S-box Size/Circuit
+Depth rows.
 Likewise, the CPU Size rows are inclusive of the ISE Size rows.
 The static code size and instruction count overheads are
 $\approx 20\%$: considerably less than a non-ISE-based software masking
@@ -185,9 +186,9 @@ Instructions Executed           & 238         & 287    & $1.21\times$   \\
 CPU Clock Cycles                & 291         & 331    & $1.14\times$   \\
 \hline
 S-box Size (NAND2 Equivalent)   & 554         & 3245   & $5.86\times$   \\
-S-box circuit depth             & 19          & 22     & $1.16\times$   \\
+S-box Circuit Depth             & 19          & 22     & $1.16\times$   \\
 ISE Size (NAND2 Equivalent)     & 1157        & 4616   & $3.99\times$   \\
-ISE circuit depth               & 30          & 37     & $1.23\times$   \\
+ISE Circuit Depth               & 30          & 37     & $1.23\times$   \\
 CPU Size (NAND2 Equivalent)     & 38610       & 45141  & $1.16\times$   \\
 CPU Size  LUTs                  & 4017        & 4956   & $1.23\times$   \\
 CPU Size  FFs                   & 2078        & 2420   & $1.16\times$   \\

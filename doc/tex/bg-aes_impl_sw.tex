@@ -1,8 +1,7 @@
 % =============================================================================
 
 In a software-only implementation,
-execution
-AES
+execution of AES
 and
 the associated application program
 is 
@@ -187,10 +186,10 @@ which constitutes
 Bit-slicing introduces some overhead related to conversion of $x$ into
 $\REP{x}$ and $\REP{r}$ into $r$, plus the (relative) inefficiency
 of $\REP{f}$ vs. $f$ wrt. latency and footprint.
-However, if each slice is itself a $R$-bit word, then it
+However, if each slice is itself an $R$-bit word, then it
 is possible to compute $R$ instances of $\REP{f}$ in {\em parallel}
 on suitably packed $\REP{x}$.
-A common analogy is that of bit-slicing transforming the 
+A common analogy is that of transforming the 
 $R$-bit, $1$-way scalar processor 
 into a 
 $1$-bit, $R$-way SIMD   processor, 

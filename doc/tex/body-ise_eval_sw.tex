@@ -7,21 +7,21 @@ $\ALG{Dec}$
 $\ALG{Enc-KeyExp}$
 and
 $\ALG{Dec-KeyExp}$.
-We use a {\em non}-ISE 
+We used a {\em non}-ISE 
 T-table based
 implementation as a baseline.
 The variants which assume  $\RVXLEN = 32$
 (\ISE{1}, \ISE{2},     \ISE{3}, and \ISE{5})
-use a    rolled strategy wrt. loops:
+used a    rolled strategy wrt. loops:
  \ISE{1}, \ISE{2},              and \ISE{5}
-use  $1$ round  per iteration,
+used  $1$ round  per iteration,
 whereas
                        \ISE{3}
-uses $2$ rounds per iteration
+used $2$ rounds per iteration
 to avoid needless register move operations.
 The variant  which assumes $\RVXLEN = 64$
 (\ISE{4})
-uses an unrolled strategy.
+used an unrolled strategy.
 In all cases the state is naturally aligned,\footnote{%
 RISC-V does not mandate support for misaligned loads and stores, so
 aligning the state this way ensures the best performance across all

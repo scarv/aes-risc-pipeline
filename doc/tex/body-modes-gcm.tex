@@ -136,7 +136,7 @@ latency of
 \VERB{clmul[h]}
 vs.
 \VERB{xor} and \VERB{s[lr]li}.
-\VERB{clmul[h]}
+Note that the entire \ALG{GHASH} operation, including \VERB{clmul[h]},
 {\em must} exhibit data-oblivious execution latency 
 (e.g., avoid data-dependent optimisations like early-termination)
 to avoid associated side-channel attacks (cf.~\cite{GOPT:09}).
