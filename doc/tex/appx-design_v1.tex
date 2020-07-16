@@ -37,19 +37,35 @@ lw           a0,  0(a4)       // Load Round Key
 lw           a1,  4(a4)
 lw           a2,  8(a4)
 lw           a3, 12(a4)
-xor          t0, t0, a0       // Add Round Key
-xor          t1, t1, a1
-xor          t2, t2, a2
-xor          t3, t3, a3
-saes.v1.encs a0, t0           // SubBytes
-saes.v1.encs a1, t1
-saes.v1.encs a2, t2
-saes.v1.encs a3, t3
-// Shift rows omitted - 31 Base ISE shift / or instructions.
-saes.v1.encm t0, t0           // MixColumns
-saes.v1.encm t1, t1
-saes.v1.encm t2, t2
-saes.v1.encm t3, t3
+xor          a4, a4, a0       // Add Round Key
+xor          a5, a5, a1
+xor          a6, a6, a2
+xor          a7, a7, a3
+saes.v1.encs a0, a4           // SubBytes
+saes.v1.encs a1, a5
+saes.v1.encs a2, a6
+saes.v1.encs a3, a7
+                              // Shift Rows
+and          a4, t0, t6   ; and   a5, t1, t6
+and          a6, t2, t6   ; and   a7, t3, t6
+slli         t4, t6, 0x8  ; and   t5, t0, t4
+or           a7, a7, t5   ; and   t5, t3, t4
+or           a6, a6, t5   ; and   t5, t2, t4
+or           a5, a5, t5   ; and   t5, t1, t4
+or           a4, a4, t5   ; slli  t4, t4, 0x8
+and          t5, t2, t4   ; or    a4, a4, t5
+and          t5, t3, t4   ; or    a5, a5, t5
+and          t5, t0, t4   ; or    a6, a6, t5
+and          t5, t1, t4   ; or    a7, a7, t5
+slli         t4, t4, 0x8  ; and   t5, t3, t4
+or           a4, a4, t5   ; and   t5, t0, t4
+or           a5, a5, t5   ; and   t5, t1, t4
+or           a6, a6, t5   ; and   t5, t2, t4
+or           a7, a7, t5
+saes.v1.encm t0, a4           // MixColumns
+saes.v1.encm t1, a5
+saes.v1.encm t2, a6
+saes.v1.encm t3, a7
 \end{lstlisting}
 \caption{
   An AES encryption round implemented using \ISE{1}.
