@@ -102,7 +102,7 @@ on performance than area-efficiency.
 \hline
   \multicolumn{1}{|c|}{ISA}
 & \multicolumn{1}{ c }{Variant}
-& \multicolumn{1}{ c|}{(Goal)}
+& \multicolumn{1}{ c|}{Goal}
 & \multicolumn{1}{ c|}{             ISE area}
 & \multicolumn{1}{ c|}{             ISE Circuit Depth}
 & \multicolumn{2}{ c|}{\CORE{1} $+$ ISE area}
@@ -148,19 +148,17 @@ on performance than area-efficiency.
                                   Note that the $64$-bit \ISE{4} is absent, since there is no $64$-bit \CORE{2} core.
                                  },label={tab:eval:sw:perf:2},float={table}[!p]}
 \centering
-\begin{tabular}{|c|c@{\;}c|rr|rr|rr|rr|}
+\begin{tabular}{|c|l|rr|rr|rr|rr|}
 \hline
   \multicolumn{1}{|c|}{ISA}
-& \multicolumn{1}{ c }{Variant}
-& \multicolumn{1}{ c|}{(Goal)}
+& \multicolumn{1}{ c|}{Variant}
 & \multicolumn{2}{ c|}{$\ALG{Enc}$}
 & \multicolumn{2}{ c|}{$\ALG{Dec}$}
 & \multicolumn{2}{ c|}{$\ALG{Enc-KeyExp}$}
 & \multicolumn{2}{ c|}{$\ALG{Dec-KeyExp}$}
 \\
-\cline{4-11}
-&
-&
+\cline{3-10}
+& / Goal
 & \multicolumn{1}{ c|}{iret}
 & \multicolumn{1}{ c|}{cycles}
 & \multicolumn{1}{ c|}{iret}
@@ -172,15 +170,15 @@ on performance than area-efficiency.
 \\
 \hline
 \hline
-%RV32IMC & Byte    &     &            &            &            &            &            &            &            &            \\
- RV32IMC & T-table &     &       998  &      1076  &       998  &      1103  &       466  &       554  &      1747  &      2346  \\ 
- RV32IMC & \ISE{1} & (L) &       518  &       593  &       518  &       607  &\bftab 198  &\bftab 291  &\bftab 204  &\bftab 310  \\
- RV32IMC & \ISE{1} & (A) &       518  &       753  &       518  &       775  &\bftab 198  &       331  &\bftab 204  &       350  \\
- RV32IMC & \ISE{2} & (L) &\bftab 221  &       301  &\bftab 222  &       303  &\bftab 198  &       302  &       335  &       616  \\
- RV32IMC & \ISE{2} & (A) &\bftab 221  &       538  &\bftab 222  &       540  &\bftab 198  &       332  &       335  &       754  \\
- RV32IMC & \ISE{3} &     &       238  &\bftab 291  &       238  &\bftab 286  &       219  &       312  &       659  &      1118  \\
- RV32IMC & \ISE{5} & (L) &       233  &       304  &       233  &       309  &       332  &       447  &       338  &       466  \\
- RV32IMC & \ISE{5} & (A) &       233  &       556  &       233  &       550  &       332  &       477  &       338  &       496  \\
+%RV32IMC & Byte        &            &            &            &            &            &            &            &            \\
+ RV32IMC & T-table     &       998  &      1076  &       998  &      1103  &       466  &       554  &      1747  &      2346  \\ 
+ RV32IMC & \ISE{1} (L) &       518  &       593  &       518  &       607  &\bftab 198  &\bftab 291  &\bftab 204  &\bftab 310  \\
+ RV32IMC & \ISE{1} (A) &       518  &       753  &       518  &       775  &\bftab 198  &       331  &\bftab 204  &       350  \\
+ RV32IMC & \ISE{2} (L) &\bftab 221  &       301  &\bftab 222  &       303  &\bftab 198  &       302  &       335  &       616  \\
+ RV32IMC & \ISE{2} (A) &\bftab 221  &       538  &\bftab 222  &       540  &\bftab 198  &       332  &       335  &       754  \\
+ RV32IMC & \ISE{3}     &       238  &\bftab 291  &       238  &\bftab 286  &       219  &       312  &       659  &      1118  \\
+ RV32IMC & \ISE{5} (L) &       233  &       304  &       233  &       309  &       332  &       447  &       338  &       466  \\
+ RV32IMC & \ISE{5} (A) &       233  &       556  &       233  &       550  &       332  &       477  &       338  &       496  \\
 \hline
 \end{tabular}                
 \end{adjustbox}
@@ -190,19 +188,17 @@ on performance than area-efficiency.
                                   Note that the $64$-bit \ISE{4} uses the $64$-bit \CORE{1} core; all others use the $32$-bit \CORE{1} core.
                                  },label={tab:eval:sw:perf:1},float={table}[!p]}
 \centering
-\begin{tabular}{|c|c@{\;}c|rr|rr|rr|rr|}
+\begin{tabular}{|c|l|rr|rr|rr|rr|}
 \hline
   \multicolumn{1}{|c|}{ISA}
-& \multicolumn{1}{ c }{Variant}
-& \multicolumn{1}{ c|}{(Goal)}
+& \multicolumn{1}{ c|}{Variant}
 & \multicolumn{2}{ c|}{$\ALG{Enc}$}
 & \multicolumn{2}{ c|}{$\ALG{Dec}$}
 & \multicolumn{2}{ c|}{$\ALG{Enc-KeyExp}$}
 & \multicolumn{2}{ c|}{$\ALG{Dec-KeyExp}$}
 \\
-\cline{4-11}
-&
-&
+\cline{3-10}
+& / Goal
 & \multicolumn{1}{ c|}{iret}
 & \multicolumn{1}{ c|}{cycles}
 & \multicolumn{1}{ c|}{iret}
@@ -214,17 +210,17 @@ on performance than area-efficiency.
 \\
 \hline
 \hline
-%RV32IMC & Byte    &     &            &            &            &            &            &            &            &            \\
- RV32IMC & T-table &     &       948  &      1143  &       949  &      1025  &       444  &       478  &      1726  &      1977  \\
- RV32IMC & \ISE{1} & (L) &       528  &       685  &       529  &       680  &\bftab 212  &       341  &\bftab 214  &\bftab 290  \\
- RV32IMC & \ISE{1} & (A) &       528  &       804  &       529  &       744  &\bftab 212  &       357  &\bftab 214  &       335  \\
- RV32IMC & \ISE{2} & (L) &\bftab 231  &\bftab 359  &\bftab 233  &       368  &\bftab 212  &\bftab 315  &       350  &       508  \\
- RV32IMC & \ISE{2} & (A) &\bftab 231  &       511  &\bftab 233  &       520  &       212  &       345  &       350  &       646  \\
- RV32IMC & \ISE{3} &     &       253  &       445  &       254  &       445  &       233  &       470  &       674  &      2425  \\
- RV32IMC & \ISE{5} & (L) &       243  &       414  &       244  &\bftab 319  &       346  &       427  &       348  &       424  \\
- RV32IMC & \ISE{5} & (A) &       243  &       585  &       244  &       543  &       346  &       504  &       348  &       454  \\
+%RV32IMC & Byte        &            &            &            &            &            &            &            &            \\
+ RV32IMC & T-table     &       948  &      1143  &       949  &      1025  &       444  &       478  &      1726  &      1977  \\
+ RV32IMC & \ISE{1} (L) &       528  &       685  &       529  &       680  &\bftab 212  &       341  &\bftab 214  &\bftab 290  \\
+ RV32IMC & \ISE{1} (A) &       528  &       804  &       529  &       744  &\bftab 212  &       357  &\bftab 214  &       335  \\
+ RV32IMC & \ISE{2} (L) &\bftab 231  &\bftab 359  &\bftab 233  &       368  &\bftab 212  &\bftab 315  &       350  &       508  \\
+ RV32IMC & \ISE{2} (A) &\bftab 231  &       511  &\bftab 233  &       520  &       212  &       345  &       350  &       646  \\
+ RV32IMC & \ISE{3}     &       253  &       445  &       254  &       445  &       233  &       470  &       674  &      2425  \\
+ RV32IMC & \ISE{5} (L) &       243  &       414  &       244  &\bftab 319  &       346  &       427  &       348  &       424  \\
+ RV32IMC & \ISE{5} (A) &       243  &       585  &       244  &       543  &       346  &       504  &       348  &       454  \\
 \hline
- RV64IMC & \ISE{4} &     &        81  &       119  &        82  &       125  &        66  &       204  &       136  &       306  \\
+ RV64IMC & \ISE{4}     &        81  &       119  &        82  &       125  &        66  &       204  &       136  &       306  \\
 \hline
 \end{tabular}
 \end{adjustbox}
@@ -235,19 +231,17 @@ on performance than area-efficiency.
                                   for each ISE variant. 
                                  },label={tab:eval:results},float={table}[!t]}
 \centering
-\begin{tabular}{|c|c@{\;}c|rr|rr|rr|rr|}
+\begin{tabular}{|c|l|rr|rr|rr|rr|}
 \hline
   \multicolumn{1}{|c|}{ISA}
-& \multicolumn{1}{ c }{Variant}
-& \multicolumn{1}{ c|}{(Goal)}
+& \multicolumn{1}{ c|}{Variant}
 & \multicolumn{2}{ c|}{$\ALG{Enc}$}
 & \multicolumn{2}{ c|}{$\ALG{Dec}$}
-& \multicolumn{2}{ c|}{$\ALG{Enc-KeyExp}$}
-& \multicolumn{2}{ c|}{$\ALG{Dec-KeyExp}$}
+& \multicolumn{2}{ c|}{$\ALG{EncKeyExp}$}
+& \multicolumn{2}{ c|}{$\ALG{DecKeyExp}$}
 \\
-\cline{4-11}
-&
-&
+\cline{3-10}
+& / Goal
 & \multicolumn{1}{ c|}{iret}
 & \multicolumn{1}{ c|}{cycles}
 & \multicolumn{1}{ c|}{iret}
@@ -259,15 +253,15 @@ on performance than area-efficiency.
 \\
 \hline
 \hline
-RV32IMC & \ISE{1} & (L) &       4.61  &       4.34  &       4.61  &       4.35  &       5.39  &       6.06  &      20.50  &      18.12   \\
-RV32IMC & \ISE{1} & (A) &       7.37  &       5.46  &       7.37  &       5.44  &       8.61  &       6.40  &\bftab32.74  &\bftab25.63   \\
-RV32IMC & \ISE{2} & (L) &      10.58  &       8.38  &      10.53  &       8.53  &       5.28  &       4.30  &      12.22  &       8.92   \\
-RV32IMC & \ISE{2} & (A) &      27.18  &      12.04  &      27.06  &      12.29  &      13.56  &      10.04  &      31.39  &      18.73   \\
-RV32IMC & \ISE{3} &     &\bftab30.12  &\bftab26.56  &\bftab30.12  &\bftab27.71  &\bftab14.63  &\bftab12.76  &      19.04  &      15.08   \\
-RV32IMC & \ISE{5} & (L) &       8.64  &       7.14  &       8.64  &       7.20  &       2.71  &       2.50  &      10.43  &      10.15   \\
-RV32IMC & \ISE{5} & (A) &      18.48  &       8.35  &      17.64  &       8.30  &       5.79  &       5.01  &      22.29  &      20.40   \\
+RV32IMC & \ISE{1} (L) &       4.61  &       4.34  &       4.61  &       4.35  &       5.39  &       6.06  &      20.50  &      18.12   \\
+RV32IMC & \ISE{1} (A) &       7.37  &       5.46  &       7.37  &       5.44  &       8.61  &       6.40  &\bftab32.74  &\bftab25.63   \\
+RV32IMC & \ISE{2} (L) &      10.58  &       8.38  &      10.53  &       8.53  &       5.28  &       4.30  &      12.22  &       8.92   \\
+RV32IMC & \ISE{2} (A) &      27.18  &      12.04  &      27.06  &      12.29  &      13.56  &      10.04  &      31.39  &      18.73   \\
+RV32IMC & \ISE{3}     &\bftab30.12  &\bftab26.56  &\bftab30.12  &\bftab27.71  &\bftab14.63  &\bftab12.76  &      19.04  &      15.08   \\
+RV32IMC & \ISE{5} (L) &       8.64  &       7.14  &       8.64  &       7.20  &       2.71  &       2.50  &      10.43  &      10.15   \\
+RV32IMC & \ISE{5} (A) &      18.48  &       8.35  &      17.64  &       8.30  &       5.79  &       5.01  &      22.29  &      20.40   \\
 \hline
-RV64IMC & \ISE{4} &     &      12.32  &       9.04  &      12.17  &       8.82  &       6.76  &       2.72  &      12.85  &       7.67   \\
+RV64IMC & \ISE{4}     &      12.32  &       9.04  &      12.17  &       8.82  &       6.76  &       2.72  &      12.85  &       7.67   \\
 \hline
 \end{tabular}
 \end{adjustbox}
