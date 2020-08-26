@@ -4,7 +4,7 @@
 demonstrates that all ISE variants
 imply a modest area overhead relative to their host core.
 The RV32 \CORE{1} area results are not listed, as the ISE overhead compared to
-the area of a synthesised Rocket Tile with caches was less than $1\%$ in all
+the area of a synthesised \CORE{1} Tile with caches was less than $1\%$ in all
 cases.
 \REFTAB{tab:eval:sw:size}
 shows all ISE variants
@@ -75,47 +75,58 @@ on performance than area-efficiency.
 % -----------------------------------------------------------------------------
 
 \begin{adjustbox}{center,caption={Hardware implementation metrics 
-                                  (e.g., area and Circuit Depth)
                                   for each ISE variant.
                                  },label={tab:eval:hw},float={table}[!p]}
 \centering
-\begin{tabular}{|c|c@{\;}c|rr|rr|}
+\begin{tabular}{|c|l|rr|r|r|}
 \hline
   \multicolumn{1}{|c|}{ISA}
-& \multicolumn{1}{ c }{Variant}
-& \multicolumn{1}{ c|}{(Goal)}
-& \multicolumn{1}{ c|}{             ISE area}
-& \multicolumn{1}{ c|}{             ISE Circuit Depth}
-& \multicolumn{2}{ c|}{\CORE{2} $+$ ISE area}
+& \multicolumn{1}{ c|}{Variant}
+& \multicolumn{1}{ c|}{             ISE}
+& \multicolumn{1}{ c|}{             ISE}
+& \multicolumn{1}{ c|}{\CORE{2}     CPU}
+& \multicolumn{1}{ c|}{\CORE{1}     CPU}
+\\
+& \multicolumn{1}{ c|}{/ Goal       }
+& \multicolumn{1}{ c|}{Area         }
+& \multicolumn{1}{ c|}{Path Depth   }
+& \multicolumn{1}{ c|}{$+$ ISE area }
+& \multicolumn{1}{ c|}{$+$ ISE area }
 \\
 \hline
 \hline
- RV32IMC &          &     &              &            &       37375 &       (1.00$\times$) \\
- RV32IMC & \ISE{1}  & (L) &        3472  & \bftab 19  &       41723 &       (1.12$\times$) \\
- RV32IMC & \ISE{1}  & (A) &        2174  &        22  &       40161 &       (1.07$\times$) \\
- RV32IMC & \ISE{2}  & (L) &        3547  & \bftab 19  &       41199 &       (1.10$\times$) \\
- RV32IMC & \ISE{2}  & (A) &        1381  &        21  &       38885 &       (1.04$\times$) \\
- RV32IMC & \ISE{3}  &     & \bftab 1157  &        30  &\bftab 38610 &\bftab (1.03$\times$) \\
- RV32IMC & \ISE{5}  & (L) &        4121  &        22  &       42070 &       (1.13$\times$) \\
- RV32IMC & \ISE{5}  & (A) &        1927  &        23  &       39251 &       (1.05$\times$) \\
+ RV32IMC &             &              &            &       37375  (1.00$\times$) & TODO \\
+ RV32IMC & \ISE{1} (L) &        3472  & \bftab 19  &       41723  (1.12$\times$) & TODO \\
+ RV32IMC & \ISE{1} (A) &        2174  &        22  &       40161  (1.07$\times$) & TODO \\
+ RV32IMC & \ISE{2} (L) &        3547  & \bftab 19  &       41199  (1.10$\times$) & TODO \\
+ RV32IMC & \ISE{2} (A) &        1381  &        21  &       38885  (1.04$\times$) & TODO \\
+ RV32IMC & \ISE{3}     & \bftab 1157  &        30  &\bftab 38610  (1.03$\times$) & TODO \\
+ RV32IMC & \ISE{5} (L) &        4121  &        22  &       42070  (1.13$\times$) & TODO \\
+ RV32IMC & \ISE{5} (A) &        1927  &        23  &       39251  (1.05$\times$) & TODO \\
 \hline
 \hline
   \multicolumn{1}{|c|}{ISA}
-& \multicolumn{1}{ c }{Variant}
-& \multicolumn{1}{ c|}{Goal}
-& \multicolumn{1}{ c|}{             ISE area}
-& \multicolumn{1}{ c|}{             ISE Circuit Depth}
-& \multicolumn{2}{ c|}{\CORE{1} $+$ ISE area}
+& \multicolumn{1}{ c|}{Variant}
+& \multicolumn{1}{ c|}{             ISE}
+& \multicolumn{1}{ c|}{             ISE}
+& \multicolumn{1}{ c|}{\CORE{2}     CPU}
+& \multicolumn{1}{ c|}{\CORE{1}     CPU}
+\\
+& \multicolumn{1}{ c|}{/ Goal       }
+& \multicolumn{1}{ c|}{Area         }
+& \multicolumn{1}{ c|}{Path Depth   }
+& \multicolumn{1}{ c|}{$+$ ISE area }
+& \multicolumn{1}{ c|}{$+$ ISE area }
 \\
 \hline
- RV64IMC &          &     &$          $&$          $&$   3717607 $&$     (1.000\times)$ \\
- RV64IMC & \ISE{4}  &     &$     8312 $&$       27 $&$   3733786 $&$     (1.004\times)$ \\
+\hline
+ RV64IMC &          &          &          &  N/A  & 3717607 (1.000$\times$) \\
+ RV64IMC & \ISE{4}  &     8312 &       27 &  N/A  & 3733786 (1.004$\times$) \\
 \hline
 \end{tabular}
 \end{adjustbox}
 
-\begin{adjustbox}{center,caption={Software implementation metrics 
-                                  (i.e., memory footprint measured in bytes)
+\begin{adjustbox}{center,caption={Software  memory footprint measured in bytes
                                   for each ISE variant.
                                  },label={tab:eval:sw:size},float={table}[!p]}
 \centering
@@ -228,8 +239,9 @@ on performance than area-efficiency.
 
 % -----------------------------------------------------------------------------
 
-\begin{adjustbox}{center,caption={Comparison performance and area product. 
-                                 },label={tab:eval:results},float={table}[!t]}
+\begin{adjustbox}{center,caption={
+    Comparison of performance/area product. 
+},label={tab:eval:results},float={table}[!t]}
 \centering
 \begin{tabular}{|c|l|rr|rr|rr|rr|}
 \hline
@@ -253,15 +265,15 @@ on performance than area-efficiency.
 \\
 \hline
 \hline
-RV32IMC & \ISE{1} (L) &             &             &             &             &             &             &             &              \\
-RV32IMC & \ISE{1} (A) &             &             &             &             &             &             &             &              \\
-RV32IMC & \ISE{2} (L) &             &             &             &             &             &             &             &              \\
-RV32IMC & \ISE{2} (A) &             &             &             &             &             &             &             &              \\
-RV32IMC & \ISE{3}     &             &             &             &             &             &             &             &              \\
-RV32IMC & \ISE{5} (L) &             &             &             &             &             &             &             &              \\
-RV32IMC & \ISE{5} (A) &             &             &             &             &             &             &             &              \\
+RV32IMC & \ISE{1} (L) &       0.748 &       0.840 &       0.748 &       0.841 &       0.289 &       0.441 &       0.298 &       0.469 \\
+RV32IMC & \ISE{1} (A) &       0.468 &       0.672 &       0.468 &       0.673 &       0.181 &       0.313 &\bftab 0.187 &\bftab 0.330 \\
+RV32IMC & \ISE{2} (L) &       0.321 &       0.409 &       0.322 &       0.425 &       0.295 &       0.451 &       0.500 &       0.918 \\
+RV32IMC & \ISE{2} (A) &       0.125 &       0.291 &       0.125 &       0.303 &       0.115 &       0.193 &       0.195 &       0.437 \\
+RV32IMC & \ISE{3}     &\bftab 0.116 &\bftab 0.142 &\bftab 0.116 &\bftab 0.139 &\bftab 0.107 &\bftab 0.152 &       0.321 &       0.544 \\
+RV32IMC & \ISE{5} (L) &       0.394 &       0.510 &       0.394 &       0.504 &       0.576 &       0.778 &       0.586 &       0.811 \\
+RV32IMC & \ISE{5} (A) &       0.184 &       0.449 &       0.184 &       0.431 &       0.269 &       0.388 &       0.274 &       0.404 \\
 \hline
-RV64IMC & \ISE{4}     &             &             &             &             &             &             &             &              \\
+RV64IMC & \ISE{4}     &       0.266 &       0.402 &       0.266 &       0.465 &       0.213 &       0.696 &       0.458 &       1.000  \\
 \hline
 \end{tabular}
 \end{adjustbox}
