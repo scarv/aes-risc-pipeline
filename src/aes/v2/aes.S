@@ -88,9 +88,9 @@ aes_128_enc_key_schedule:       // a0 - uint32_t rk [AES_128_RK_WORDS]
 .endfunc
 
 
-.func   aes_enc_block                           // a0 - uint8_t     ct [16],
-.global aes_enc_block                           // a1 - uint8_t     pt [16],
-aes_enc_block:                                  // a2 - uint32_t  * rk,
+.func   aes_128_enc_block                       // a0 - uint8_t     ct [16],
+.global aes_128_enc_block                       // a1 - uint8_t     pt [16],
+aes_128_enc_block:                              // a2 - uint32_t  * rk,
                                                 // a3 - int         nr
     #define T0 a4
     #define T1 a5
@@ -109,6 +109,7 @@ aes_enc_block:                                  // a2 - uint32_t  * rk,
     #define NR a3
     #define KP a3
 
+    li      NR, 10                              // Num Rounds.
     slli    KP, NR, 4
     add     KP, KP, RK                          // kp = rk + 4*nr
 
@@ -204,9 +205,9 @@ aes_enc_block:                                  // a2 - uint32_t  * rk,
 .endfunc
 
 
-.func   aes_dec_block                           // a0 - uint8_t     pt [16],
-.global aes_dec_block                           // a1 - uint8_t     ct [16],
-aes_dec_block:                                  // a2 - uint32_t  * rk,
+.func   aes_128_dec_block                       // a0 - uint8_t     pt [16],
+.global aes_128_dec_block                       // a1 - uint8_t     ct [16],
+aes_128_dec_block:                              // a2 - uint32_t  * rk,
                                                 // a3 - int         nr
     #define T0 a4
     #define T1 a5
@@ -225,6 +226,7 @@ aes_dec_block:                                  // a2 - uint32_t  * rk,
     #define NR a3
     #define KP a3
 
+    li      NR, 10                              // Num Rounds.
     slli    KP, NR, 4
     add     KP, KP, RK                          // kp = rk + 4*nr
 

@@ -21,17 +21,19 @@
     ((X & 0x000000FF) << 24)  \
 )
 
-#define MEASURE_BEGIN(SI,SC) { \
-    SI = test_rdinstret(); \
-    SC = test_rdcycle(); \
-}
+#define MEASURE_BEGIN(NAME) { \
+    uint32_t instr_start, instr_end                     ; \
+    uint32_t cycle_start, cycle_end                     ; \
+    asm volatile("rdcycle   %0" : "=r"(cycle_start))    ; \
+    asm volatile("rdinstret %0" : "=r"(instr_start))    ;
+ 
 
 
-#define MEASURE_END(SI,SC,I,C) { \
-    uint64_t end_instrs = test_rdinstret(); \
-    uint64_t end_cycles = test_rdcycle(); \
-    I  = end_instrs - SI; \
-    C  = end_cycles - SC; \
+#define MEASURE_END(NAME,I,C)   \
+    asm volatile("rdcycle   %0" : "=r"(cycle_end))      ; \
+    asm volatile("rdinstret %0" : "=r"(instr_end))      ; \
+    I  = instr_end - instr_start; \
+    C  = cycle_end - cycle_start; \
 }
 
 //

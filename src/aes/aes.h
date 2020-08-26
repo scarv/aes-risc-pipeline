@@ -112,30 +112,6 @@ void    aes_128_dec_key_schedule (
     uint8_t     ck [AES_128_CK_BYTES]  //!< [in]  The cipher key to expand
 );
 
-//! Key expansion function for the AES 192 parameterisation - encrypt
-void    aes_192_enc_key_schedule (
-    uint32_t    rk [AES_192_RK_WORDS], //!< [out] The expanded key schedule
-    uint8_t     ck [AES_192_CK_BYTES]  //!< [in]  The cipher key to expand
-);
-
-//! Key expansion function for the AES 192 parameterisation - decrypt
-void    aes_192_dec_key_schedule (
-    uint32_t    rk [AES_192_RK_WORDS], //!< [out] The expanded key schedule
-    uint8_t     ck [AES_192_CK_BYTES]  //!< [in]  The cipher key to expand
-);
-
-//! Key expansion function for the AES 256 parameterisation - encrypt
-void    aes_256_enc_key_schedule (
-    uint32_t    rk [AES_256_RK_WORDS], //!< [out] The expanded key schedule
-    uint8_t     ck [AES_256_CK_BYTES]  //!< [in]  The cipher key to expand
-);
-
-//! Key expansion function for the AES 256 parameterisation - decrypt
-void    aes_256_dec_key_schedule (
-    uint32_t    rk [AES_256_RK_WORDS], //!< [out] The expanded key schedule
-    uint8_t     ck [AES_256_CK_BYTES]  //!< [in]  The cipher key to expand
-);
-
 //! Block Encrypt function for the AES 128 parameterisation
 void    aes_128_enc_block(
     uint8_t     ct [              16], //!< [out] Output ciphertext
@@ -148,34 +124,6 @@ void    aes_128_dec_block(
     uint8_t     pt [              16], //!< [out] Output plaintext
     uint8_t     ct [              16], //!< [in] Ciphertext to encrypt
     uint32_t    rk [AES_128_RK_WORDS]  //!< [in] The expanded key schedule
-);
-
-//! Block Encrypt function for the AES 192 parameterisation
-void    aes_192_enc_block(
-    uint8_t     ct [              16], //!< [out] Output ciphertext
-    uint8_t     pt [              16], //!< [in] Plaintext to encrypt
-    uint32_t    rk [AES_192_RK_WORDS]  //!< [in] The expanded key schedule
-);
-
-//! Block Decrypt function for the AES 192 parameterisation
-void    aes_192_dec_block(
-    uint8_t     pt [              16], //!< [out] Output plaintext
-    uint8_t     ct [              16], //!< [in] Ciphertext to encrypt
-    uint32_t    rk [AES_192_RK_WORDS]  //!< [in] The expanded key schedule
-);
-
-//! Block Encrypt function for the AES 256 parameterisation
-void    aes_256_enc_block(
-    uint8_t     ct [              16], //!< [out] Output ciphertext
-    uint8_t     pt [              16], //!< [in] Plaintext to encrypt
-    uint32_t    rk [AES_256_RK_WORDS]  //!< [in] The expanded key schedule
-);
-
-//! Block Decrypt function for the AES 256 parameterisation
-void    aes_256_dec_block(
-    uint8_t     pt [              16], //!< [out] Output plaintext
-    uint8_t     ct [              16], //!< [in] Ciphertext to encrypt
-    uint32_t    rk [AES_256_RK_WORDS]  //!< [in] The expanded key schedule
 );
 
 

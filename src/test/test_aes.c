@@ -6,15 +6,15 @@
 
 #include "aes.h"
 
-// Start with known inputs from FIPS 197, Appendix B.
-uint8_t  key [AES_128_CK_BYTES ] = {0x2b ,0x7e ,0x15 ,0x16 ,0x28 ,0xae ,0xd2 ,0xa6 ,0xab ,0xf7 ,0x15 ,0x88 ,0x09 ,0xcf ,0x4f ,0x3c};
-uint8_t  pt  [16   ] = {0x32 ,0x43 ,0xf6 ,0xa8 ,0x88 ,0x5a ,0x30 ,0x8d ,0x31 ,0x31 ,0x98 ,0xa2 ,0xe0 ,0x37 ,0x07 ,0x34};
-uint32_t erk [AES_128_RK_BYTES  ]; //!< Roundkeys (encrypt)
-uint32_t drk [AES_128_RK_BYTES  ]; //!< Roundkeys (decrypt)
-uint8_t  ct  [16   ];
-uint8_t  pt2 [16   ];
-
 int main(int argc, char ** argv) {
+
+    // Start with known inputs from FIPS 197, Appendix B.
+    uint8_t  key [AES_128_CK_BYTES ] = {0x2b ,0x7e ,0x15 ,0x16 ,0x28 ,0xae ,0xd2 ,0xa6 ,0xab ,0xf7 ,0x15 ,0x88 ,0x09 ,0xcf ,0x4f ,0x3c};
+    uint8_t  pt  [16   ] = {0x32 ,0x43 ,0xf6 ,0xa8 ,0x88 ,0x5a ,0x30 ,0x8d ,0x31 ,0x31 ,0x98 ,0xa2 ,0xe0 ,0x37 ,0x07 ,0x34};
+    uint32_t erk [AES_128_RK_BYTES  ]; //!< Roundkeys (encrypt)
+    uint32_t drk [AES_128_RK_BYTES  ]; //!< Roundkeys (decrypt)
+    uint8_t  ct  [16   ];
+    uint8_t  pt2 [16   ];
 
     printf("import sys, binascii, Crypto.Cipher.AES as AES\n");
     printf("benchmark_name = 'aes'\n");
@@ -26,28 +26,25 @@ int main(int argc, char ** argv) {
     uint64_t enc_icount, enc_cycles;
     uint64_t dec_icount, dec_cycles;
 
-    uint64_t start_instrs;
-    uint64_t start_cycles;
-
     for(int i = 0; i < num_tests; i ++) {
         
-        printf("#\n# test %d/%d\n",i , num_tests);
+        //printf("#\n# test %d/%d\n",i , num_tests);
 
-        MEASURE_BEGIN(start_instrs, start_cycles)
+        MEASURE_BEGIN("EKS")
         aes_128_enc_key_schedule(erk, key    );
-        MEASURE_END(start_instrs, start_cycles, kse_icount, kse_cycles)
+        MEASURE_END("EKS", kse_icount, kse_cycles)
 
-        MEASURE_BEGIN(start_instrs, start_cycles)
+        MEASURE_BEGIN("ENC")
         aes_128_enc_block       (ct , pt, erk);
-        MEASURE_END(start_instrs, start_cycles, enc_icount, enc_cycles)
+        MEASURE_END("ENC", enc_icount, enc_cycles)
         
-        MEASURE_BEGIN(start_instrs, start_cycles)
+        MEASURE_BEGIN("DKS")
         aes_128_dec_key_schedule(drk, key    );
-        MEASURE_END(start_instrs, start_cycles, ksd_icount, ksd_cycles)
+        MEASURE_END("DKS", ksd_icount, ksd_cycles)
 
-        MEASURE_BEGIN(start_instrs, start_cycles)
+        MEASURE_BEGIN("DEC")
         aes_128_dec_block       (pt2, ct, drk);
-        MEASURE_END(start_instrs, start_cycles, dec_icount, dec_cycles)
+        MEASURE_END("DEC", dec_icount, dec_cycles)
 
         printf("kse_icount = 0x"); puthex64(kse_icount); printf("\n");
         printf("ksd_icount = 0x"); puthex64(ksd_icount); printf("\n");
