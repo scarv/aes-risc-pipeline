@@ -16,7 +16,7 @@
 
 Compared to more general workloads, cryptographic algorithms like AES
 present a significant implementation challenge.
-They involve computationally intensive and specialist functionality,
+They involve computationally intensive and specialised functionality,
 are used in a wide range of contexts
 and
 form a central target in a complex attack surface.
@@ -41,7 +41,7 @@ acts as an enabler for security.
 This is because one {\em should not}
 compromise security to meet efficiency requirements.
 Hence a more efficient implementation leaves greater margin to deliver
-countermeasures against attack.
+countermeasures against an attack.
 
 AES is an interesting case-study wrt. secure, efficient implementation.
 For example,
@@ -103,7 +103,7 @@ an {\em interface} to domain-specific functionality through the
 addition of instructions to a base ISA.
 As a fundamental and long-lived computer systems interface, the design
 and extension of an ISA demands careful consideration
-(cf.~\cite[Section 4]{Gueron:09}). 
+(cf.~\cite[Section 4]{Gueron:09})
 and the production of a concrete ISE design is not trivial.
 It must deliver a quantified improvement to the workload in 
 question {\em and}
@@ -142,13 +142,13 @@ Advanced Encryption Standard New Instructions (AES-NI)~\cite{Gueron:09,DruGueKra
 ISE
 supports AES: it significantly improves latency and throughput
 (see, e.g.,~\cite{FazLopOli:18}),
-and represents a useful casestudy in the design goals above:
+and represents a useful case-study in the design goals above:
 it adds just $6$ additional (vs. $1500+$ total) instructions,
 reduces overhead by sharing the pre-existing XMM register file,
 and facilitates compatibility via the
 \VERB{CPUID}~\cite[Chapter 20]{X86:1:18}
 feature identification mechanism.
-It is also (sometimes un-expectedly) useful beyond AES:
+It is also (sometimes unexpectedly) useful beyond AES:
 the Gr{\o}stl hash function ~\cite{GKMMRST:11} uses the S-box,
 and
 the YAES~\cite{BosVer:14} authenticated encryption scheme uses a full round.

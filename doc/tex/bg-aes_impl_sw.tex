@@ -122,7 +122,7 @@ pre-computing
    \end{array}
    \]
    for $x \in \F_{2^8}$,
-3) computing each $j$-th column of $\AESRND{s}{r+1}$ as
+   then computing each $j$-th column of $\AESRND{s}{r+1}$ as
    \[
    T_0[ \AESRND{s}{r}_{i, j + i \pmod{Nb}} ] \AESADD
    T_1[ \AESRND{s}{r}_{i, j + i \pmod{Nb}} ] \AESADD
@@ -148,6 +148,8 @@ analyse the impact of different addressing modes on this issue, with
 Stoffelen~\cite[Section 3.1]{Stoffelen:19}
 concluding that RISC-V is ill-equipped to reduce said overhead,
 due to the provision of a sparse set of addressing modes.
+Futher, in systems with data caches, T-table based implementations are
+succeptible to timing attacks \cite{DJB:05}.
 
 % -----------------------------------------------------------------------------
 

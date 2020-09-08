@@ -3,9 +3,12 @@
 \REFTAB{tab:eval:hw}
 demonstrates that all ISE variants
 imply a modest area overhead relative to their host core.
-The RV32 \CORE{1} area results are not listed, as the ISE overhead compared to
-the area of a synthesised \CORE{1} Tile with caches was less than $1\%$ in all
-cases.
+For the RV32 \CORE{1} the area overhead of a synthesised \CORE{1} Tile with
+caches was less than $1\%$ in all cases.
+For the \CORE{2}, the area overhead ranged between
+$13\%$ (\ISE{5} (L))
+and
+$3\%$ (\ISE{3}).
 \REFTAB{tab:eval:sw:size}
 shows all ISE variants
 having similarly small memory footprints in terms of both instruction code and
@@ -13,30 +16,28 @@ data.
 Beyond this, and per 
 \REFSEC{sec:ise:design},
 the primary metric of interest is efficiency in terms of
-improvement in execution latency per area:
+the latency-area product.
 this metric draws on data from
 \REFTAB{tab:eval:hw}
 plus either
 \REFTAB{tab:eval:sw:perf:2}
 or
 \REFTAB{tab:eval:sw:perf:1}
-for the \CORE{2} or \CORE{1} core respectively,
-and, for each variant, is computed by dividing the improvement in execution 
-latency (relative to the T-table baseline) by the normalised area (i.e., the 
-ISE area column of \REFTAB{tab:eval:hw}). We deliberately omit the area of
-the host core from this calculation, as this fixed overhead dominates the
-final value and detracts from the comparison between ISEs themselves.
+for the \CORE{2} or \CORE{1} core respectively.
+We deliberately omit the area of the host core from this calculation, as this
+fixed overhead dominates the final value and detracts from the comparison
+between ISEs themselves.
 
 \REFTAB{tab:eval:results} 
 captures the results for the \CORE{1} core, although the same conclusion can 
 be drawn for the \CORE{2} core.  Qualitatively, we place more of a weight on 
-\ALG{Enc} 
+Encryption (\ALG{Enc})
 and 
-\ALG{Dec} 
+Decryption (\ALG{Dec})
 vs.
-\ALG{Enc-KeyExp} 
+Encryption Key Expansion (\ALG{Enc-KeyExp})
 and 
-\ALG{Dec-KeyExp},
+Decryption Key Expansion (\ALG{Dec-KeyExp}),
 because
 typically many \ALG{Enc} or \ALG{Dec} operations are performed per
 \ALG{KeyExp}.
@@ -95,14 +96,14 @@ on performance than area-efficiency.
 \\
 \hline
 \hline
- RV32IMC &             &              &            &       37375  (1.00$\times$) & TODO \\
- RV32IMC & \ISE{1} (L) &        3472  & \bftab 19  &       41723  (1.12$\times$) & TODO \\
- RV32IMC & \ISE{1} (A) &        2174  &        22  &       40161  (1.07$\times$) & TODO \\
- RV32IMC & \ISE{2} (L) &        3547  & \bftab 19  &       41199  (1.10$\times$) & TODO \\
- RV32IMC & \ISE{2} (A) &        1381  &        21  &       38885  (1.04$\times$) & TODO \\
- RV32IMC & \ISE{3}     & \bftab 1157  &        30  &\bftab 38610  (1.03$\times$) & TODO \\
- RV32IMC & \ISE{5} (L) &        4121  &        22  &       42070  (1.13$\times$) & TODO \\
- RV32IMC & \ISE{5} (A) &        1927  &        23  &       39251  (1.05$\times$) & TODO \\
+ RV32IMC & Baseline    &              &            &       37375  ($1.00\times$) &       3501576 ($1.000\times$) \\
+ RV32IMC & \ISE{1} (L) &        3472  & \bftab 19  &       41723  ($1.12\times$) &       3508448 ($1.002\times$) \\
+ RV32IMC & \ISE{1} (A) &        2174  &        22  &       40161  ($1.07\times$) &       3506995 ($1.002\times$) \\
+ RV32IMC & \ISE{2} (L) &        3547  & \bftab 19  &       41199  ($1.10\times$) &       3508946 ($1.002\times$) \\
+ RV32IMC & \ISE{2} (A) &        1381  &        21  &       38885  ($1.04\times$) &\bftab 3506591 ($1.001\times$) \\
+ RV32IMC & \ISE{3}     & \bftab 1157  &        30  &\bftab 38610  ($1.03\times$) &       3506761 ($1.001\times$) \\
+ RV32IMC & \ISE{5} (L) &        4121  &        22  &       42070  ($1.13\times$) &       3510055 ($1.002\times$) \\
+ RV32IMC & \ISE{5} (A) &        1927  &        23  &       39251  ($1.05\times$) &       3507755 ($1.002\times$) \\
 \hline
 \hline
   \multicolumn{1}{|c|}{ISA}
@@ -120,7 +121,7 @@ on performance than area-efficiency.
 \\
 \hline
 \hline
- RV64IMC &          &          &          &  N/A  & 3717607 (1.000$\times$) \\
+ RV64IMC & Baseline &          &          &  N/A  & 3717607 (1.000$\times$) \\
  RV64IMC & \ISE{4}  &     8312 &       27 &  N/A  & 3733786 (1.004$\times$) \\
 \hline
 \end{tabular}

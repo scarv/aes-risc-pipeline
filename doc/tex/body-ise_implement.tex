@@ -77,8 +77,9 @@ while
 the \CORE{1} core accesses the AES-FU via the
 Rocket Custom Coprocessor (RoCC)~\cite[Section 4]{rocket:16}
 interface.
-Due to \REFREQ{req:2}, 
-specifically that each instruction uses at most $2$ source and $1$ destination register, 
+Since \REFREQ{req:2}
+(each instruction uses at most $2$ source and $1$ destination register)
+is fulfilled,
 neither micro-architecture required further structural alteration.
 A synthesis-time parameter was used to switch between different 
 ISEs.
