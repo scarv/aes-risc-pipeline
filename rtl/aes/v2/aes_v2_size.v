@@ -19,6 +19,11 @@ output wire [31:0] rd         //
 
 );
 
+// Enable the decryption instructions.
+parameter DECRYPT_EN=1;
+
+wire   decrypt = !enc && DECRYPT_EN;
+
 //
 // SBox Instruction
 // ------------------------------------------------------------
@@ -31,7 +36,7 @@ wire [ 7:0] sb_in   =
 
 wire [ 7:0] sb_out  ;
 
-aes_sbox i_aes_sbox(.in (sb_in), .inv(!enc), .out(sb_out) );
+aes_sbox i_aes_sbox(.in (sb_in), .inv(decrypt), .out(sb_out) );
 
 //
 // MixColumns Instruction
@@ -89,7 +94,12 @@ wire [ 7:0] mix_dec;
 wire [ 7:0] mix_out = enc ? mix_enc : mix_dec;
 
 aes_mixcolumn_byte_enc i_mc_enc(.col_in(mix_in), .byte_out(mix_enc));
-aes_mixcolumn_byte_dec i_mc_dec(.col_in(mix_in), .byte_out(mix_dec));
+
+generate if(DECRYPT_EN) begin : decrypt_enabled
+    aes_mixcolumn_byte_dec i_mc_dec(.col_in(mix_in), .byte_out(mix_dec));
+end else begin : decrypt_disabled
+    assign mix_dec = 8'b0;
+end endgenerate
 
 //
 // Temporary Storage

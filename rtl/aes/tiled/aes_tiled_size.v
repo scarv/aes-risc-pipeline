@@ -18,6 +18,11 @@ output  wire        ready       , // Finished computing?
 output  wire [31:0] rd            // Output destination register value.
 );
 
+// Enable the decryption instructions.
+parameter DECRYPT_EN=1;
+
+wire   decrypt = dec && DECRYPT_EN;
+
 `define BYTEOF(X,I) X[7+8*I:8*I]
 
 // Sub-bytes input/output
@@ -56,7 +61,7 @@ wire [31:0] sbsr_fwd    =  hi ? {t1, t0, sbfwd_out, t2}:
 wire [31:0] sbsr_inv    =  hi ? {t1, t0, sbinv_out, t2}: 
                                 {t2, t0, sbinv_out, t1}; 
 
-wire [31:0] result_sbsr = dec ? sbsr_inv : sbsr_fwd;
+wire [31:0] result_sbsr = decrypt ? sbsr_inv : sbsr_fwd;
 wire [31:0] result_sb   = {sbfwd_out, t2, t1, t0}; 
 
 //
@@ -124,8 +129,8 @@ reg  [  7:0] t0;
 reg  [  7:0] t1;
 reg  [  7:0] t2;
 
-wire         n_tmp_sub_fwd = (op_sb || op_sbsr) && !dec;
-wire         n_tmp_sub_inv = (         op_sbsr) &&  dec;
+wire         n_tmp_sub_fwd = (op_sb || op_sbsr) && !decrypt;
+wire         n_tmp_sub_inv = (         op_sbsr) &&  decrypt;
 wire         n_tmp_mix     = (op_mix          );
 
 wire [  7:0] n_tmp         = {8{n_tmp_sub_fwd}} & sbfwd_out    |
@@ -162,7 +167,11 @@ wire [7:0] sbinv_in =
 
 aes_fwd_sbox i_aes_sbox_f0(.in (sbfwd_in), .fx(sbfwd_out) );
 
-aes_inv_sbox i_aes_sbox_i0(.in (sbinv_in), .fx(sbinv_out) );
+generate if(DECRYPT_EN) begin:decrypt_enabled
+    aes_inv_sbox i_aes_sbox_i0(.in (sbinv_in), .fx(sbinv_out) );
+end else begin : decrypt_disabled
+    assign sbinv_out = 8'b0;
+end endgenerate
 
 wire [31:0] mix_in =
     {32{fsm_idle}} & mc_0  |
@@ -170,7 +179,7 @@ wire [31:0] mix_in =
     {32{fsm_s2  }} & mc_0r |
     {32{fsm_s3  }} & mc_1r ;
 
-aes_mixcolumn_byte i_aes_mixcolumn_0 (.col_in(mix_in), .dec(dec), .byte_out(mix_out));
+aes_mixcolumn_byte i_aes_mixcolumn_0 (.col_in(mix_in), .dec(decrypt), .byte_out(mix_out));
 
 `undef BYTEOF
 

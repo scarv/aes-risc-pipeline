@@ -19,8 +19,13 @@ output wire [31:0] rd         //
 
 );
 
+// Enable the decryption instructions.
+parameter DECRYPT_EN=1;
+
 // Single cycle implementation
 assign ready = valid;
+
+wire   decrypt = !enc && DECRYPT_EN;
 
 //
 // SBox Instruction
@@ -29,10 +34,10 @@ assign ready = valid;
 // Output of SBox Computation
 wire [31:0] sb_out;
 
-aes_sbox i_aes_sbox_0(.in (rs1[ 7: 0]), .inv(!enc), .out(sb_out[ 7: 0]) );
-aes_sbox i_aes_sbox_1(.in (rs2[15: 8]), .inv(!enc), .out(sb_out[15: 8]) );
-aes_sbox i_aes_sbox_2(.in (rs1[23:16]), .inv(!enc), .out(sb_out[23:16]) );
-aes_sbox i_aes_sbox_3(.in (rs2[31:24]), .inv(!enc), .out(sb_out[31:24]) );
+aes_sbox i_aes_sbox_0(.in (rs1[ 7: 0]), .inv(decrypt), .out(sb_out[ 7: 0]) );
+aes_sbox i_aes_sbox_1(.in (rs2[15: 8]), .inv(decrypt), .out(sb_out[15: 8]) );
+aes_sbox i_aes_sbox_2(.in (rs1[23:16]), .inv(decrypt), .out(sb_out[23:16]) );
+aes_sbox i_aes_sbox_3(.in (rs2[31:24]), .inv(decrypt), .out(sb_out[31:24]) );
 
 //
 // Mix Instruction
@@ -88,12 +93,17 @@ wire [31:0] mix_enc     = {mix_enc_3, mix_enc_2, mix_enc_1, mix_enc_0};
 
 //
 // Mix instruction - decrypt.
-wire [ 7:0] mix_dec_0   = mixcolumn_dec(mix_0, mix_1, mix_2, mix_3);
-wire [ 7:0] mix_dec_1   = mixcolumn_dec(mix_1, mix_2, mix_3, mix_0);
-wire [ 7:0] mix_dec_2   = mixcolumn_dec(mix_2, mix_3, mix_0, mix_1);
-wire [ 7:0] mix_dec_3   = mixcolumn_dec(mix_3, mix_0, mix_1, mix_2);
+wire [31:0] mix_dec     ;
+generate if(DECRYPT_EN) begin : decrypt_enabled_mix
+    wire [ 7:0] mix_dec_0   = mixcolumn_dec(mix_0, mix_1, mix_2, mix_3);
+    wire [ 7:0] mix_dec_1   = mixcolumn_dec(mix_1, mix_2, mix_3, mix_0);
+    wire [ 7:0] mix_dec_2   = mixcolumn_dec(mix_2, mix_3, mix_0, mix_1);
+    wire [ 7:0] mix_dec_3   = mixcolumn_dec(mix_3, mix_0, mix_1, mix_2);
 
-wire [31:0] mix_dec     = {mix_dec_3, mix_dec_2, mix_dec_1, mix_dec_0};
+    assign      mix_dec     = {mix_dec_3, mix_dec_2, mix_dec_1, mix_dec_0};
+end else begin : decrypt_disabled_mix
+    assign      mix_dec     = 32'b0;
+end endgenerate
 
 //
 // Mix instruction - result

@@ -17,6 +17,9 @@ output  wire        ready   , // Finished computing?
 output  wire [31:0] rd        // Output destination register value.
 );
 
+// Enable the decryption instructions.
+parameter DECRYPT_EN=1;
+
 localparam FSM_IDLE = 3'd0;
 localparam FSM_B0   = 3'd1;
 localparam FSM_B1   = 3'd2;
@@ -28,6 +31,8 @@ reg  [ 2:0] n_fsm       ;
 
 wire [ 7:0] sb_in       ;
 wire [ 7:0] sb_out      ;
+
+wire        decrypt     = dec && DECRYPT_EN;
 
 // Intermediate value storage registers.
 reg  [ 7:0] r0, r1, r2, r3;
@@ -95,12 +100,12 @@ end
 // Single SBOX instance.
 aes_sbox i_aes_sbox(
 .in (sb_in ),
-.inv(dec   ),
+.inv(decrypt),
 .out(sb_out)
 );
 
 aes_mixcolumn i_aes_mixcolumn(
-    .col_in(rs1), .dec(dec), .col_out(result_mc)
+    .col_in(rs1), .dec(decrypt), .col_out(result_mc)
 );
 
 endmodule

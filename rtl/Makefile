@@ -1,12 +1,21 @@
 
 BUILD_DIR = $(REPO_BUILD)/rtl
-YOSYS     = yosys
+YOSYS     = $(YOSYS_ROOT)/yosys
 
 SYNTH_TARGETS   =
 LINT_TARGETS    =
 SIM_TARGETS     =
 TARGETS         =
 PROVE_TARGETS   =
+
+ENABLE_DECRYPT  = 1
+YOSYS_DEC_CMD   =
+
+ifeq ($(ENABLE_DECRYPT),1)
+YOSYS_DEC_CMD = chparam -set DECRYPT_EN 1
+else
+YOSYS_DEC_CMD = chparam -set DECRYPT_EN 0
+endif
 
 define map_build_dir
 $(BUILD_DIR)/${1}
@@ -69,6 +78,7 @@ $(call map_synth_rpt,${1}) : ${2}
 	@mkdir -p $(call map_build_dir,${1})
 	$(YOSYS) -qQT \
         -p "read_verilog ${2}" \
+        -p "$(YOSYS_DEC_CMD) ${3}" \
         -p "proc" \
         -p "synth -top ${3} -flatten" \
         -p "abc -g cmos" \
@@ -83,7 +93,7 @@ synth-${1} : $(call map_synth_rpt,${1}) $(call map_lint_rpt,${1})
 $(call map_lint_rpt,${1}) : ${2}
 	@mkdir -p $(dir $(call map_lint_rpt,${1}))
 	@rm -f $${@}
-	verilator --top-module ${3} --lint-only $${^} | tee $${@}
+	$(VERILATOR_ROOT)/bin/verilator --top-module ${3} --lint-only $${^} | tee $${@}
 
 lint-${1} : $(call map_lint_rpt,${1})
 

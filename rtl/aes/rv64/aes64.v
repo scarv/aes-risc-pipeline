@@ -27,6 +27,11 @@ output wire         ready     // Compute finished?
 
 );
 
+// Enable the decryption instructions.
+parameter DECRYPT_EN=1;
+
+wire   decrypt = op_dec && DECRYPT_EN;
+
 `define BY(X,I) X[7+8*I:8*I]
 
 // Always finish in a single cycle.
@@ -174,7 +179,7 @@ assign rd =
     {64{op_ks1          }} & result_ks1     |
     {64{op_ks2          }} & result_ks2     |
     {64{op_enc          }} & result_enc     |
-    {64{op_dec          }} & result_dec     |
+    {64{decrypt         }} & result_dec     |
     {64{op_imix         }} & result_imix    ;
 
 //
@@ -188,6 +193,12 @@ aes_fwd_sbox i_aes_fwd_sbox_5 (.in (sb_fwd_in_5),.fx(sb_fwd_out_5));
 aes_fwd_sbox i_aes_fwd_sbox_6 (.in (sb_fwd_in_6),.fx(sb_fwd_out_6));
 aes_fwd_sbox i_aes_fwd_sbox_7 (.in (sb_fwd_in_7),.fx(sb_fwd_out_7));
 
+//
+// Mix Column Instances
+aes_mixcolumn_word_enc i_mix_e0(.col_in(mce_i0),.col_out(mce_o0));
+aes_mixcolumn_word_enc i_mix_e1(.col_in(mce_i1),.col_out(mce_o1));
+
+generate if(DECRYPT_EN) begin: decrypt_enabled
 aes_inv_sbox i_aes_inv_sbox_0 (.in (sb_inv_in_0),.fx(sb_inv_out_0));
 aes_inv_sbox i_aes_inv_sbox_1 (.in (sb_inv_in_1),.fx(sb_inv_out_1));
 aes_inv_sbox i_aes_inv_sbox_2 (.in (sb_inv_in_2),.fx(sb_inv_out_2));
@@ -197,13 +208,21 @@ aes_inv_sbox i_aes_inv_sbox_5 (.in (sb_inv_in_5),.fx(sb_inv_out_5));
 aes_inv_sbox i_aes_inv_sbox_6 (.in (sb_inv_in_6),.fx(sb_inv_out_6));
 aes_inv_sbox i_aes_inv_sbox_7 (.in (sb_inv_in_7),.fx(sb_inv_out_7));
 
-//
-// Mix Column Instances
-aes_mixcolumn_word_enc i_mix_e0(.col_in(mce_i0),.col_out(mce_o0));
-aes_mixcolumn_word_enc i_mix_e1(.col_in(mce_i1),.col_out(mce_o1));
-
 aes_mixcolumn_word_dec i_mix_d0(.col_in(mcd_i0),.col_out(mcd_o0));
 aes_mixcolumn_word_dec i_mix_d1(.col_in(mcd_i1),.col_out(mcd_o1));
+end else begin : decrypt_disabled
+    assign sb_inv_out_0 = 8'b0;
+    assign sb_inv_out_1 = 8'b0;
+    assign sb_inv_out_2 = 8'b0;
+    assign sb_inv_out_3 = 8'b0;
+    assign sb_inv_out_4 = 8'b0;
+    assign sb_inv_out_5 = 8'b0;
+    assign sb_inv_out_6 = 8'b0;
+    assign sb_inv_out_7 = 8'b0;
+    assign mcd_o0       = 32'b0;
+    assign mcd_o1       = 32'b0;
+end endgenerate
+
 
 `undef BY
 

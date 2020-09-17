@@ -26,6 +26,8 @@ output wire         ready     // Is compute finished?
 
 );
 
+parameter DECRYPT_EN=1;
+
 // Always complete in a single cycle.
 assign ready = valid;
 

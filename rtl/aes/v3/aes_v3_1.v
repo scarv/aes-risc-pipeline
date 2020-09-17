@@ -26,6 +26,11 @@ output wire         ready     // Compute finished?
 
 );
 
+// Enable the decryption instructions.
+parameter DECRYPT_EN=1;
+
+wire   decrypt = dec && DECRYPT_EN;
+
 wire [7:0] bytes_in [3:0]   ;
 
 // Always finish in a single cycle.
@@ -38,7 +43,6 @@ assign     bytes_in [  3]   =  rs2[31:24]               ;
 
 wire [7:0] sel_byte         = bytes_in[bs]              ;
 
-wire       sbox_inv         = dec                       ;
 wire [7:0] sbox_out         ;
 
 //
@@ -64,10 +68,10 @@ function [7:0] xtimeN;
 
 endfunction
 
-wire [ 7:0] mix_b3 =       xtimeN(sbox_out, (dec ? 11  : 3))            ;
-wire [ 7:0] mix_b2 = dec ? xtimeN(sbox_out, (           13)) : sbox_out ;
-wire [ 7:0] mix_b1 = dec ? xtimeN(sbox_out, (            9)) : sbox_out ;
-wire [ 7:0] mix_b0 =       xtimeN(sbox_out, (dec ? 14  : 2))            ;
+wire [ 7:0] mix_b3 =       xtimeN(sbox_out, (decrypt ? 11  : 3))            ;
+wire [ 7:0] mix_b2 = decrypt ? xtimeN(sbox_out, (           13)) : sbox_out ;
+wire [ 7:0] mix_b1 = decrypt ? xtimeN(sbox_out, (            9)) : sbox_out ;
+wire [ 7:0] mix_b0 =       xtimeN(sbox_out, (decrypt ? 14  : 2))            ;
 
 wire [31:0] result_mix  = {mix_b3, mix_b2, mix_b1, mix_b0};
 
@@ -84,7 +88,7 @@ assign      rd          = rotated ^ rs1;
 //
 // Single SBOX instance
 aes_sbox i_aes_sbox (
-.inv(sbox_inv),
+.inv(decrypt ),
 .in (sel_byte),
 .out(sbox_out)
 );

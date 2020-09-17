@@ -18,6 +18,11 @@ output  wire        ready       , // Finished computing?
 output  wire [31:0] rd            // Output destination register value.
 );
 
+// Enable the decryption instructions.
+parameter DECRYPT_EN=1;
+
+wire   decrypt = dec && DECRYPT_EN;
+
 `define BYTEOF(X,I) X[7+8*I:8*I]
 
 // Sub-bytes input/output
@@ -60,7 +65,7 @@ wire [31:0] sbsr_fwd    =  hi ? {sbfwd_1, sbfwd_0, sbfwd_3, sbfwd_2}:
 wire [31:0] sbsr_inv    =  hi ? {sbinv_1, sbinv_0, sbinv_3, sbinv_2}: 
                                 {sbinv_2, sbinv_0, sbinv_3, sbinv_1}; 
 
-wire [31:0] result_sbsr = dec ? sbsr_inv : sbsr_fwd;
+wire [31:0] result_sbsr = decrypt ? sbsr_inv : sbsr_fwd;
 wire [31:0] result_sb   = {sbfwd_3, sbfwd_2, sbfwd_1, sbfwd_0}; 
 
 //
@@ -100,15 +105,22 @@ aes_fwd_sbox i_aes_sbox_f1(.in (sbinf_1), .fx(sbfwd_1) );
 aes_fwd_sbox i_aes_sbox_f2(.in (sbinf_2), .fx(sbfwd_2) );
 aes_fwd_sbox i_aes_sbox_f3(.in (sbinf_3), .fx(sbfwd_3) );
 
-aes_inv_sbox i_aes_sbox_i0(.in (sbini_0), .fx(sbinv_0) );
-aes_inv_sbox i_aes_sbox_i1(.in (sbini_1), .fx(sbinv_1) );
-aes_inv_sbox i_aes_sbox_i2(.in (sbini_2), .fx(sbinv_2) );
-aes_inv_sbox i_aes_sbox_i3(.in (sbini_3), .fx(sbinv_3) );
+generate if(DECRYPT_EN) begin : decrypt_enabled
+    aes_inv_sbox i_aes_sbox_i0(.in (sbini_0), .fx(sbinv_0) );
+    aes_inv_sbox i_aes_sbox_i1(.in (sbini_1), .fx(sbinv_1) );
+    aes_inv_sbox i_aes_sbox_i2(.in (sbini_2), .fx(sbinv_2) );
+    aes_inv_sbox i_aes_sbox_i3(.in (sbini_3), .fx(sbinv_3) );
+end else begin: decrypt_disabled
+    assign sbinv_0 = 8'b0;
+    assign sbinv_1 = 8'b0;
+    assign sbinv_2 = 8'b0;
+    assign sbinv_3 = 8'b0;
+end endgenerate
 
-aes_mixcolumn_byte i_aes_mixcolumn_0 (.col_in(mc_0 ), .dec(dec), .byte_out(mo0_0));
-aes_mixcolumn_byte i_aes_mixcolumn_1 (.col_in(mc_1 ), .dec(dec), .byte_out(mo1_0));
-aes_mixcolumn_byte i_aes_mixcolumn_2 (.col_in(mc_0r), .dec(dec), .byte_out(mo0_1));
-aes_mixcolumn_byte i_aes_mixcolumn_3 (.col_in(mc_1r), .dec(dec), .byte_out(mo1_1));
+aes_mixcolumn_byte i_aes_mixcolumn_0 (.col_in(mc_0 ), .dec(decrypt), .byte_out(mo0_0));
+aes_mixcolumn_byte i_aes_mixcolumn_1 (.col_in(mc_1 ), .dec(decrypt), .byte_out(mo1_0));
+aes_mixcolumn_byte i_aes_mixcolumn_2 (.col_in(mc_0r), .dec(decrypt), .byte_out(mo0_1));
+aes_mixcolumn_byte i_aes_mixcolumn_3 (.col_in(mc_1r), .dec(decrypt), .byte_out(mo1_1));
 
 `undef BYTEOF
 
