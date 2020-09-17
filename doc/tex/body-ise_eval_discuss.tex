@@ -75,22 +75,23 @@ on performance than area-efficiency.
 
 % -----------------------------------------------------------------------------
 
-\begin{adjustbox}{center,caption={Hardware implementation metrics 
-                                  for each ISE variant.
-                                 },label={tab:eval:hw},float={table}[!p]}
+\begin{adjustbox}{center,caption={
+    Hardware implementation metrics for each ISE variant with
+    encrypt and decrypt instructions implemented.
+                                 },label={tab:eval:hw:encdec},float={table}[!p]}
 \centering
 \begin{tabular}{|c|l|rr|r|r|}
 \hline
   \multicolumn{1}{|c|}{ISA}
 & \multicolumn{1}{ c|}{Variant}
 & \multicolumn{1}{ c|}{             ISE}
-& \multicolumn{1}{ c|}{             ISE}
+& \multicolumn{1}{ c|}{       ISE Path }
 & \multicolumn{1}{ c|}{\CORE{2}     CPU}
 & \multicolumn{1}{ c|}{\CORE{1}     CPU}
 \\
 & \multicolumn{1}{ c|}{/ Goal       }
 & \multicolumn{1}{ c|}{Area         }
-& \multicolumn{1}{ c|}{Path Depth   }
+& \multicolumn{1}{ c|}{Depth        }
 & \multicolumn{1}{ c|}{$+$ ISE area }
 & \multicolumn{1}{ c|}{$+$ ISE area }
 \\
@@ -109,13 +110,13 @@ on performance than area-efficiency.
   \multicolumn{1}{|c|}{ISA}
 & \multicolumn{1}{ c|}{Variant}
 & \multicolumn{1}{ c|}{             ISE}
-& \multicolumn{1}{ c|}{             ISE}
+& \multicolumn{1}{ c|}{        ISE Path}
 & \multicolumn{1}{ c|}{\CORE{2}     CPU}
 & \multicolumn{1}{ c|}{\CORE{1}     CPU}
 \\
 & \multicolumn{1}{ c|}{/ Goal       }
 & \multicolumn{1}{ c|}{Area         }
-& \multicolumn{1}{ c|}{Path Depth   }
+& \multicolumn{1}{ c|}{Depth        }
 & \multicolumn{1}{ c|}{$+$ ISE area }
 & \multicolumn{1}{ c|}{$+$ ISE area }
 \\
@@ -126,6 +127,62 @@ on performance than area-efficiency.
 \hline
 \end{tabular}
 \end{adjustbox}
+
+
+\begin{adjustbox}{center,caption={
+    Hardware implementation metrics for each ISE variant with
+    only encrypt instructions implemented.
+                                 },label={tab:eval:hw:dec},float={table}[!p]}
+\centering
+\begin{tabular}{|c|l|rr|r|r|}
+\hline
+  \multicolumn{1}{|c|}{ISA}
+& \multicolumn{1}{ c|}{Variant}
+& \multicolumn{1}{ c|}{             ISE}
+& \multicolumn{1}{ c|}{       ISE Path }
+& \multicolumn{1}{ c|}{\CORE{2}     CPU}
+& \multicolumn{1}{ c|}{\CORE{1}     CPU}
+\\
+& \multicolumn{1}{ c|}{/ Goal       }
+& \multicolumn{1}{ c|}{Area         }
+& \multicolumn{1}{ c|}{Depth        }
+& \multicolumn{1}{ c|}{$+$ ISE area }
+& \multicolumn{1}{ c|}{$+$ ISE area }
+\\
+\hline
+\hline
+ RV32IMC & Baseline    &              &            &       37375  ($1.00\times$) &       3501576 ($1.000\times$) \\
+ RV32IMC & \ISE{1} (L) &        1542  &        18  &              ($    \times$) &               ($     \times$) \\
+ RV32IMC & \ISE{1} (A) &         794  &        21  &              ($    \times$) &               ($     \times$) \\
+ RV32IMC & \ISE{2} (L) &        1621  & \bftab 17  &              ($    \times$) &               ($     \times$) \\
+ RV32IMC & \ISE{2} (A) & \bftab  630  &        20  &              ($    \times$) &               ($     \times$) \\
+ RV32IMC & \ISE{3}     & \bftab  630  &        25  &              ($    \times$) &               ($     \times$) \\
+ RV32IMC & \ISE{5} (L) &        1853  &        23  &              ($    \times$) &               ($     \times$) \\
+ RV32IMC & \ISE{5} (A) &         910  &        22  &              ($    \times$) &               ($     \times$) \\
+\hline
+\hline
+  \multicolumn{1}{|c|}{ISA}
+& \multicolumn{1}{ c|}{Variant}
+& \multicolumn{1}{ c|}{             ISE}
+& \multicolumn{1}{ c|}{        ISE Path}
+& \multicolumn{1}{ c|}{\CORE{2}     CPU}
+& \multicolumn{1}{ c|}{\CORE{1}     CPU}
+\\
+& \multicolumn{1}{ c|}{/ Goal       }
+& \multicolumn{1}{ c|}{Area         }
+& \multicolumn{1}{ c|}{Depth        }
+& \multicolumn{1}{ c|}{$+$ ISE area }
+& \multicolumn{1}{ c|}{$+$ ISE area }
+\\
+\hline
+\hline
+ RV64IMC & Baseline &          &          &  N/A  & 3717607 (1.000$\times$) \\
+ RV64IMC & \ISE{4}  &          &          &  N/A  &         (     $\times$) \\
+\hline
+\end{tabular}
+\end{adjustbox}
+
+
 
 \begin{adjustbox}{center,caption={Software  memory footprint measured in bytes
                                   for each ISE variant.
