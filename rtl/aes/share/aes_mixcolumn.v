@@ -179,13 +179,20 @@ output  wire [31:0] col_out
 
 );
 
+parameter DECRYPT_EN = 1;
+
 wire [31:0] col_enc;
 wire [31:0] col_dec;
 
 aes_mixcolumn_word_enc i_enc_word(.col_in(col_in),.col_out(col_enc));
-aes_mixcolumn_word_dec i_dec_word(.col_in(col_in),.col_out(col_dec));
 
-assign col_out = dec ? col_dec : col_enc;
+generate if(DECRYPT_EN) begin: decrypt_enabled
+aes_mixcolumn_word_dec i_dec_word(.col_in(col_in),.col_out(col_dec));
+end else begin: decrypt_disabled
+assign col_dec = 32'b0;
+end endgenerate
+
+assign col_out = dec && DECRYPT_EN ? col_dec : col_enc;
 
 endmodule
 

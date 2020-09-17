@@ -33,13 +33,13 @@ wire [31:0] result_subbytes         = {rd_3, rd_2, rd_1, rd_0};
 wire [31:0] result_mixcols          ;
 
 assign rd = mix ? result_mixcols : result_subbytes;
+        
+aes_sbox #(.DECRYPT_EN(DECRYPT_EN)) i_aes_sbox_0(.in (rs1_0), .inv(decrypt), .out( rd_0) );
+aes_sbox #(.DECRYPT_EN(DECRYPT_EN)) i_aes_sbox_1(.in (rs1_1), .inv(decrypt), .out( rd_1) );
+aes_sbox #(.DECRYPT_EN(DECRYPT_EN)) i_aes_sbox_2(.in (rs1_2), .inv(decrypt), .out( rd_2) );
+aes_sbox #(.DECRYPT_EN(DECRYPT_EN)) i_aes_sbox_3(.in (rs1_3), .inv(decrypt), .out( rd_3) );
 
-aes_sbox i_aes_sbox_0(.in (rs1_0), .inv(decrypt), .out( rd_0) );
-aes_sbox i_aes_sbox_1(.in (rs1_1), .inv(decrypt), .out( rd_1) );
-aes_sbox i_aes_sbox_2(.in (rs1_2), .inv(decrypt), .out( rd_2) );
-aes_sbox i_aes_sbox_3(.in (rs1_3), .inv(decrypt), .out( rd_3) );
-
-aes_mixcolumn i_aes_mixcolumn(
+aes_mixcolumn #(.DECRYPT_EN(DECRYPT_EN)) i_aes_mixcolumn(
     .col_in(rs1), .dec(decrypt), .col_out(result_mixcols)
 );
 

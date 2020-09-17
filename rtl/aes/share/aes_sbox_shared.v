@@ -329,15 +329,21 @@ module aes_sbox(
     output wire [7:0] out       // Output byte
 );
 
+parameter DECRYPT_EN = 1;
+
 wire [7:0] inv_out;
 wire [7:0] fwd_out;
 
-assign out = inv ? inv_out : fwd_out;
+assign out = inv && DECRYPT_EN ? inv_out : fwd_out;
 
+generate if(DECRYPT_EN ) begin: decrypt_enabled
 aes_inv_sbox i_aesi_sbox (
 .in(in),
 .fx(inv_out)
 );
+end else begin : decrypt_disabled
+assign inv_out = 8'b0;
+end endgenerate
 
 aes_fwd_sbox i_aes_sbox (
 .in(in),

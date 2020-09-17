@@ -17,6 +17,8 @@ else
 YOSYS_DEC_CMD = chparam -set DECRYPT_EN 0
 endif
 
+ASIC_LIB_FILE=$(YOSYS_ROOT)/examples/cmos/cmos_cells.lib
+
 define map_build_dir
 $(BUILD_DIR)/${1}
 endef
@@ -85,7 +87,7 @@ $(call map_synth_rpt,${1}) : ${2}
         -p "opt fast" \
         -p "write_verilog $(call map_cmos_verilog,${1})" \
         -p "flatten" \
-        -p "tee -o $(call map_synth_rpt,${1}) stat -tech cmos" \
+        -p "tee -o $(call map_synth_rpt,${1}) stat -tech cmos -liberty $(ASIC_LIB_FILE)" \
         -p "tee -a $(call map_synth_rpt,${1}) ltp -noff" \
 
 synth-${1} : $(call map_synth_rpt,${1}) $(call map_lint_rpt,${1})

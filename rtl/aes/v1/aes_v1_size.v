@@ -98,13 +98,13 @@ end
 
 //
 // Single SBOX instance.
-aes_sbox i_aes_sbox(
+aes_sbox #(.DECRYPT_EN(DECRYPT_EN)) i_aes_sbox(
 .in (sb_in ),
 .inv(decrypt),
 .out(sb_out)
 );
 
-aes_mixcolumn i_aes_mixcolumn(
+aes_mixcolumn  #(.DECRYPT_EN(DECRYPT_EN))i_aes_mixcolumn(
     .col_in(rs1), .dec(decrypt), .col_out(result_mc)
 );
 
