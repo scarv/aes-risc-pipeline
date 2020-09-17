@@ -1,13 +1,13 @@
 
 VARIANT  = ttable64
 
-AES_SRCS = $(REPO_HOME)/src/aes/ttable/aes_enc.c \
-           $(REPO_HOME)/src/aes/ttable/aes_dec.c \
-           $(REPO_HOME)/src/aes/ttable/aes.S
+AES_SRCS = $(REPO_HOME)/src/aes/ttable64/aes_enc.c \
+           $(REPO_HOME)/src/aes/ttable64/aes_dec.c \
+           $(REPO_HOME)/src/aes/ttable64/aes.S
 
-FLAGS    = -march=rv64imac -mabi=lp64
+FLAGS64  = -march=rv64imac -mabi=lp64
 
-SPIKEF   = --isa=rv64imac
+SPIKEF64 = --isa=rv64imac
 
-$(eval $(call add_aes_lib_target,$(VARIANT),$(AES_SRCS),$(FLAGS)))
-$(eval $(call add_aes_test_target,$(VARIANT),$(FLAGS),$(SPIKEF),$(PK64)))
+$(eval $(call add_aes_lib_target,$(VARIANT),$(AES_SRCS),$(FLAGS64)))
+$(eval $(call add_aes_test_target,$(VARIANT),$(FLAGS),$(SPIKEF64),$(PK64)))
