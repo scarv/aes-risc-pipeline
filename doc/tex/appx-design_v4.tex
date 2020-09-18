@@ -61,8 +61,8 @@ ld              a0, 0(a4)  // Load round key as double words.
 ld              a1, 8(a4)
 xor             t0, t0, a0 // Add round key for 2 columns at a time.
 xor             t1, t1, a1
-aes.v5.encsm    t2, t0, t1 // Next round state: columns 0, 1
-aes.v5.encsm    t3, t1, t0 // columns 2, 3 - Note swapped rs1/rs2
+aes.v4.encsm    t2, t0, t1 // Next round state: columns 0, 1
+aes.v4.encsm    t3, t1, t0 // columns 2, 3 - Note swapped rs1/rs2
 \end{lstlisting}
 \caption{
   An AES encryption round implemented using \ISE{4}.
