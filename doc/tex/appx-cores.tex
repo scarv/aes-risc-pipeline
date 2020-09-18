@@ -1,6 +1,13 @@
 % =============================================================================
 
-\vspace*{\fill}
+\begin{figure}[!h]
+\centering
+\includegraphics[scale={0.45},angle={90}]{diagrams/scarv-cpu-uarch.png}
+\caption{
+  \CORE{2} core micro-architecture.
+}
+\label{fig:core:2:normal}
+\end{figure}
 
 \begin{figure}[!h]
 \begin{lstlisting}[style={block},language={scala}]
@@ -35,6 +42,16 @@ class AESVanilla64 extends Config(
 \label{fig:rocket:64}
 \end{figure}
 
-\vspace*{\fill}
+% NOTE: Commented out as SCA section not likely to be included in final version.
+%\begin{figure}[!h]
+%\centering
+%\includegraphics[scale=0.45,angle=90]{diagrams/scarv-cpu-uarch-sca.png}
+%\caption{
+%  \CORE{2} core: hardened micro-architecture, 
+%  extending \ISE{3} for improved security against side-channel attack.
+%  Connections coloured red are security-critical, in the sense they relate to masks.
+%}
+%\label{fig:core:2:secure}
+%\end{figure}
 
 % =============================================================================
