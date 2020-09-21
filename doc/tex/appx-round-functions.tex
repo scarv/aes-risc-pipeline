@@ -1,0 +1,139 @@
+
+The following figures are implementations of the AES block encryption
+round function using the various ISEs.
+
+\begin{figure}[!h]
+\begin{lstlisting}[language=pseudo,style=block]
+lw           a0,  0(a4)       // Load Round Key
+lw           a1,  4(a4)
+lw           a2,  8(a4)
+lw           a3, 12(a4)
+xor          a4, a4, a0       // Add Round Key
+xor          a5, a5, a1
+xor          a6, a6, a2
+xor          a7, a7, a3
+saes.v1.encs a0, a4           // SubBytes
+saes.v1.encs a1, a5
+saes.v1.encs a2, a6
+saes.v1.encs a3, a7
+                              // Shift Rows
+and          a4, t0, t6   ; and   a5, t1, t6
+and          a6, t2, t6   ; and   a7, t3, t6
+slli         t4, t6, 0x8  ; and   t5, t0, t4
+or           a7, a7, t5   ; and   t5, t3, t4
+or           a6, a6, t5   ; and   t5, t2, t4
+or           a5, a5, t5   ; and   t5, t1, t4
+or           a4, a4, t5   ; slli  t4, t4, 0x8
+and          t5, t2, t4   ; or    a4, a4, t5
+and          t5, t3, t4   ; or    a5, a5, t5
+and          t5, t0, t4   ; or    a6, a6, t5
+and          t5, t1, t4   ; or    a7, a7, t5
+slli         t4, t4, 0x8  ; and   t5, t3, t4
+or           a4, a4, t5   ; and   t5, t0, t4
+or           a5, a5, t5   ; and   t5, t1, t4
+or           a6, a6, t5   ; and   t5, t2, t4
+or           a7, a7, t5
+saes.v1.encm t0, a4           // MixColumns
+saes.v1.encm t1, a5
+saes.v1.encm t2, a6
+saes.v1.encm t3, a7
+\end{lstlisting}
+\caption{
+  An AES encryption round implemented using \ISE{1}.
+}
+\label{fig:v1:round}
+\end{figure}
+
+\begin{figure}[!h]
+\begin{lstlisting}[language=pseudo,style=block]
+lw              a0,  0(a4)     // Load Round Key
+lw              a1,  4(a4)
+lw              a2,  8(a4)
+lw              a3, 12(a4)
+xor             t0, t0, a0     // Add Round Key
+xor             t1, t1, a1
+xor             t2, t2, a2
+xor             t3, t3, a3
+saes.v2.sub.enc a0, t0, t1     // SubBytes / ShiftRows
+saes.v2.sub.enc a1, t2, t3
+saes.v2.sub.enc a2, t1, t2
+saes.v2.sub.enc a3, t3, t0
+saes.v2.mix.enc t0, a0, a1     // ShiftRows / MixColumns
+saes.v2.mix.enc t1, a2, a3
+saes.v2.mix.enc t2, a1, a0
+saes.v2.mix.enc t3, a3, a2
+\end{lstlisting}
+\caption{
+  An AES encryption round implemented using \ISE{2}.
+}
+\label{fig:v2:round}
+\end{figure}
+
+\begin{figure}[!h]
+\begin{lstlisting}[language=pseudo,style=block]
+lw              a0, 16(RK)      // Load Round Key
+lw              a1, 20(RK)
+lw              a2, 24(RK)
+lw              a3, 28(RK)      // t0,t1,t2,t3 contains current round state.
+saes.v3.encsm   a0, a0, t0, 0   // Next state for column 0.
+saes.v3.encsm   a0, a0, t1, 1   // Current column 0 in t0.
+saes.v3.encsm   a0, a0, t2, 2   // Next column 0 accumulates in a0
+saes.v3.encsm   a0, a0, t3, 3
+saes.v3.encsm   a1, a1, t1, 0   // Next state for column 1.
+saes.v3.encsm   a1, a1, t2, 1
+saes.v3.encsm   a1, a1, t3, 2
+saes.v3.encsm   a1, a1, t0, 3
+saes.v3.encsm   a2, a2, t2, 0   // Next state for column 2.
+saes.v3.encsm   a2, a2, t3, 1
+saes.v3.encsm   a2, a2, t0, 2
+saes.v3.encsm   a2, a2, t1, 3
+saes.v3.encsm   a3, a3, t3, 0   // Next state for column 3.
+saes.v3.encsm   a3, a3, t0, 1
+saes.v3.encsm   a3, a3, t1, 2
+saes.v3.encsm   a3, a3, t2, 3   // a0,a1,a2,a3 contains new round state
+\end{lstlisting}
+\caption{
+  An AES encryption round implemented using \ISE{3}.
+}
+
+\label{fig:v3:round}
+\end{figure}
+\begin{figure}[!h]
+\begin{lstlisting}[language=pseudo,style=block]
+ld              a0, 0(a4)  // Load round key as double words.
+ld              a1, 8(a4)
+xor             t0, t0, a0 // Add round key for 2 columns at a time.
+xor             t1, t1, a1
+aes.v4.encsm    t2, t0, t1 // Next round state: columns 0, 1
+aes.v4.encsm    t3, t1, t0 // columns 2, 3 - Note swapped rs1/rs2
+\end{lstlisting}
+\caption{
+  An AES encryption round implemented using \ISE{4}.
+}
+\label{fig:v4:round}
+\end{figure}
+
+\begin{figure}[!h]
+\begin{lstlisting}[language=pseudo,style=block]
+lw                a0,  0(a4)   // Load Round Key
+lw                a1,  4(a4)
+lw                a2,  8(a4)
+lw                a3, 12(a4)
+xor               t0, t0, a0   // Add Round Key
+xor               t1, t1, a1
+xor               t2, t2, a2
+xor               t3, t3, a3
+saes.v5.esrsub.lo a0, t0, t1   // Quad 0: SubBytes / ShiftRows
+saes.v5.esrsub.lo a1, t1, t0   // Quad 1
+saes.v5.esrsub.hi a2, t2, t3   // Quad 2
+saes.v5.esrsub.hi a3, t3, t2   // Quad 3
+saes.v5.emix      t0, a0, a2   // Quad 0: ShiftRows / MixColumns
+saes.v5.emix      t1, a1, a3   // Quad 1
+saes.v5.emix      t2, a2, a0   // Quad 2
+saes.v5.emix      t3, a3, a1   // Quad 3
+\end{lstlisting}
+\caption{
+  An AES encryption round implemented using \ISE{5}.
+}
+\label{fig:v5:round}
+\end{figure}

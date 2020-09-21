@@ -101,7 +101,7 @@ on performance than area-efficiency.
 \begin{adjustbox}{center,caption={
     Hardware implementation metrics for each ISE variant with
     encrypt and decrypt instructions implemented.
-                                 },label={tab:eval:hw:encdec},float={table}[!p]}
+                                 },label={tab:eval:hw:encdec},float={table}[!t]}
 \centering
 \begin{tabular}{|c|l|rr|r|r|}
 \hline
@@ -137,49 +137,9 @@ on performance than area-efficiency.
 \end{adjustbox}
 
 
-\begin{adjustbox}{center,caption={
-    Hardware implementation metrics for each ISE variant with
-    only encrypt instructions implemented.
-                                 },label={tab:eval:hw:dec},float={table}[!p]}
-\centering
-\begin{tabular}{|c|l|rr|r|r|}
-\hline
-  \multicolumn{1}{|c|}{ISA}
-& \multicolumn{1}{ c|}{Variant}
-& \multicolumn{1}{ c|}{             ISE}
-& \multicolumn{1}{ c|}{       ISE Path }
-& \multicolumn{1}{ c|}{\CORE{2}     CPU}
-& \multicolumn{1}{ c|}{\CORE{1}     CPU}
-\\
-& \multicolumn{1}{ c|}{/ Goal       }
-& \multicolumn{1}{ c|}{Area         }
-& \multicolumn{1}{ c|}{Depth        }
-& \multicolumn{1}{ c|}{$+$ ISE area }
-& \multicolumn{1}{ c|}{$+$ ISE area }
-\\
-\hline
-\hline
- RV32IMC & Baseline    &              &            &       37325  ($1.00\times$) &       3501576 ($1.000\times$) \\
- RV32IMC & \ISE{1} (L) &        1605  & \bftab 17  &       39154  ($    \times$) &       3506224 ($     \times$) \\
- RV32IMC & \ISE{1} (A) &        1038  &        23  &       38561  ($    \times$) &       3505695 ($     \times$) \\
- RV32IMC & \ISE{2} (L) &        1611  & \bftab 17  &       40337  ($    \times$) &       3506729 ($     \times$) \\
- RV32IMC & \ISE{2} (A) &         780  &        21  &       38479  ($    \times$) &       3505910 ($     \times$) \\
- RV32IMC & \ISE{3}     & \bftab  630  &        25  &       38301  ($    \times$) &       3506097 ($     \times$) \\
- RV32IMC & \ISE{5} (L) &        1852  &        23  &       40626  ($    \times$) &       3507518 ($     \times$) \\
- RV32IMC & \ISE{5} (A) &        1048  &        23  &       38749  ($    \times$) &       3506816 ($     \times$) \\
-\hline
-\hline
- RV64IMC & Baseline &          &          &  N/A  & 3717607 (1.000$\times$) \\
- RV64IMC & \ISE{4}  &  3790    &    27    &  N/A  &         (     $\times$) \\
-\hline
-\end{tabular}
-\end{adjustbox}
-
-
-
 \begin{adjustbox}{center,caption={Software  memory footprint measured in bytes
                                   for each ISE variant.
-                                 },label={tab:eval:sw:size},float={table}[!p]}
+                                 },label={tab:eval:sw:size},float={table}[!t]}
 \centering
 \begin{tabular}{|c|c|r|r|r|r|r|}
 \hline
@@ -208,7 +168,7 @@ on performance than area-efficiency.
 \begin{adjustbox}{center,caption={Execution metrics
                                   for each ISE variant on the \CORE{2} core.
                                   Note that the $64$-bit \ISE{4} is absent, since there is no $64$-bit \CORE{2} core.
-                                 },label={tab:eval:sw:perf:2},float={table}[!p]}
+                                 },label={tab:eval:sw:perf:2},float={table}[!t]}
 \centering
 \begin{tabular}{|c|l|rr|rr|rr|rr|}
 \hline
@@ -248,7 +208,7 @@ on performance than area-efficiency.
 \begin{adjustbox}{center,caption={Execution metrics
                                   for each ISE variant on the \CORE{1} core.
                                   Note that the $64$-bit \ISE{4} uses the $64$-bit \CORE{1} core; all others use the $32$-bit \CORE{1} core.
-                                 },label={tab:eval:sw:perf:1},float={table}[!p]}
+                                 },label={tab:eval:sw:perf:1},float={table}[!t]}
 \centering
 \begin{tabular}{|c|l|rr|rr|rr|rr|}
 \hline
