@@ -45,12 +45,14 @@ computing platforms. Dedicated
 Instruction Set Extensions (ISEs) are often included for this purpose.
 RISC-V is a (relatively) new ISA that lacks such a standardised ISE.
 We survey the state-of-the-art industrial and academic ISEs for AES,
-implement and evaluate five different ISEs, one of which is novel,
-and make recommendations for standardisation.
-% NOTE: Commented out as SCA section not likely to be included in final version.
-%We consider the side-channel security implications of the ISE designs,
-%demonstrating how an implementation of one candidate ISE can be hardened
-%against DPA-style attacks.
+implement and evaluate five different ISEs, one of which is novel.
+We recommend separate ISEs for 32 and 64-bit base architectures, with
+measured performance improvements for block encryption of
+$4\times$ 
+and
+$10\times$
+with a hardware cost of $1.1K$ and $8.2K$ gates respectivley,
+when compared to a software T-Table implementation,
 We also explore how the proposed standard bit-manipulation extension
 to RISC-V can be harnessed for efficient implementation of AES-GCM.
 Our work supports the ongoing RISC-V cryptography extension standardisation

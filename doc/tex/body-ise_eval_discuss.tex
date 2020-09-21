@@ -1,6 +1,6 @@
 % =============================================================================
 
-\REFTAB{tab:eval:hw}
+\REFTAB{tab:eval:hw:encdec}
 demonstrates that all ISE variants
 imply a modest area overhead relative to their host core.
 For the RV32 \CORE{1} the area overhead of a synthesised \CORE{1} Tile with
@@ -18,7 +18,7 @@ Beyond this, and per
 the primary metric of interest is efficiency in terms of
 the latency-area product.
 this metric draws on data from
-\REFTAB{tab:eval:hw}
+\REFTAB{tab:eval:hw:encdec}
 plus either
 \REFTAB{tab:eval:sw:perf:2}
 or
@@ -41,6 +41,7 @@ Decryption Key Expansion (\ALG{Dec-KeyExp}),
 because
 typically many \ALG{Enc} or \ALG{Dec} operations are performed per
 \ALG{KeyExp}.
+
 For a $32$-bit core, our conclusion is that
 \ISE{3} 
 is the best option.
@@ -49,10 +50,32 @@ and simplest to implement.
 The area optimised \ISE{2} implementation sometimes comes close in
 efficiency, but requires a more complex multi-cycle implementation
 in this case.
+We note that \ISE{3} has relatively poor performance for the decryption
+key schedule.
+This is because it uses the Equivalent Inverse Cipher representation,
+and must first create an {\em encryption} orientated key schedule, before
+applying the Inverse MixCols transform to each word in the key schedule.
+Each word requires $8$ instructions to apply {\em only} the Inverse MixCols
+transform. We believe this is reasonable, as one typically performs
+many block decryptions per key schedule operation.
+
+Compared to past work, our implementation of \ISE{3} is
+slightly smaller than its original description in \cite{Saarinen:20}:
+$1149$ v.s. $1240$ gates.
+\cite{Saarinen:20} estimates a $5\times$ performance improvment, which is
+slightly better than our measured $4\times$ improvement, though this is
+dependant on relative memory access latencies.
+We would expect this improvement to increase in systems which store TTables
+in (relatively) high latency flash memory.
+\ISE{3} performs considerably better than \cite{TilGroSze:05},
+which achieves only a $2\times$ speedup in the best case.
+
 For a $64$-bit core,
 \ISE{4} 
 is the best option, which is somewhat obvious because it specifically makes
 use of the wider data-path.
+It is $10\times$ faster to perform a block encryption than a baseline TTable
+implemntation targeting a 64-bit base RISC-V architecture.
 With reference to
 \REFTAB{tab:eval:sw:perf:1}, 
 note that the number of cycles per instruction executed is relatively low.

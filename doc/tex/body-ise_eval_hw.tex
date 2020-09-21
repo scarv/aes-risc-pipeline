@@ -24,22 +24,40 @@ the (L)atency goal
 instantiates $4$ S-boxes and has a $1$-cycle execution latency.
 
 \REFTAB{tab:eval:hw:encdec}
-and
-\REFTAB{tab:eval:hw:enc}
-record
-various metrics 
-associated with the hardware implementations, 
-arranged in two parts: 
-the  left-hand part relates to each ISE in isolation,
-whereas 
-the right-hand part relates to each ISE integrated with a given core.
-Throughout, both area (measured in NAND2 equivalent gates) and Circuit
-Depth are as reported by Yosys~\cite{yosys}.  We found 
+shows the metrics associated with the hardware implementations, 
+and show the separated cost of the standalone ISE logic, and the
+cost of the core and integrated ISE.
+We use the open source Yosys~\cite{yosys} synthesis tool (v0.9+1706)
+with default settings
+to provide post synthesis circuit area (in the form of NAND2 gate
+equivalents) and circuit depths (in the form of gate delays).
+This approach, while more abstract than providing exact area and
+frequency results for a particular ASIC standard cell library, is
+much easier to reproduce\footnote{
+Especially
+for researchers lacking expensive commercial
+synthesis tools and process design kits.
+} while still providing meaningful results.
+We focus on ASIC implementations (rather than FPGA implementations)
+because this is the more relevant metric to the industrial (rather than
+academic) RISC-V community.
+This methodology has also been used for other RISC-V standard extension
+proposals, namely the Bit manipulation extension
+\cite[Section 3.1, Page 54]{riscv:bitmanip:draft}
+We found 
 that none of the ISEs affected the critical path of either the \CORE{2} 
 or \CORE{1} core.
-% TODO: address the issue re. Rocket area (i.e., the caches dominating)
 Considering each ISE as implemented on the \CORE{1} core, we note the 
 overhead wrt. area is marginal: this stems from the fact that the 
 baseline area of \CORE{1} includes the data and instruction caches.
+
+In
+\REFTAB{tab:eval:hw:dec}
+we consider the hardware costs when only {\em encryption} instructions are
+implemented.
+This is relevant to systems which only care about certain block cipher
+modes of operation, such as Galos/Counter-mode,
+which only use the encryption function of a block cipher.
+We discuss this further in \REFSEC{sec:gcm}.
 
 % =============================================================================

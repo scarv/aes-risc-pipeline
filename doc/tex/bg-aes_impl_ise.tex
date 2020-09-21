@@ -194,7 +194,8 @@ but was not designed
       Burke et al.~\cite{BurMcDAus:00}
       propose 
       a workload-agnostic ISE
-      based on workload characterisation.
+      based on workload characterisation for the
+      DEC Alpha architecture \cite{alpha2014alpha}.
       Per~\cite{BurMcDAus:00}, pertinent examples
       for AES
       include
@@ -215,7 +216,8 @@ but was not designed
       propose 
       a workload-agnostic ISE
       that employs a so-called
-      Parallel Table Lookup Module (PTLU).
+      Parallel Table Lookup Module (PTLU) for a ``{\em RISC like}''
+      instruction set.
       For AES, 
       this accelerates implementations based on T-tables 
       by affording an addressing mode that
@@ -231,7 +233,8 @@ but was not designed
       Grabher et al.~\cite{GraGroPag:08}
       explore  (in practice)
       a workload-agnostic ISE
-      that supports bit-sliced implementations.
+      that supports bit-sliced implementations for their custom
+      CRISP (``{\em RISC like}'') architecture.
       The ISE allows computation using 
       {\em configurable} $4$-input, $2$-output 
       Boolean functions, vs. 
@@ -270,7 +273,7 @@ but was not designed
       propose 
       a workload-specific ISE
        that could be described as 
-      ``hardware-assisted S-box''.
+      ``hardware-assisted S-box'' for the SPARC V8 architecture.
       The ISE constitutes a single instruction
       $\VERB{sbox} \mapsto \AESFUNC{SubBytes}$,
       supported by a dedicated hardware module
@@ -299,7 +302,7 @@ but was not designed
       propose 
       a workload-specific ISE
        that could be described as 
-      ``hardware-assisted round functions''.
+      ``hardware-assisted round functions'' for the SPARC V8 architecture.
       The ISE includes
          byte- and word-oriented variants of
          $\VERB  {sbox[4][s|r]} \mapsto \AESFUNC{SubBytes} $
