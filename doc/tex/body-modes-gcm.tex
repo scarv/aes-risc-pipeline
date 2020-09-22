@@ -227,18 +227,18 @@ specified in the proposed RISC-V Bit-manipulation extension also be included
 in the RISC-V cryptography extension.
 Implementers would otherwise need to implement (a subset of) the B
 extension, potentially adding functionality and cost that is not
-nessesary.
+necessary.
 
 An important consideration for the GCTR component of GCM is that it only
 requires the encryption function for a block cipher.
 Given this, we re-evaluate the hardware costs of each ISE, assuming that
 only the encryption instructions are implemented.
 These results are shown in \REFTAB{tab:eval:hw:dec}.
-Unsupprisingly, the area overhead is approximately halved, and there is
+Unsurprisingly, the area overhead is approximately halved, and there is
 a small reduction in circuit depth.
 For very constrained devices which have exact functionality
 requirements, we believe that making implementation of the decryption
-instruction optional could be benefical.
+instruction optional could be beneficial.
 If these systems {\em do} require AES decryption, it could still be
 implemented in software, with a performance and code size similar
 to the baseline implementations in

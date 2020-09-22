@@ -29,7 +29,7 @@ detailed in \cite[Section 5.3.5]{FIPS:197}.
 This enables all of the round transformations to be applied in the same
 order for both encryption and decryption.
 The \AESFUNC{AddRoundKey} step can then lifted out of the
-round function instructions (where otherwise it would apper in the middle of
+round function instructions (where otherwise it would appear in the middle of
 the decryption round), and implemented using a base ISA \VERB{xor}
 instruction.
 The round key then no longer needs to be an input to the instruction,
@@ -69,8 +69,8 @@ is replaced by
      \VERB{saes.v4.encs}.
 
 Note that use of the Equivalent Inverse Cipher representation
-nessesitates inclusion of the \VERB{saes.v4.imix} instruction, in order
+necessitates inclusion of the \VERB{saes.v4.imix} instruction, in order
 to efficiently imply the inverse \AESFUNC{MixColumn} step to words
-of the KeySchedule.
+of the Key-Schedule.
 
 % =============================================================================
