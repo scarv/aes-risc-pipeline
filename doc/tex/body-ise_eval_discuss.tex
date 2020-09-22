@@ -104,10 +104,7 @@ on performance than area-efficiency.
 
 % -----------------------------------------------------------------------------
 
-\begin{adjustbox}{center,caption={
-    Hardware metrics for each ISE variant with
-    encrypt and decrypt instructions.
-                                 },label={tab:eval:hw:encdec},float={table}[!t]}
+\begin{table}[p]
 \centering
 \begin{tabular}{|c|l|rr|r|r|}
 \hline
@@ -140,12 +137,11 @@ on performance than area-efficiency.
  RV64IMC & \ISE{4}  &     8226 &       28 &  N/A  & 3733786 (1.004$\times$) \\
 \hline
 \end{tabular}
-\end{adjustbox}
+\caption{Hardware metrics for each ISE variant with encrypt and decrypt instructions.}
+\label{tab:eval:hw:encdec}
+\end{table}
 
-
-\begin{adjustbox}{center,caption={Software  memory footprint measured in bytes
-                                  for each ISE variant.
-                                 },label={tab:eval:sw:size},float={table}[!t]}
+\begin{table}[p]
 \centering
 \begin{tabular}{|c|c|r|r|r|r|r|}
 \hline
@@ -169,12 +165,11 @@ on performance than area-efficiency.
  RV64IMC & \ISE{4} &       268  &       268 &      168 &      100 &    0 \\
 \hline
 \end{tabular}
-\end{adjustbox}
+\caption{Software memory footprint measured in bytes for each ISE variant.}
+\label{tab:eval:sw:size}
+\end{table}
 
-\begin{adjustbox}{center,caption={Execution metrics
-                                  for each ISE variant on the \CORE{2} core.
-                                  Note that the $64$-bit \ISE{4} is absent, since there is no $64$-bit \CORE{2} core.
-                                 },label={tab:eval:sw:perf:2},float={table}[!t]}
+\begin{table}
 \centering
 \begin{tabular}{|c|l|rr|rr|rr|rr|}
 \hline
@@ -209,12 +204,11 @@ on performance than area-efficiency.
  RV32IMC & \ISE{5} (A) &          227 &          554 &          227 &          532&          332 &          479 &          338 &          498 \\
 \hline
 \end{tabular}                
-\end{adjustbox}
+\caption{Execution metrics for each ISE variant on the \CORE{2} core.  Note that the $64$-bit \ISE{4} is absent, since there is no $64$-bit \CORE{2} core.}
+\label{tab:eval:sw:perf:2}
+\end{table}
 
-\begin{adjustbox}{center,caption={Execution metrics
-                                  for each ISE variant on the \CORE{1} core.
-                                  Note that the $64$-bit \ISE{4} uses the $64$-bit \CORE{1} core; all others use the $32$-bit \CORE{1} core.
-                                 },label={tab:eval:sw:perf:1},float={table}[!t]}
+\begin{table}[p]
 \centering
 \begin{tabular}{|c|l|rr|rr|rr|rr|}
 \hline
@@ -252,15 +246,13 @@ on performance than area-efficiency.
  RV64IMC & \ISE{4}     &        76  &       115  &        76  &       133  &        61  &       199  &       131  &       286  \\
 \hline
 \end{tabular}
-\end{adjustbox}
+\caption{Execution metrics for each ISE variant on the \CORE{1} core.  Note that the $64$-bit \ISE{4} uses the $64$-bit \CORE{1} core; all others use the $32$-bit \CORE{1} core.}
+\label{tab:eval:sw:perf:1}
+\end{table}
 
 % -----------------------------------------------------------------------------
 
-\begin{adjustbox}{center,caption={
-    Comparison of performance/area product. Each value is normalised to the
-    largest product per column. The {\tt RV64IMC} row is not normalised as
-    there is no comparison point.
-},label={tab:eval:results},float={table}[!t]}
+\begin{table}[p]
 \centering
 \begin{tabular}{|c|l|rr|rr|rr|rr|}
 \hline
@@ -295,6 +287,8 @@ RV32IMC & \ISE{5} (A) &        0.22 &           0.47 &           0.22 &         
 RV64IMC & \ISE{4}     &       0.266 &       0.402 &       0.266 &       0.465 &       0.213 &       0.696 &       0.458 &       1.000  \\
 \hline
 \end{tabular}
-\end{adjustbox}
+\caption{Comparison of performance/area product. Each value is normalised to the largest product per column. The {\tt RV64IMC} row is not normalised as there is no comparison point.}
+\label{tab:eval:results}
+\end{table}
 
 % =============================================================================

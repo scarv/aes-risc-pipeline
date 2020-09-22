@@ -1,5 +1,5 @@
 
-\begin{figure}[!h]
+\begin{figure}[p]
 \begin{lstlisting}[language=pseudo,style=block]
 saes.v1.encs rd, rs1 : v1.SubBytes(rd, rs1, fwd=1)
 saes.v1.decs rd, rs1 : v1.SubBytes(rd, rs1, fwd=0)
@@ -20,7 +20,7 @@ v1.MixColumn(rd, rs1, fwd):
 \label{fig:v1:pseudo}
 \end{figure}
 
-\begin{figure}[!h]
+\begin{figure}[p]
 \begin{lstlisting}[language=pseudo,style=block]
 saes.v2.encs rd, rs1, rs2 : v2.SubBytes(rd, rs1, rs2, fwd=1)
 saes.v2.decs rd, rs1, rs2 : v2.SubBytes(rd, rs1, rs2, fwd=0)
@@ -43,7 +43,7 @@ v2.MixColumns(rd, rs1, rs2, fwd):
 \label{fig:v2:pseudo}
 \end{figure}
 
-\begin{figure}[!h]
+\begin{figure}[p]
 \begin{lstlisting}[language=pseudo,style=block]
 saes.v3.encs  rd, rs1, rs2, bs : v3.Proc(rd, rs1, rs2, bs, fwd=1, mix=0)
 saes.v3.encsm rd, rs1, rs2, bs : v3.Proc(rd, rs1, rs2, bs, fwd=1, mix=1)
@@ -63,7 +63,7 @@ v3.Proc(rd, rs1, rs2, bs, fwd, mix):
 \label{fig:v3:pseudo}
 \end{figure}
 
-\begin{figure}[!h]
+\begin{figure}[p]
 \begin{lstlisting}[language=pseudo,style=block]
 saes.v4.ks1       rd rs1 rcon : v4.ks1(rd, rs1, rcon)
 saes.v4.ks2       rd rs1 rs2  : v4.ks2(rd, rs1, rs2 )
@@ -108,7 +108,7 @@ v4.InvMix(rd, rs1):             // Inverse MixColumns
 \label{fig:v4:pseudo}
 \end{figure}
 
-\begin{figure}[!h]
+\begin{figure}[p]
 \begin{lstlisting}[language=pseudo,style=block]
 saes.v5.esrsub.lo rd, rs1, rs2 : rd = v5.SrSub(rs1, rs2, fwd=1, hi=0)
 saes.v5.esrsub.hi rd, rs1, rs2 : rd = v5.SrSub(rs1, rs2, fwd=1, hi=1)

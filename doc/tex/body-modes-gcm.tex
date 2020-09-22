@@ -1,7 +1,6 @@
 % =============================================================================
 
-\begin{adjustbox}{center,caption={Instruction    counts for multiplication in $\F_{2^{128}}$ as used by \ALG{GHASH}.
-                                 },label={tab:gcm:instrs},float={table}[!ht]}
+\begin{table}[p]
 \centering
 \begin{tabular}{|c|c|c|rrrrrr|}
 \hline
@@ -24,10 +23,11 @@ RV64IB &       yes &    mul &$  2$&$ 14$&$  0$&$  5$&$  5$&$ 26$ \\
 RV64IB &       yes &  shift &$  2$&$ 24$&$ 12$&$  3$&$  3$&$ 44$ \\
 \hline
 \end{tabular}
-\end{adjustbox}
+\caption{Instruction counts for multiplication in $\F_{2^{128}}$ as used by \ALG{GHASH}.}
+\label{tab:gcm:instrs}
+\end{table}
 
-\begin{adjustbox}{center,caption={Modelled cycle counts for multiplication in $\F_{2^{128}}$ as used by \ALG{GHASH}.
-                                 },label={tab:gcm:cycles},float={table}[!ht]}
+\begin{table}[p]
 \centering
 \begin{tabular}{|c|c|c|rrrr|}
 \hline
@@ -46,12 +46,11 @@ RV64IB &       yes &    mul &             26  &    \bftab   36  &     \bftab  46
 RV64IB &       yes &  shift &             44  &             50  &             56  &     \bftab  74  \\
 \hline
 \end{tabular}
-\end{adjustbox}
+\caption{Modelled cycle counts for multiplication in $\F_{2^{128}}$ as used by \ALG{GHASH}.}
+\label{tab:gcm:cycles}
+\end{table}
 
-\begin{adjustbox}{center,caption={
-    Hardware implementation metrics for each ISE variant with
-    only encrypt instructions implemented.
-                                 },label={tab:eval:hw:dec},float={table}[!ht]}
+\begin{table}[p]
 \centering
 \begin{tabular}{|c|l|rr|r|r|}
 \hline
@@ -84,8 +83,9 @@ RV64IB &       yes &  shift &             44  &             50  &             56
  RV64IMC & \ISE{4}  &  3790    &    27    &  N/A  & 3728235 (1.003$\times$) \\
 \hline
 \end{tabular}
-\end{adjustbox}
-
+\caption{Hardware implementation metrics for each ISE variant with only encrypt instructions implemented.}
+\label{tab:eval:hw:dec}
+\end{table}
 
 % -----------------------------------------------------------------------------
 
