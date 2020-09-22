@@ -1,65 +1,58 @@
 % =============================================================================
 
-\ISE{4}
-is similar to the SPARC~\cite[Page 109]{SPARC:16} ISE in
-requiring
-$\RVXLEN = 64$
-and adopting a 
-{\em double}
-column-packed 
+\ISE{4} requires $\RVXLEN = 64$
+and adopts a {\em double} column-packed 
 representation of state and round key matrices,
 i.e., {\em two} columns (or $8$ elements) are packed into a $64$-bit word.
-While still adhering to a format that
-includes $2$ source and $1$ destination register address,
-a single instruction can therefore 
-1) accept  all  of the current state as  input,
-   and
-2) produce half of the next    state as output.
+It is similar in principle to the SPARC~\cite[Page 109]{SPARC:16} ISE,
+but improves on it by adhering to the
+$2$ source and $1$ destination register address requirement.
+By sourcing two $64$-bit registers, and writing a single $64$-bit register,
+a single instruction can 
+accept  all  of the current round state as  input
+and
+produce half of the next    round state as output.
 
-SPARC~\cite[Page 109]{SPARC:16}
-adds
-$ 9$
+SPARC~\cite[Page 109]{SPARC:16} adds $ 9$
 instructions ($4$ for encryption, $4$ for decryption, and $1$ auxiliary).
-For example,
-\VERB{AES_EROUND01}
-and
-\VERB{AES_EROUND23}
-produce
-columns $0$ and $1$
-and
-columns $2$ and $3$
+For example, \VERB{AES_EROUND01} and \VERB{AES_EROUND23}
+produce columns $0$ and $1$ and columns $2$ and $3$
 respectively.
-As detailed in
-\REFFIG{fig:v4:pseudo},
-\ISE{4}
-improves this by 
-adding 
-$ 7$
+Each instruction sources $3$ $64$-bit registers, and writes a single
+$64$-bit register.
+
+As shown in \REFFIG{fig:v4:pseudo}, \ISE{4} improves this by 
+adding only $ 7$
 instructions ($2$ for encryption, $2$ for decryption, and $3$ auxiliary).
+This is realised by utilising the Equivalent Inverse Cipher representation
+detailed in \cite[Section 5.3.5]{FIPS:197}.
+This enables all of the round transformations to be applied in the same
+order for both encryption and decryption.
+The \AESFUNC{AddRoundKey} step can then lifted out of the
+round function instructions (where otherwise it would apper in the middle of
+the decryption round), and implemented using a base ISA \VERB{xor}
+instruction.
+The round key then no longer needs to be an input to the instruction,
+meaning it only needs $2$ source register operands.
+
+We then note that the nature of \AESFUNC{ShiftRows} means we do
+not need separate instructions to compute the next values of
+columns (0,1) or columns (2,3) as the SPARC instructions do.
+Instead, we can simply reverse the order of the source register
+operands, and get the same effect.
+This is detailed in \REFFIG{fig:v4:pseudo}, and an example round
+function is shown in \REFFIG{fig:v4:round}.
+
 For example,
-\VERB{saes.v4.encs}
+\VERB{saes.v4.encsm rd, rA, rB}
 applies
 \AESFUNC{SubBytes}, \AESFUNC{ShiftRow}, and \AESFUNC{MixColumn}  
-to elements in   a packed column,
-but differs from 
-\VERB{AES_EROUND01}
-and
-\VERB{AES_EROUND23},
-because
-1) it constitutes
-   $1$ (vs. $2$)
-   instruction,
-   which is possible by observing that swapping the inputs allows 
-   computation of either 
-   columns $0$ and $1$ 
-   or 
-   columns $2$ and $3$,
-   and
-2) it uses 
-   $2$ (vs. $3$)
-   source register addresses, 
-   as a result of opting not to include
-   \AESFUNC{AddRoundKey}.
+to elements in a packed column and
+produces the {\em next} round values for packed columns (0,1).
+Executing
+\VERB{saes.v4.encsm rd, rB, rA}, with no change in values of
+\VERB{rA} or \VERB{rB}, will produce the next round state values for
+packed columns (2, 3).
 
 \REFFIG{fig:v4:round}
 demonstrates that use of \ISE{4} to implement AES encryption requires
@@ -74,5 +67,10 @@ In the $Nr$-th round, which omits \AESFUNC{MixColumns},
      \VERB{saes.v4.encsm}
 is replaced by 
      \VERB{saes.v4.encs}.
+
+Note that use of the Equivalent Inverse Cipher representation
+nessesitates inclusion of the \VERB{saes.v4.imix} instruction, in order
+to efficiently imply the inverse \AESFUNC{MixColumn} step to words
+of the KeySchedule.
 
 % =============================================================================

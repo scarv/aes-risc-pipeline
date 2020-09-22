@@ -70,6 +70,12 @@ in (relatively) high latency flash memory.
 \ISE{3} performs considerably better than \cite{TilGroSze:05},
 which achieves only a $2\times$ speedup in the best case.
 
+We note that despite needing the same number of instructions per round
+as \ISE{2} (based on \cite{TilGroSze:05}), our \ISE{5} design suffers in terms
+of performance.
+This is due to the conversion between quadrant-packed and column packed
+representations.
+
 For a $64$-bit core,
 \ISE{4} 
 is the best option, which is somewhat obvious because it specifically makes
@@ -78,7 +84,7 @@ It is $10\times$ faster to perform a block encryption than a baseline TTable
 implemntation targeting a 64-bit base RISC-V architecture.
 With reference to
 \REFTAB{tab:eval:sw:perf:1}, 
-note that the number of cycles per instruction executed is relatively low.
+note that the number of cycles per instruction executed is relatively high.
 This fact stems from use of the ROCC interface, in that forwarding of the 
 result from an ISE instruction (that uses the ROCC) incurs an overhead vs. 
 an ISE instruction; fine-grained integration of the AES-FU could therefore
@@ -99,8 +105,8 @@ on performance than area-efficiency.
 % -----------------------------------------------------------------------------
 
 \begin{adjustbox}{center,caption={
-    Hardware implementation metrics for each ISE variant with
-    encrypt and decrypt instructions implemented.
+    Hardware metrics for each ISE variant with
+    encrypt and decrypt instructions.
                                  },label={tab:eval:hw:encdec},float={table}[!t]}
 \centering
 \begin{tabular}{|c|l|rr|r|r|}
@@ -121,13 +127,13 @@ on performance than area-efficiency.
 \hline
 \hline
  RV32IMC & Baseline    &              &            &       37325  ($1.00\times$) &       3501576 ($1.000\times$) \\
- RV32IMC & \ISE{1} (L) &        3514  & \bftab 18  &       41746  ($1.  \times$) &       3508448 ($1.002\times$) \\
- RV32IMC & \ISE{1} (A) &        2195  &        21  &       40171  ($1.  \times$) &       3506995 ($1.002\times$) \\
- RV32IMC & \ISE{2} (L) &        3574  &        19  &       41132  ($1.  \times$) &       3508946 ($1.002\times$) \\
- RV32IMC & \ISE{2} (A) &        1355  &        21  &       38777  ($1.  \times$) &\bftab 3506591 ($1.001\times$) \\
- RV32IMC & \ISE{3}     & \bftab 1149  &        30  &\bftab 38546  ($1.  \times$) &       3506761 ($1.001\times$) \\
- RV32IMC & \ISE{5} (L) &        4172  &        21  &       42035  ($1.  \times$) &       3510055 ($1.002\times$) \\
- RV32IMC & \ISE{5} (A) &        1726  &        23  &       39144  ($1.  \times$) &       3507755 ($1.002\times$) \\
+ RV32IMC & \ISE{1} (L) &        3514  & \bftab 18  &       41746  ($1.12\times$) &       3508448 ($1.002\times$) \\
+ RV32IMC & \ISE{1} (A) &        2195  &        21  &       40171  ($1.08\times$) &       3506995 ($1.002\times$) \\
+ RV32IMC & \ISE{2} (L) &        3574  &        19  &       41132  ($1.10\times$) &       3508946 ($1.002\times$) \\
+ RV32IMC & \ISE{2} (A) &        1355  &        21  &       38777  ($1.04\times$) &\bftab 3506591 ($1.001\times$) \\
+ RV32IMC & \ISE{3}     & \bftab 1149  &        30  &\bftab 38546  ($1.03\times$) &       3506761 ($1.001\times$) \\
+ RV32IMC & \ISE{5} (L) &        4172  &        21  &       42035  ($1.13\times$) &       3510055 ($1.002\times$) \\
+ RV32IMC & \ISE{5} (A) &        1726  &        23  &       39144  ($1.05\times$) &       3507755 ($1.002\times$) \\
 \hline
 \hline
  RV64IMC & Baseline &          &          &  N/A  & 3717607 (1.000$\times$) \\
@@ -251,7 +257,9 @@ on performance than area-efficiency.
 % -----------------------------------------------------------------------------
 
 \begin{adjustbox}{center,caption={
-    Comparison of performance/area product. 
+    Comparison of performance/area product. Each value is normalised to the
+    largest product per column. The {\tt RV64IMC} row is not normalised as
+    there is no comparison point.
 },label={tab:eval:results},float={table}[!t]}
 \centering
 \begin{tabular}{|c|l|rr|rr|rr|rr|}
@@ -276,13 +284,13 @@ on performance than area-efficiency.
 \\
 \hline
 \hline
-RV32IMC & \ISE{1} (L) &       0.748 &       0.840 &       0.748 &       0.841 &       0.289 &       0.441 &       0.298 &       0.469 \\
-RV32IMC & \ISE{1} (A) &       0.468 &       0.672 &       0.468 &       0.673 &       0.181 &       0.313 &\bftab 0.187 &\bftab 0.330 \\
-RV32IMC & \ISE{2} (L) &       0.321 &       0.409 &       0.322 &       0.425 &       0.295 &       0.451 &       0.500 &       0.918 \\
-RV32IMC & \ISE{2} (A) &       0.125 &       0.291 &       0.125 &       0.303 &       0.115 &       0.193 &       0.195 &       0.437 \\
-RV32IMC & \ISE{3}     &\bftab 0.116 &\bftab 0.142 &\bftab 0.116 &\bftab 0.139 &\bftab 0.107 &\bftab 0.152 &       0.321 &       0.544 \\
-RV32IMC & \ISE{5} (L) &       0.394 &       0.510 &       0.394 &       0.504 &       0.576 &       0.778 &       0.586 &       0.811 \\
-RV32IMC & \ISE{5} (A) &       0.184 &       0.449 &       0.184 &       0.431 &       0.269 &       0.388 &       0.274 &       0.404 \\
+RV32IMC & \ISE{1} (L) &        1.00 &           1.00 &           1.00 &           1.00 &           0.50 &        0.57 &        0.51 &        0.51 \\
+RV32IMC & \ISE{1} (A) &        0.62 &           0.80 &           0.62 &           0.80 &           0.31 &        0.40 & \bftab 0.32 & \bftab 0.36 \\
+RV32IMC & \ISE{2} (L) &        0.43 &           0.48 &           0.43 &           0.50 &           0.51 &        0.58 &        0.85 &        1.00 \\
+RV32IMC & \ISE{2} (A) &        0.16 &           0.34 &           0.16 &           0.35 &           0.19 &        0.24 & \bftab 0.32 &        0.46 \\
+RV32IMC & \ISE{3}     & \bftab 0.15 & \bftab    0.17 & \bftab    0.15 & \bftab    0.16 & \bftab    0.18 & \bftab 0.19 &        0.54 &        0.58 \\
+RV32IMC & \ISE{5} (L) &        0.53 &           0.61 &           0.53 &           0.60 &           1.00 &        1.00 &        1.00 &        0.89 \\
+RV32IMC & \ISE{5} (A) &        0.22 &           0.47 &           0.22 &           0.45 &           0.41 &        0.44 &        0.41 &        0.39 \\
 \hline
 RV64IMC & \ISE{4}     &       0.266 &       0.402 &       0.266 &       0.465 &       0.213 &       0.696 &       0.458 &       1.000  \\
 \hline

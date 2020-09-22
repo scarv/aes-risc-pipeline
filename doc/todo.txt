@@ -1,8 +1,4 @@
 
-Explain use of different decryption in v4
-
-TODO
-
 > Explain why variant 3 is so expensive in terms of cycles for the key
 > expansion of decryption.
 
@@ -35,20 +31,24 @@ DONE
 
 DONE
 
-> Use the additional space for a more detailed description of the AES
-> variants and their implementation, in particular of your new variant.
-
-TODO
-
 > Extend and strengthen the discussion on GCM.
 > Describe the impact on performance metrics to your implementations, if
 > the decoding functionality was to be removed when using only AES-GCM.
 
-TODO
+DONE
 
 > Bring crucial information from the appendix back into the paper.
 
-TODO
+DONE
+
+> Explain use of different decryption in v4
+
+DONE
+
+> Use the additional space for a more detailed description of the AES
+> variants and their implementation, in particular of your new variant.
+
+DONE
 
 ---
 

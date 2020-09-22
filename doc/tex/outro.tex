@@ -22,6 +22,20 @@ Our conclusion is that
    extension
    can combine with either option to support AES-GCM.
 
+\paragraph{Future Work}
+Our evaluations of the different ISEs have foucsed primarily on
+performance, code size and hardware cost metrics.
+Because our work is a departure from historic
+AES ISEs in that they are designed to be suitable for small, embedded
+CPUs, power and EM side-channel security will likely be a consideration
+for implementations of these ISEs.
+We consider the problem of side-channel secure ISE design to be an
+open problem, particularly in terms of making the same code portably
+side-channel secure across multiple implementations of the same ISE.
+Future efforts would be well spent in studying this problem, perhaps
+looking at creating custom extensions based on the recommendations here
+to support side-channel security.
+
 % TODO: maybe try to add some insight into ISA design constraints ...
 %
 %The requirement for $3$-address (i.e., $2$ source and $1$ destination)

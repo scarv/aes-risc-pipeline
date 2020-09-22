@@ -1,7 +1,7 @@
 % =============================================================================
 
 \begin{adjustbox}{center,caption={Instruction    counts for multiplication in $\F_{2^{128}}$ as used by \ALG{GHASH}.
-                                 },label={tab:gcm:instrs},float={table}[!t]}
+                                 },label={tab:gcm:instrs},float={table}[!ht]}
 \centering
 \begin{tabular}{|c|c|c|rrrrrr|}
 \hline
@@ -27,7 +27,7 @@ RV64IB &       yes &  shift &$  2$&$ 24$&$ 12$&$  3$&$  3$&$ 44$ \\
 \end{adjustbox}
 
 \begin{adjustbox}{center,caption={Modelled cycle counts for multiplication in $\F_{2^{128}}$ as used by \ALG{GHASH}.
-                                 },label={tab:gcm:cycles},float={table}[!t]}
+                                 },label={tab:gcm:cycles},float={table}[!ht]}
 \centering
 \begin{tabular}{|c|c|c|rrrr|}
 \hline
@@ -51,7 +51,7 @@ RV64IB &       yes &  shift &             44  &             50  &             56
 \begin{adjustbox}{center,caption={
     Hardware implementation metrics for each ISE variant with
     only encrypt instructions implemented.
-                                 },label={tab:eval:hw:dec},float={table}[!t]}
+                                 },label={tab:eval:hw:dec},float={table}[!ht]}
 \centering
 \begin{tabular}{|c|l|rr|r|r|}
 \hline
@@ -71,17 +71,17 @@ RV64IB &       yes &  shift &             44  &             50  &             56
 \hline
 \hline
  RV32IMC & Baseline    &              &            &       37325  ($1.00\times$) &       3501576 ($1.000\times$) \\
- RV32IMC & \ISE{1} (L) &        1605  & \bftab 17  &       39154  ($    \times$) &       3506224 ($     \times$) \\
- RV32IMC & \ISE{1} (A) &        1038  &        23  &       38561  ($    \times$) &       3505695 ($     \times$) \\
- RV32IMC & \ISE{2} (L) &        1611  & \bftab 17  &       40337  ($    \times$) &       3506729 ($     \times$) \\
- RV32IMC & \ISE{2} (A) &         780  &        21  &       38479  ($    \times$) &       3505910 ($     \times$) \\
- RV32IMC & \ISE{3}     & \bftab  630  &        25  &       38301  ($    \times$) &       3506097 ($     \times$) \\
- RV32IMC & \ISE{5} (L) &        1852  &        23  &       40626  ($    \times$) &       3507518 ($     \times$) \\
- RV32IMC & \ISE{5} (A) &        1048  &        23  &       38749  ($    \times$) &       3506816 ($     \times$) \\
+ RV32IMC & \ISE{1} (L) &        1605  & \bftab 17  &       39154  ($1.05\times$) &       3506224 ($1.001\times$) \\
+ RV32IMC & \ISE{1} (A) &        1038  &        23  &       38561  ($1.05\times$) &       3505695 ($1.001\times$) \\
+ RV32IMC & \ISE{2} (L) &        1611  & \bftab 17  &       40337  ($1.03\times$) &       3506729 ($1.001\times$) \\
+ RV32IMC & \ISE{2} (A) &         780  &        21  &       38479  ($1.08\times$) &       3505910 ($1.001\times$) \\
+ RV32IMC & \ISE{3}     & \bftab  630  &        25  &\bftab 38301  ($1.03\times$) &       3506097 ($1.001\times$) \\
+ RV32IMC & \ISE{5} (L) &        1852  &        23  &       40626  ($1.03\times$) &       3507518 ($1.001\times$) \\
+ RV32IMC & \ISE{5} (A) &        1048  &        23  &       38749  ($1.09\times$) &       3506816 ($1.001\times$) \\
 \hline
 \hline
  RV64IMC & Baseline &          &          &  N/A  & 3717607 (1.000$\times$) \\
- RV64IMC & \ISE{4}  &  3790    &    27    &  N/A  &         (     $\times$) \\
+ RV64IMC & \ISE{4}  &  3790    &    27    &  N/A  & 3728235 (1.003$\times$) \\
 \hline
 \end{tabular}
 \end{adjustbox}
@@ -115,6 +115,11 @@ Bit-manipulation ~\cite[Section 17]{RV:ISA:I:19}
 (At the time of writing, the draft extension proposal is found in
 \cite{riscv:bitmanip:draft})
 extension.
+This approach is attractive for two reasons.
+AES-GCM is a very common construction, but AES is not the only block
+cipher which can be used with GCM.
+Likewise, AES may not always be used with GCM, so separation of
+the two constructs from an instruction set point of view is prudent.
 
 % -----------------------------------------------------------------------------
 
@@ -147,7 +152,8 @@ a reduction of the $256$-bit result modulo
 $
 \IND{x}^{128} + \IND{x}^{7} + \IND{x}^{2} + \IND{x} + 1 .
 $
-The first  step 
+
+The multiplication step 
 can be realised using pairs of ``carry-less'' multiplication instructions
 \VERB{clmul} and \VERB{clmulh}.
 These compute the least significant (resp. most-significant) 
@@ -165,7 +171,8 @@ requires
 $ 9$ (resp. $3$) such pairs 
 on RV32IB (resp. RV64IB),
 plus some additional \VERB{xor} instructions.
-The second step
+
+The reduction step
 can be implemented in two ways:
 a shift-based reduction, made possible by the low Hamming weight of the
 primitive polynomial,
@@ -215,7 +222,7 @@ a shift-based
 reduction 
 is preferable.
 
-The authors recommend the carry-less multiply instructions
+We recommend the carry-less multiply instructions
 specified in the proposed RISC-V Bit-manipulation extension also be included
 in the RISC-V cryptography extension.
 Implementers would otherwise need to implement (a subset of) the B

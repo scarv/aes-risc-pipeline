@@ -36,7 +36,9 @@
 \node [inner sep={-2pt},fit=(C3-1-1) (C3-4-1),fill={orange},fill opacity={0.2}] {} ;
 \end{tikzpicture}
 \end{math}
-\caption{An illustration of quadrant-packed representation, as applied to a state matrix.}
+\caption{
+An illustration of quadrant-packed representation (left), as applied to a state matrix (right).
+}
 \label{fig:ise:v5:quadpack}
 \end{figure}
 
@@ -47,45 +49,47 @@ assumes
 $\RVXLEN = 32$
 and adopts a 
 novel, {\em quadrant}-packed 
-representation of state and round key matrices:
-per
-\REFFIG{fig:ise:v5:quadpack}
-for example, doing so packs each $4$-element quadrant of the state into 
-a $32$-bit word.  Note that {\em either} two rows {\em or} two columns 
-of the state can be accessed by accessing two quadrants: the intuition,
-based on this fact, is that such a representation can
+representation of state and round key matrices
+as shown in
+\REFFIG{fig:ise:v5:quadpack}.
+This means that each quadrant of the standard $4\times4$ byte AES state
+representation is packed into a single $32$-bit register word.
+This allows {\em either} two complete rows (to perform \AESFUNC{ShiftRows}) 
+{\em or}
+two complete columns (to perform \AESFUNC{MixColumns})
+of the state can be accessed by accessing two quadrants.
+Based on this, such a representation can
 1) afford advantages of {\em both} row- and column-packed alternatives,
    {\em and}
-2) allow an instruction format that 
-   includes $2$ source and $1$ destination register address.
-However, it also implies a need to convert any input into (resp. output 
-from) {\em quadrant}-packed representation; although such conversion is
-amortised by $Nr$ rounds of computation, it represents an overhead vs.
+2) allow an instruction format that meets the
+   $2$ source and $1$ destination register address constraint of a RISC
+   pipeline.
+However, it also requires conversion of any input and output 
+data betwen {\em quadrant}-packed and standard {\em column}-packed
+representation.
+Although such conversion is
+amortised by $Nr$ rounds of computation, it still represents an overhead vs.
 other variants.
 
-As detailed in
-\REFFIG{fig:v5:pseudo},
-\ISE{5}
-adds
-$ 7$
+As detailed in \REFFIG{fig:v5:pseudo}, \ISE{5} adds $ 7$
 instructions ($3$ for encryption, $3$ for decryption, and $1$ auxiliary).
-For example,
-\VERB{saes.v5.esrsub.lo}
-applies
-\AESFUNC{SubBytes} and \AESFUNC{ShiftRow}  
-to the lower
-row spanning    two packed quadrants,
-\VERB{saes.v5.esrsub.hi}
-applies
-\AESFUNC{SubBytes} and \AESFUNC{ShiftRow}  
-to the upper
-row spanning    two packed quadrants,
-and
-\VERB{saes.v5.emix}
-applies 
-\AESFUNC{MixColumn} 
-to a
-column spanning two packed quadrants.
+Taking encryption as an example,
+we define two instructions to perform the 
+\AESFUNC{ShiftRows} and \AESFUNC{SubBytes} steps.
+\VERB{saes.v5.esrsub.lo} performs 
+\AESFUNC{ShiftRows} and \AESFUNC{SubBytes} on the two
+{\em bottom} quadrants, and \VERB{saes.v5.esrsub.hi} does the same for
+the two {\em top} quadrants.
+The two instructions are nessesary to account for the different rotation
+amounts applied to the top and bottom rows as part of \AESFUNC{ShiftRows}.
+A single instruction \VERB{saes.v5.emix} applies the \AESFUNC{MixColumns}
+transformation to two columns.
+The instruction can source two entire column owing to the quadrant
+packed representation, but
+can only write a single quadrant back.
+Hence, two executions of
+the same instruction are needed to apply the entire \AESFUNC{MixColumns}
+step to each two quadrants.
 
 \REFFIG{fig:v5:round}
 demonstrates that use of 
@@ -110,6 +114,16 @@ $ 4$ \VERB{pack[h]}
      standard 
      Bit-manipulation ~\cite[Section 17]{RV:ISA:I:19}
      extension.
+
+\ISE{5} instructions may be implemented with between $1$ and $4$
+SBox instances, with a corresponding tradeoff between area and
+latency.
+As with \ISE{1} and \ISE{2} however, additional storage elements
+are required if fewer than $4$ SBoxes are instanced in order to
+store intermediate results.
+The auxiliary \VERB{saes.v5.sub} instruction is used during the
+KeySchedule, and can act simply as an interface to the SBoxes
+already required by the round instructions.
 
 % =============================================================================
 
