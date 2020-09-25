@@ -33,19 +33,19 @@ Group\footnote{
 } provides some specific context for this paper, through their remit to 
 develop scalar and vector extensions to support cryptography.
 
-RISC-V uses $32$ registers
-denoted $\GPR[*][ i ]$, for $0 \leq i < 32$,
-and uses \RVXLEN to denote the register bit-width of the base ISA.
+RISC-V uses $32$ registers,
+denoted $\GPR[*][ i ]$ for $0 \leq i < 32$:
 $
 \GPR[*][ 0 ]
 $
-is fixed to $0$, while $\GPR$s $1-31$ are general purpose.
+is fixed to $0$, whereas $\GPR[*][1]$ to $\GPR[*][31]$ are general-purpose.
+\RVXLEN is used to denote the width of each $\GPR[*][ i ]$, and hence the base ISA.
 We focus on extending the
 RV32I~\cite[Section 2]{RV:ISA:I:19}
 and 
 RV64I~\cite[Section 5]{RV:ISA:I:19},
 integer RISC-V base ISA
-and hence focus on systems where 
+and therefore focus on systems where 
 $\RVXLEN = 32$
 or
 $\RVXLEN = 64$.

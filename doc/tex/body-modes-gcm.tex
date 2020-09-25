@@ -111,10 +111,8 @@ Having dealt with efficient implementation of AES and hence \ALG{GCTR} in
 Rather than further 
 embellish the ISE for AES, we instead focus on re-use of the proposed
 standard 
-Bit-manipulation ~\cite[Section 17]{RV:ISA:I:19}
-(At the time of writing, the draft extension proposal is found in
-\cite{riscv:bitmanip:draft})
-extension.
+bit-manipulation extension~\cite[Section 17]{RV:ISA:I:19}
+(at the time of writing, the draft extension proposal is found in~\cite{riscv:bitmanip:draft}).
 This approach is attractive for two reasons.
 AES-GCM is a very common construction, but AES is not the only block
 cipher which can be used with GCM.
@@ -223,7 +221,7 @@ reduction
 is preferable.
 
 We recommend the carry-less multiply instructions
-specified in the proposed RISC-V Bit-manipulation extension also be included
+specified in the proposed RISC-V bit-manipulation extension also be included
 in the RISC-V cryptography extension.
 Implementers would otherwise need to implement (a subset of) the B
 extension, potentially adding functionality and cost that is not

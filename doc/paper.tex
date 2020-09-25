@@ -40,7 +40,7 @@ Symbiotic EDA \\ \email{claire@symbioticeda.com}
 \maketitle
 
 \begin{abstract}
-Secure, efficient execution of AES is an essential requirement for most
+Secure, efficient execution of AES is an essential requirement on most
 computing platforms. Dedicated
 Instruction Set Extensions (ISEs) are often included for this purpose.
 RISC-V is a (relatively) new ISA that lacks such a standardised ISE.
@@ -52,7 +52,7 @@ $4\times$
 and
 $10\times$
 with a hardware cost of $1.1K$ and $8.2K$ gates respectivley,
-when compared to a software T-Table implementation,
+when compared to a software-only implementation based on use of T-tables.
 We also explore how the proposed standard bit-manipulation extension
 to RISC-V can be harnessed for efficient implementation of AES-GCM.
 Our work supports the ongoing RISC-V cryptography extension standardisation
@@ -176,6 +176,9 @@ process.
 \ifbool{anonymous}{}{%
 \section*{Acknowledgements}
 
+We would like to thank the reviewers for their helpful and 
+constructive comments.
+
 This work was undertaken as part of the ongoing standardisation of
 RISC-V. We are grateful to all members of
 the Cryptographic Extensions Task Group
@@ -186,10 +189,7 @@ of their respective employers or RISC-V International.
 The RISC-V cryptography extension is in the process of being standardised
 at the time of writing. The purpose of this work is to support that process.
 
-We would like to thank the reviewers for their helpful and 
-constructive comments.
-
-This work has been supported in part by
+The first and third authors were supported in part by
 EPSRC via grant EP/R012288/1, under the
 RISE (\url{http://www.ukrise.org}) programme
 and
@@ -206,11 +206,11 @@ Innovate UK Project 105747.
 \appendix
 
 \clearpage
-\section{Example AES Round Functions}
+\section{Example AES round function implementations}
 \label{sec:round-functions}
 \input{tex/appx-round-functions.tex}
 \clearpage
-\section{CPU Cores: additional technical detail}
+\section{Additional technical detail for CPU cores}
 \label{sec:cores}
 \input{tex/appx-cores.tex}
 

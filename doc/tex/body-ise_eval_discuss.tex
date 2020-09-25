@@ -58,7 +58,6 @@ applying the Inverse \AESFUNC{MixColumns} transform to each word in the key sche
 Each word requires $8$ instructions to apply {\em only} the Inverse \AESFUNC{MixColumns} 
 transform. We believe this is reasonable, as one typically performs
 many block decryptions per key schedule operation.
-
 Compared to past work, our implementation of \ISE{3} is
 slightly smaller than its original description in \cite{Saarinen:20}:
 $1149$ v.s. $1240$ gates.
@@ -69,11 +68,10 @@ We would expect this improvement to increase in systems which store TTables
 in (relatively) high latency flash memory.
 \ISE{3} performs considerably better than \cite{TilGroSze:05},
 which achieves only a $2\times$ speedup in the best case.
-
 We note that despite needing the same number of instructions per round
 as \ISE{2} (based on \cite{TilGroSze:05}), our \ISE{5} design suffers in terms
 of performance.
-This is due to the conversion between quadrant-packed and column packed
+This is due to the conversion between quadrant-packed and column-packed
 representations.
 
 For a $64$-bit core,

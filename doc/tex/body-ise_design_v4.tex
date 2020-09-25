@@ -20,7 +20,6 @@ produce columns $0$ and $1$ and columns $2$ and $3$
 respectively.
 Each instruction sources $3$ $64$-bit registers, and writes a single
 $64$-bit register.
-
 As shown in \REFFIG{fig:v4:pseudo}, \ISE{4} improves this by 
 adding only $ 7$
 instructions ($2$ for encryption, $2$ for decryption, and $3$ auxiliary).
@@ -34,7 +33,6 @@ the decryption round), and implemented using a base ISA \VERB{xor}
 instruction.
 The round key then no longer needs to be an input to the instruction,
 meaning it only needs $2$ source register operands.
-
 We then note that the nature of \AESFUNC{ShiftRows} means we do
 not need separate instructions to compute the next values of
 columns (0,1) or columns (2,3) as the SPARC instructions do.
@@ -67,7 +65,6 @@ In the $Nr$-th round, which omits \AESFUNC{MixColumns},
      \VERB{saes.v4.encsm}
 is replaced by 
      \VERB{saes.v4.encs}.
-
 Note that use of the Equivalent Inverse Cipher representation
 necessitates inclusion of the \VERB{saes.v4.imix} instruction, in order
 to efficiently imply the inverse \AESFUNC{MixColumn} step to words

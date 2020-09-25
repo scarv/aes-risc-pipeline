@@ -1,7 +1,7 @@
 % =============================================================================
 
 A field element in $\F_{2^8}$ can be represented by an
-$8$-bit byte
+$8$-bit byte,
 where the $i$-th bit of $x$ for $0 \leq i < 8$ represents the $i$-th 
 polynomial coefficient.
 
@@ -11,7 +11,7 @@ The most direct option would be termed
 array-based (or unpacked):
 the matrix is represented as a $16$-element array of $8$-bit bytes, each
 representing field elements.
-FIPS-197~\cite{FIPS:197} defines a word to be st. $w = 32$.
+%FIPS-197~\cite{FIPS:197} defines a word to be st. $w = 32$.
 We use $R$ to refer to the register width of a target platform.
 For RISC-V, $R = \RVXLEN$ where we consider $\RVXLEN \in {32,64}$.
 Where $R \geq  32$,
