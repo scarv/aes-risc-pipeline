@@ -21,10 +21,11 @@ but was not designed
 
 % =============================================================================
 
-\subsubsection{Standard, industry-specified ISEs.}
+\subsubsection{Standard, industry-specified ISEs}
 
-\paragraph{Intel.}
-      Introduced support for AES in 
+\noindent
+{\bf Intel}
+      introduced support for AES in 
       x86
       per~\cite[Section 12.13]{X86:1:18}.
       Instructions use a
@@ -63,12 +64,13 @@ but was not designed
 %            and
 %            \VERB{AESIMC}         ~\cite[Page 3-58]{X86:2:18}).
 
-\paragraph {IBM.}
-      Introduced support for AES in 
+\noindent
+{\bf IBM}
+      introduced support for AES in 
       POWER
       per~\cite[Section 6.11.1]{POWER:18}.
       Instructions use a
-      non-destructive $3$-address ($2$ source, $1$        destination)
+      non-destructive $3$-register ($2$ source, $1$        destination)
       format,
       and operate on data housed in the pre-existing
       vector 
@@ -98,8 +100,9 @@ but was not designed
 %     key expansion
 %     (i.e., \VERB{vsbox}       ~\cite[Page 305]{POWER:18}).
 
-\paragraph{ARM.}
-      Introduced support for AES in 
+\noindent
+{\bf ARM}
+      introduced support for AES in 
       ARMv8-A
       per~\cite[Section A2.3]{ARMv8-A:20}.
       Instructions use a
@@ -137,8 +140,9 @@ but was not designed
 %     \VERB{AESE} obviously lacks \AESFUNC{MixColumns}, and the post-whitening 
 %     step is naturally supported via XOR. 
 
-\paragraph{Oracle.}
-      Introduced support for AES in 
+\noindent
+{\bf Oracle}
+      introduced support for AES in 
       SPARC 
       per~\cite[Sections 7.3+7.4]{SPARC:16}.
       Instructions use a
@@ -187,7 +191,7 @@ but was not designed
 
 % -----------------------------------------------------------------------------
 
-\subsubsection{Non-standard, academia-specified ISEs.}
+\subsubsection{Non-standard, academia-specified ISEs}
 
 % workload-agnostic
 

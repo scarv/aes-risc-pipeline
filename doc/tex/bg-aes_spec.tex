@@ -71,8 +71,8 @@ use the terms AES and AES-128 synonymously.
 
 \paragraph{Design.}
 
-AES is based on some underpinning Mathematics~\cite[Section 4]{FIPS:197},
-and, in particular, can be defined in terms of 
+The mathematics underpinning AES are described in ~\cite[Section 4]{FIPS:197}.
+In particular, it can be defined in terms of 
 operations in the finite field $\F_{2^{  8}}$ constructed as
 $
 \F_{2}[\IND{x}] / ( \IND{x}^{8} + \IND{x}^{4} + \IND{x}^{3} + \IND{x} + 1 ) .
@@ -103,7 +103,6 @@ and
 $\AESRND{rk}{r}_{i,j}$
 respectively, with super- and/or subscripts omitted whenever irrelevant.
 
-At a high(er) level, 
 AES is an iterative block cipher, based on a substitution-permutation network.
 This means encryption using AES can be described~\cite[Section 5.2]{FIPS:197}
 as follows:
