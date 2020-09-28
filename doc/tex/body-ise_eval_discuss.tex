@@ -24,6 +24,11 @@ plus either
 or
 \REFTAB{tab:eval:sw:perf:1}
 for the \CORE{2} or \CORE{1} core respectively.
+We note the small difference in instruction count in some cases between the
+cores.
+This is due to slightly different compiler behaviour at the mesured
+function call sites in each core: the \CORE{1} core saves an extra
+register to the stack.
 We deliberately omit the area of the host core from this calculation, as this
 fixed overhead dominates the final value and detracts from the comparison
 between ISEs themselves.
@@ -109,13 +114,13 @@ on performance than area-efficiency.
   \multicolumn{1}{|c|}{ISA}
 & \multicolumn{1}{ c|}{Variant}
 & \multicolumn{1}{ c|}{             ISE}
-& \multicolumn{1}{ c|}{       ISE Path }
+& \multicolumn{1}{ c|}{       Gate     }
 & \multicolumn{1}{ c|}{\CORE{2}     CPU}
 & \multicolumn{1}{ c|}{\CORE{1}     CPU}
 \\
 & \multicolumn{1}{ c|}{/ Goal       }
 & \multicolumn{1}{ c|}{Area         }
-& \multicolumn{1}{ c|}{Depth        }
+& \multicolumn{1}{ c|}{Delays       }
 & \multicolumn{1}{ c|}{$+$ ISE area }
 & \multicolumn{1}{ c|}{$+$ ISE area }
 \\
