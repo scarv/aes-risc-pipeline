@@ -11,7 +11,7 @@ As a block cipher, AES defines two algorithms
 \ALG{Dec} &:& \SET{ 0, 1 }^{8 \cdot 4 \cdot Nk} \times \SET{ 0, 1 }^{8 \cdot 4 \cdot Nb} \rightarrow \SET{ 0, 1 }^{8 \cdot 4 \cdot Nb} \\
 \end{array}
 \]
-st.
+such that
 $
 m = \ALG{Dec}( k, c = \ALG{Enc}( k, m ) ) .
 $
@@ -59,7 +59,7 @@ $Nr$ dictates the number of rounds.  The standard AES parameter sets are
 \mbox{AES-256} &\mapsto& \TUPLE{ 8, 4, 14 } \\
 \end{array}
 \]
-st. the number of bits in a plaintext (resp. ciphertext) block is fixed to 
+such that the number of bits in a plaintext (resp. ciphertext) block is fixed to 
 $
 8 \cdot 4 \cdot Nb = 128 .
 $

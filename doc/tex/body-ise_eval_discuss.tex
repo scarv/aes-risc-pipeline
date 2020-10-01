@@ -1,111 +1,78 @@
 % =============================================================================
 
+\paragraph{Hardware.}
+\label{sec:ise:eval:hw}
+
+Each ISE variant was integrated into the two host cores 
+described in \REFSEC{sec:ise:imp}.
+The variants which assume  $\RVXLEN = 32$
+(\ISE{1}, \ISE{2}, \ISE{3}, and \ISE{5}) 
+were evaluated
+on {\em both} the
+$32$-bit \CORE{2} core
+{\em  and} the
+$32$-bit \CORE{1} core;
+the variant  which assumes $\RVXLEN = 64$
+(\ISE{4})
+was  evaluated
+on {\em only} the
+$64$-bit \CORE{1} core.
+For \ISE{1}, \ISE{2} and \ISE{5} a trade-off
+between latency and area exists. 
+Each such case is considered through two optimisation goals:
+the (A)rea    goal
+instantiates $1$ S-box   and has a $n$-cycle execution latency,
+whereas
+the (L)atency goal
+instantiates $4$ S-boxes and has a $1$-cycle execution latency.
+We focus on ASIC implementations (rather than FPGA implementations)
+because this is the more relevant metric to the industrial (rather than
+academic) RISC-V community.
+
 \REFTAB{tab:eval:hw:encdec}
-demonstrates that all ISE variants
-imply a modest area overhead relative to their host core.
-For the RV32 \CORE{1} the area overhead of a synthesised \CORE{1} Tile with
-caches was less than $1\%$ in all cases.
-For the \CORE{2}, the area overhead ranged between
-$13\%$ (\ISE{5} (L))
-and
-$3\%$ (\ISE{3}).
-\REFTAB{tab:eval:sw:size}
-shows all ISE variants
-having similarly small memory footprints in terms of both instruction code and
-data.
-Beyond this, and per 
-\REFSEC{sec:ise:design},
-the primary metric of interest is efficiency in terms of
-the latency-area product.
-this metric draws on data from
-\REFTAB{tab:eval:hw:encdec}
-plus either
-\REFTAB{tab:eval:sw:perf:2}
-or
-\REFTAB{tab:eval:sw:perf:1}
-for the \CORE{2} or \CORE{1} core respectively.
-We note the small difference in instruction count in some cases between the
-cores.
-This is due to slightly different compiler behaviour at the mesured
-function call sites in each core: the \CORE{1} core saves an extra
-register to the stack.
-We deliberately omit the area of the host core from this calculation, as this
-fixed overhead dominates the final value and detracts from the comparison
-between ISEs themselves.
+shows the separated cost of the standalone ISE logic and the
+combined cost of the core and integrated ISE.
+Numbers highlighted in {\bf bold} are the best result for each metric.
+The {\em Baseline} rows indicate the metrics for the the
+{\em unmodified} host CPU cores.
+We use the open source Yosys~\cite{yosys} synthesis tool (v0.9+1706)
+with default settings
+to provide post-synthesis (as opposed to post-layout) circuit area in the
+form of NAND2 gate equivalents
+(ISE Area, Tables \ref{tab:eval:hw:encdec} and \ref{tab:eval:hw:dec})
+and circuit depths
+in the form of gate delays
+(ISE Latency, Tables \ref{tab:eval:hw:encdec} and \ref{tab:eval:hw:dec}).
+While more abstract than providing exact area and
+frequency results for a particular ASIC standard cell library, it is
+much easier to reproduce\footnote{
+Especially
+for researchers lacking expensive commercial
+synthesis tools and process design kits.
+} while still providing meaningful results.
+This methodology has also been used for other RISC-V standard extension
+proposals, namely the bit-manipulation extension~\cite[Section 3.1, Page 54]{riscv:bitmanip:draft}.
+We found 
+that none of the ISEs affected the critical gate delay path of either the
+\CORE{2} or \CORE{1} core.
+These were $97$ for the 32-bit \CORE{2} core and $231$ and $167$ for the
+$32$ and $64$-bit \CORE{1} core respectivley\footnote{
+We are unable to explain why the gate delay path should be longer for
+the $32$-bit \CORE{2} core than the $64$-bit variant without a deep dive
+into the micro-architecture. We suspect it is an artifact of the sheer
+configurability (rather than optimality) of the \CORE{1} core.
+}.
+Considering each ISE as implemented on the \CORE{1} core, we note the 
+overhead wrt. area is marginal: this stems from the fact that the 
+baseline area of \CORE{1} includes the data and instruction caches.
 
-\REFTAB{tab:eval:results} 
-captures the results for the \CORE{1} core, although the same conclusion can 
-be drawn for the \CORE{2} core.  Qualitatively, we place more of a weight on 
-Encryption (\ALG{Enc})
-and 
-Decryption (\ALG{Dec})
-vs.
-Encryption Key Expansion (\ALG{Enc-KeyExp})
-and 
-Decryption Key Expansion (\ALG{Dec-KeyExp}),
-because
-typically many \ALG{Enc} or \ALG{Dec} operations are performed per
-\ALG{KeyExp}.
-
-For a $32$-bit core, our conclusion is that
-\ISE{3} 
-is the best option.
-Despite not being the fastest (by a small margin), it is the most efficient,
-and simplest to implement.
-The area optimised \ISE{2} implementation sometimes comes close in
-efficiency, but requires a more complex multi-cycle implementation
-in this case.
-We note that \ISE{3} has relatively poor performance for the decryption
-key schedule.
-This is because it uses the Equivalent Inverse Cipher representation,
-and must first create an {\em encryption} orientated key schedule, before
-applying the Inverse \AESFUNC{MixColumns} transform to each word in the key schedule.
-Each word requires $8$ instructions to apply {\em only} the Inverse \AESFUNC{MixColumns} 
-transform. We believe this is reasonable, as one typically performs
-many block decryptions per key schedule operation.
-Compared to past work, our implementation of \ISE{3} is
-slightly smaller than its original description in \cite{Saarinen:20}:
-$1149$ v.s. $1240$ gates.
-\cite{Saarinen:20} estimates a $5\times$ performance improvement, which is
-slightly better than our measured $4\times$ improvement, though this is
-dependant on relative memory access latencies.
-We would expect this improvement to increase in systems which store TTables
-in (relatively) high latency flash memory.
-\ISE{3} performs considerably better than \cite{TilGroSze:05},
-which achieves only a $2\times$ speedup in the best case.
-We note that despite needing the same number of instructions per round
-as \ISE{2} (based on \cite{TilGroSze:05}), our \ISE{5} design suffers in terms
-of performance.
-This is due to the conversion between quadrant-packed and column-packed
-representations.
-
-For a $64$-bit core,
-\ISE{4} 
-is the best option, which is somewhat obvious because it specifically makes
-use of the wider data-path.
-It is $10\times$ faster to perform a block encryption than a baseline T-Table
-implementation targeting a 64-bit base RISC-V architecture.
-With reference to
-\REFTAB{tab:eval:sw:perf:1}, 
-note that the number of cycles per instruction executed is relatively high.
-This fact stems from use of the ROCC interface, in that forwarding of the 
-result from an ISE instruction (that uses the ROCC) incurs an overhead vs. 
-an ISE instruction; fine-grained integration of the AES-FU could therefore
-incrementally improve the results.
-
-We believe it is sensible to standardise different ISEs for the
-RV32 and RV64 base ISAs.
-This allows each ISE design to better suit the constraints of each
-base ISA.
-In the RV32 case, this acknowledges that such cores will most often
-appear in resource-constrained, embedded or IoT class devices.
-Hence, the most efficient ISE design is appropriate.
-For necessarily larger RV64-based designs, it makes sense to take advantage
-of the wider data-path, and acknowledge that these are more likely to
-be application class cores. Hence, they will place a higher value
-on performance than area-efficiency.
-
-% -----------------------------------------------------------------------------
+In
+\REFTAB{tab:eval:hw:dec}
+we consider the hardware costs when only {\em encryption} instructions are
+implemented.
+This is relevant to systems which only care about certain block cipher
+modes of operation, such as Galos/Counter-mode.
+We discuss this further in \REFSEC{sec:gcm}.
 
 \begin{table}[p]
 \centering
@@ -114,13 +81,13 @@ on performance than area-efficiency.
   \multicolumn{1}{|c|}{ISA}
 & \multicolumn{1}{ c|}{Variant}
 & \multicolumn{1}{ c|}{             ISE}
-& \multicolumn{1}{ c|}{       Gate     }
+& \multicolumn{1}{ c|}{       ISE      }
 & \multicolumn{1}{ c|}{\CORE{2}     CPU}
 & \multicolumn{1}{ c|}{\CORE{1}     CPU}
 \\
 & \multicolumn{1}{ c|}{/ Goal       }
 & \multicolumn{1}{ c|}{Area         }
-& \multicolumn{1}{ c|}{Delays       }
+& \multicolumn{1}{ c|}{Latency      }
 & \multicolumn{1}{ c|}{$+$ ISE area }
 & \multicolumn{1}{ c|}{$+$ ISE area }
 \\
@@ -140,9 +107,78 @@ on performance than area-efficiency.
  RV64IMC & \ISE{4}  &     8226 &       28 &  N/A  & 3733786 (1.004$\times$) \\
 \hline
 \end{tabular}
-\caption{Hardware metrics for each ISE variant with encrypt and decrypt instructions.}
+\caption{
+Hardware metrics for each ISE variant with encrypt and decrypt instructions.
+Area is measured in NAND2 gate equivalents and latency in gate delays.
+}
 \label{tab:eval:hw:encdec}
 \end{table}
+% =============================================================================
+
+\paragraph{Software.}
+\label{sec:ise:eval:sw}
+
+We evaluated each ISE variant by implementing the AES-128
+$\ALG{Enc}$,
+$\ALG{Dec}$
+{\em plus}
+$\ALG{Enc-KeyExp}$
+and
+$\ALG{Dec-KeyExp}$.
+We use our own implementation of a {\em non}-ISE 
+T-table based
+implementation as a baseline.
+The variants which assume  $\RVXLEN = 32$
+(\ISE{1}, \ISE{2},     \ISE{3}, and \ISE{5})
+used a    rolled strategy wrt. loops:
+ \ISE{1}, \ISE{2},              and \ISE{5}
+used  $1$ round  per iteration,
+whereas
+                       \ISE{3}
+used $2$ rounds per iteration
+to avoid needless register move operations.
+The variant  which assumes $\RVXLEN = 64$
+(\ISE{4})
+used an unrolled strategy.
+In all cases the state is naturally aligned,\footnote{%
+RISC-V does not mandate support for misaligned loads and stores, so
+aligning the state this way ensures the best performance across all
+cores.
+} meaning any input (resp. output) can be loaded (resp. stored) 
+using 
+$4$ \VERB{lw} instructions on a $32$-bit core
+or
+$2$ \VERB{ld} instructions on a $64$-bit core.
+
+\REFTAB{tab:eval:sw:size} 
+records the
+memory footprint (i.e., code footprint and static data footprint)
+of each software implementation.
+Again, numbers highlighted in {\bf bold} are the best result for each metric.
+Where an entry for
+\ALG{Dec-KeyExp}
+is     zero, this implies that
+$\ALG{Enc-KeyExp} =    \ALG{Dec-KeyExp}$
+so there is no overhead.
+Where an entry for
+\ALG{Dec-KeyExp}
+is non-zero, this implies that
+$\ALG{Enc-KeyExp} \neq \ALG{Dec-KeyExp}$,
+and the equivalent inverse cipher construction~\cite[Section 5.3.5]{FIPS:197}
+is used.
+This allows $\ALG{Dec-KeyExp}$ to
+call $\ALG{Enc-KeyExp}$,
+then
+perform some additional post processing,
+with the quoted footprint therefore reflecting the latter only.  
+\REFTAB{tab:eval:sw:perf:2}
+and
+\REFTAB{tab:eval:sw:perf:1}
+record
+instruction (i.e., iret) and cycle counts
+of each implementation,
+as executed on the \CORE{2} and \CORE{1} cores respectively.
+
 
 \begin{table}[p]
 \centering
@@ -160,10 +196,10 @@ on performance than area-efficiency.
 \hline
 %RV32IMC & Byte    &            &           &      312 &        0 &  522 \\
  RV32IMC & T-table &       804  &       804 &      154 &      174 & 5120 \\
- RV32IMC & \ISE{1} &       424  &       424 &\bftab 68 &        0 &   10 \\
- RV32IMC & \ISE{2} &\bftab 234  &\bftab 238 &\bftab 68 &       62 &   10 \\
- RV32IMC & \ISE{3} &       290  &       290 &       86 &       64 &   10 \\
- RV32IMC & \ISE{5} &       266  &       278 &      290 &        0 &   10 \\
+ RV32IMC & \ISE{1} &       424  &       424 &\bftab 68 & \bftab 0 &\bftab 10 \\
+ RV32IMC & \ISE{2} &\bftab 234  &\bftab 238 &\bftab 68 &       62 &\bftab 10 \\
+ RV32IMC & \ISE{3} &       290  &       290 &       86 &       64 &\bftab 10 \\
+ RV32IMC & \ISE{5} &       266  &       278 &      290 & \bftab 0 &\bftab 10 \\
 \hline
  RV64IMC & \ISE{4} &       268  &       268 &      168 &      100 &    0 \\
 \hline
@@ -172,7 +208,7 @@ on performance than area-efficiency.
 \label{tab:eval:sw:size}
 \end{table}
 
-\begin{table}
+\begin{table}[p]
 \centering
 \begin{tabular}{|c|l|rr|rr|rr|rr|}
 \hline
@@ -252,6 +288,121 @@ on performance than area-efficiency.
 \caption{Execution metrics for each ISE variant on the \CORE{1} core.  Note that the $64$-bit \ISE{4} uses the $64$-bit \CORE{1} core; all others use the $32$-bit \CORE{1} core.}
 \label{tab:eval:sw:perf:1}
 \end{table}
+% =============================================================================
+
+\paragraph{Discussion.}
+\label{sec:ise:eval:discuss}
+
+\REFTAB{tab:eval:hw:encdec}
+demonstrates that all ISE variants
+imply a modest area overhead relative to their host core.
+For the RV32 \CORE{1} the area overhead of a synthesised \CORE{1} Tile with
+caches was less than $1\%$ in all cases.
+For the \CORE{2}, the area overhead ranged between
+$13\%$ (\ISE{5} (L))
+and
+$3\%$ (\ISE{3}).
+\REFTAB{tab:eval:sw:size}
+shows all ISE variants
+having similarly small memory footprints in terms of both instruction code and
+data.
+Beyond this, and per 
+\REFSEC{sec:ise:design},
+the primary metric of interest is efficiency in terms of
+the latency-area product.
+This metric draws on data from
+\REFTAB{tab:eval:hw:encdec}
+plus either
+\REFTAB{tab:eval:sw:perf:2}
+or
+\REFTAB{tab:eval:sw:perf:1}
+for the \CORE{2} or \CORE{1} core respectively.
+We note the small difference in instruction count in some cases between the
+cores.
+This is due to slightly different compiler behaviour at the mesured
+function call sites in each core: the \CORE{1} core saves an extra
+register to the stack.
+We deliberately omit the area of the host core from this calculation, as this
+fixed overhead dominates the final value and detracts from the comparison
+between ISEs themselves.
+
+\REFTAB{tab:eval:results} 
+captures the results for the \CORE{1} core, although the same conclusion can 
+be drawn for the \CORE{2} core.  Qualitatively, we place more of a weight on 
+Encryption (\ALG{Enc})
+and 
+Decryption (\ALG{Dec})
+vs.
+Encryption Key Expansion (\ALG{Enc-KeyExp})
+and 
+Decryption Key Expansion (\ALG{Dec-KeyExp}),
+because
+typically many \ALG{Enc} or \ALG{Dec} operations are performed per
+\ALG{KeyExp}.
+
+For a $32$-bit core, our conclusion is that
+\ISE{3} 
+is the best option.
+Despite not being the fastest (by a small margin), it is the most efficient,
+and simplest to implement.
+The area optimised \ISE{2} implementation sometimes comes close in
+efficiency, but requires a more complex multi-cycle implementation
+in this case.
+We note that \ISE{3} has relatively poor performance for the decryption
+key schedule.
+This is because it uses the Equivalent Inverse Cipher representation,
+and must first create an {\em encryption} orientated key schedule, before
+applying the Inverse \AESFUNC{MixColumns} transform to each word in the key
+schedule.
+Each word requires $8$ instructions to apply {\em only} the Inverse \AESFUNC{MixColumns} 
+transform. We believe this is reasonable, as one typically performs
+many block decryptions per key schedule operation.
+We also note that for the common AES-GCM usecase, decryption functionality
+is not necessary. We discuss this further in \REFSEC{sec:gcm}.
+Compared to past work, our implementation of \ISE{3} is
+slightly smaller than its original description in \cite{Saarinen:20}:
+$1149$ v.s. $1240$ gates.
+\cite{Saarinen:20} estimates a $5\times$ performance improvement, which is
+slightly better than our measured $4\times$ improvement, though this is
+dependant on relative memory access latencies.
+We would expect this improvement to increase in systems which store T-tables
+in (relatively) high latency flash memory.
+\ISE{3} performs considerably better than \cite{TilGroSze:05},
+which achieves only a $2\times$ speedup in the best case.
+We note that despite needing the same number of instructions per round
+as \ISE{2} (based on \cite{TilGroSze:05}), our \ISE{5} design suffers in terms
+of performance.
+This is due to the conversion between quadrant-packed and column-packed
+representations.
+
+For a $64$-bit core,
+\ISE{4} 
+is the best option, which is somewhat obvious because it specifically makes
+use of the wider data-path.
+It is $10\times$ faster to perform a block encryption than a baseline T-table
+implementation targeting a 64-bit base RISC-V architecture.
+With reference to
+\REFTAB{tab:eval:sw:perf:1}, 
+note that the number of cycles per instruction executed is relatively high.
+This fact stems from use of the ROCC interface, in that forwarding of the 
+result from an ISE instruction (that uses the ROCC) incurs an overhead vs. 
+an ISE instruction; fine-grained integration of the AES-FU could therefore
+incrementally improve the results.
+
+We believe it is sensible to standardise different ISEs for the
+RV32 and RV64 base ISAs.
+This allows each ISE design to better suit the constraints of each
+base ISA.
+In the RV32 case, this acknowledges that such cores will most often
+appear in resource-constrained, embedded or IoT class devices.
+Hence, the most efficient ISE design is appropriate.
+For necessarily larger RV64-based designs, it makes sense to take advantage
+of the wider data-path, and acknowledge that these are more likely to
+be application class cores. Hence, they will place a higher value
+on performance than area-efficiency.
+
+% -----------------------------------------------------------------------------
+
 
 % -----------------------------------------------------------------------------
 

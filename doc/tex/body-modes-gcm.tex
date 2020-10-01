@@ -57,13 +57,13 @@ RV64IB &       yes &  shift &             44  &             50  &             56
   \multicolumn{1}{|c|}{ISA}
 & \multicolumn{1}{ c|}{Variant}
 & \multicolumn{1}{ c|}{             ISE}
-& \multicolumn{1}{ c|}{       Gate     }
+& \multicolumn{1}{ c|}{       ISE      }
 & \multicolumn{1}{ c|}{\CORE{2}     CPU}
 & \multicolumn{1}{ c|}{\CORE{1}     CPU}
 \\
 & \multicolumn{1}{ c|}{/ Goal       }
 & \multicolumn{1}{ c|}{Area         }
-& \multicolumn{1}{ c|}{Delays       }
+& \multicolumn{1}{ c|}{Latency      }
 & \multicolumn{1}{ c|}{$+$ ISE area }
 & \multicolumn{1}{ c|}{$+$ ISE area }
 \\
@@ -83,7 +83,10 @@ RV64IB &       yes &  shift &             44  &             50  &             56
  RV64IMC & \ISE{4}  &  3790    &    27    &  N/A  & 3728235 (1.003$\times$) \\
 \hline
 \end{tabular}
-\caption{Hardware implementation metrics for each ISE variant with only encrypt instructions implemented.}
+\caption{
+Hardware implementation metrics for each ISE variant with only encrypt instructions implemented.
+Area is measured in NAND2 gate equivalents and latency in gate delays.
+}
 \label{tab:eval:hw:dec}
 \end{table}
 
@@ -232,8 +235,12 @@ requires the encryption function for a block cipher.
 Given this, we re-evaluate the hardware costs of each ISE, assuming that
 only the encryption instructions are implemented.
 These results are shown in \REFTAB{tab:eval:hw:dec}.
-Unsurprisingly, the area overhead is approximately halved, and there is
-a small reduction in circuit depth.
+Compared to the hardware results for encrypt and decrypt being implemented in
+\REFTAB{tab:eval:hw:encdec}, the area overhead for all ISE variants
+is approximately halved, and there is a small reduction in circuit depth.
+For our recommended variants, \ISE{3} and \ISE{4},
+the area savings when only encryption instructions are implemented
+are $0.46\times$ and $0.54\times$ respectively.
 For very constrained devices which have exact functionality
 requirements, we believe that making implementation of the decryption
 instruction optional could be beneficial.
