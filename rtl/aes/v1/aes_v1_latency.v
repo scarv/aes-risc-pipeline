@@ -5,7 +5,7 @@
 //  Optimised to execute in a minimum number of cycles: 1.
 //  Instances four separate SBoxes.
 //
-module aes_v1 (
+module aes_v1_latency (
 input   wire        g_clk   ,
 input   wire        g_resetn,
 input   wire        valid   , // Input data valid

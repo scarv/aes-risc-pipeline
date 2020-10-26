@@ -2,7 +2,7 @@
 //
 // AES proposal: tiled
 //
-module aes_tiled (
+module aes_tiled_size (
 input   wire        g_clk       ,
 input   wire        g_resetn    ,
 input   wire        valid       , // Input data valid

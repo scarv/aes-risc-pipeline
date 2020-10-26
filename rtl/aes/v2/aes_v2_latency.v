@@ -4,7 +4,7 @@
 //
 //  Latency (clock cycles) optimised.
 //
-module aes_v2 (
+module aes_v2_latency (
 
 input  wire        g_clk    ,
 input  wire        g_resetn ,

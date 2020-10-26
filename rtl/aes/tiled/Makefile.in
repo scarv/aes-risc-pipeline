@@ -4,10 +4,10 @@ MIX  = aes/share/aes_mixcolumn.v
 
 AES_TILED_SIZE_FILES    = aes/tiled/aes_tiled_size.v $(SBOX) $(MIX)
 
-AES_TILED_LATENCY_FILES = aes/tiled/aes_tiled.v $(SBOX) $(MIX)
+AES_TILED_LATENCY_FILES = aes/tiled/aes_tiled_latency.v $(SBOX) $(MIX)
 
-$(eval $(call add_synth_target,aes_tiled_size,$(AES_TILED_SIZE_FILES),aes_tiled))
-$(eval $(call add_synth_target,aes_tiled_latency,$(AES_TILED_LATENCY_FILES),aes_tiled))
+$(eval $(call add_synth_target,aes_tiled_size,$(AES_TILED_SIZE_FILES),aes_tiled_size))
+$(eval $(call add_synth_target,aes_tiled_latency,$(AES_TILED_LATENCY_FILES),aes_tiled_latency))
 
 AES_PROVE_FILES = $(AES_TILED_SIZE_FILES) $(AES_TILED_LATENCY_FILES)
 

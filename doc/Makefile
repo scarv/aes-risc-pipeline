@@ -15,3 +15,6 @@ clean    :
 
 spotless : clean
 	@rm -f ${TARGETS}
+
+getting-started.pdf: getting-started.adoc
+	asciidoctor-pdf -b pdf -o $@ $<

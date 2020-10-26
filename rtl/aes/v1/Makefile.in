@@ -5,8 +5,8 @@ AES_V1_SIZE_FILES    = aes/v1/aes_v1_size.v $(SBOX)
 
 AES_V1_LATENCY_FILES = aes/v1/aes_v1_latency.v $(SBOX)
 
-$(eval $(call add_synth_target,aes_v1_size,$(AES_V1_SIZE_FILES),aes_v1))
-$(eval $(call add_synth_target,aes_v1_latency,$(AES_V1_LATENCY_FILES),aes_v1))
+$(eval $(call add_synth_target,aes_v1_size,$(AES_V1_SIZE_FILES),aes_v1_size))
+$(eval $(call add_synth_target,aes_v1_latency,$(AES_V1_LATENCY_FILES),aes_v1_latency))
 
 
 AES_PROVE_FILES = $(AES_V1_SIZE_FILES) $(AES_V1_LATENCY_FILES)

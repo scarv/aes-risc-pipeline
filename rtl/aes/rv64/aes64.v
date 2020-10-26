@@ -8,7 +8,7 @@
 //      - saes64.dec
 //      - saes64.imix
 //
-module aes64(
+module aes64 (
 
 input  wire         valid   , // Are the inputs valid?
 input  wire         mix     , // Mix enable for op_enc/op_dec

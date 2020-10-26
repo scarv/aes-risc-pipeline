@@ -5,7 +5,7 @@
 //  Optimised to be as small as possible.
 //  Instances 1 SBox, takes 4 cycles.
 //
-module aes_v1 (
+module aes_v1_size (
 input   wire        g_clk   ,
 input   wire        g_resetn,
 input   wire        valid   , // Input data valid

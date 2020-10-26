@@ -1,0 +1,455 @@
+
+= AES RISC-V ISE - Getting Started
+Ben Marshall <ben.marshall@bristol.ac.uk>
+:toc:
+
+== Introduction
+
+This guide should explain how to get started with this repository and
+recreate our experimental results.
+Specifically, by the end, you will have:
+
+* Built our patched toolchain to compile assembly programs using the
+  AES instruciton variants.
+
+* Build the instruction set simulator letting you quickly develop software
+  using them.
+
+* Run each ISE variant on the simulator.
+
+* Created synthesised versions of the stand-alone hardware for each ISE
+  variant.
+
+* Synthesised each ISE variant, integrated into the SCARV-CPU.
+
+* Run each ISE variant on the simulated SCARV-CPU, and opened the
+  simulation waveforms for analysis.
+
+Given the enourmous number of variables (including, but not limited to
+tool versions and base compiler / operating system combinations), you
+should not expect to replicate our results exactly, down to the last
+gate or instruction cycle. You should expect however, to reproduce our
+results to the point where you would reasonable draw the same
+conclusions as us.
+
+NOTE: This guide only details how to work with the simulated RV64 and RV32
+ISEs, and the cycle accurate RV32 verilog models. It does not detail
+how to use the Rocket core. While this doesn't allow for complete reproduction
+of our results, we had to strike a balance between time available and
+completeness. The Rocket core repository requires an enormous amount of
+extra tooling to work with, which we cannot support very easily.
+
+This is an involved project to replicate. Feel free to raise a 
+https://github.com/scarv/aes-risc-pipeline/issues/new[Github issue]
+if you have a problem.
+
+**Good luck!**
+
+== Obtaining the repository
+
+This shouldn't be too hard:
+
+    git clone git@github.com:scarv/aes-risc-pipeline.git
+    cd aes-risc-pipeline
+
+You will also need to checkout several submodules:
+
+    git submodule update --init --recursive
+
+This will checkout:
+
+* The scarv-cpu submodule, pointing at the correct development branch.
+
+* The RISC-V toolchain we modify, along with the instruction set simulator
+  and proxy kernel.
+
+Now is a good time to go and make some coffee, since the toolchain takes
+a long time to download.
+
+=== Repository organisation
+
+Here is a brief overview of the most interesting directories in the
+`aes-risc-pipeline` repository.
+
+    .
+    ├── bin - Tools / project setup scripts etc.
+    ├── doc - Project documentation.
+    ├── extern - External git submodules
+    │   ├── riscv-gnu-toolchain - The base for the RISC-V toolchain
+    │   ├── riscv-isa-sim - The RISC-V instruction set simulator (ISS)
+    │   ├── riscv-pk - Proxy kernel for running programs on the ISS
+    │   └── scarv-cpu - Development branch of the SCARV-CPU. See more below.
+    ├── rtl - Standalone RTL implementations of each ISE
+    │   └── aes
+    │       ├── rv64
+    │       ├── share
+    │       ├── tiled
+    │       ├── v1
+    │       ├── v2
+    │       └── v3
+    └── src - C/Assembly sourcecode for each variant, plus some others.
+        ├── aes
+        │   ├── bytewise
+        │   ├── rv64
+        │   ├── share
+        │   ├── tiled
+        │   ├── ttable
+        │   ├── ttable64
+        │   ├── v1
+        │   ├── v2
+        │   └── v3
+        ├── test - A test harness to make sure AES is implemented correctly.
+        └── toolchain - Patches for the ISS, toolchain and proxy kernel.
+
+NOTE: In our paper, the `tiled` variant is referred too as `v5`, and
+the `rv64` variant is referred too as `v4`.
+
+We also describe the `scarv-cpu` external submodule, since this is an
+integral part of the project too. Some directories not strictly needed to
+reproduce this work such as the verification flow for the unmodified core) 
+are omitted for clarity.
+
+    .
+    ├── bin - Project setup and utility scripts.
+    ├── docs - Project documentation.
+    ├── external - External submodules.
+    ├── flow - Simulation/Verificaiton/Synthesis flow scripts.
+    │   ├── gtkwave - Pre-made wave viewer layout files.
+    │   ├── verilator - Verilator simulation flows.
+    │   └── yosys - Synthesis flow.
+    ├── rtl 
+    │   └── core - Verilog files for the CPU core.
+    ├── src - Core specific software.
+    └── verif - Verification code
+        ├── rvfi - Formal verification interface support code.
+        └── unit - Unit tests, including the AES benchmark harness.
+
+At this point you should:
+
+* Have checked out the top level repository and its submodules.
+
+== Setting up the Workspace
+
+Any time you are working with the repository, you will need to run
+the workspace setup script.
+For commands run inside the top level `aes-risc-pipeline` repository
+you cloned first, you must run:
+
+    source bin/conf.sh
+    -------------------------[Setting Up Project]--------------------------
+    $RISCV is empty. Setting to '/home/work/scarv/aes-risc-pipeline/build/toolchain/install'
+    ----
+    REPO_HOME      = /home/work/scarv/aes-risc-pipeline
+    REPO_BUILD     = /home/work/scarv/aes-risc-pipeline/build
+    YOSYS_ROOT     = /opt/eda/Yosys
+    VERILATOR_ROOT = /opt/eda/verilator
+    RISCV          = /home/work/scarv/aes-risc-pipeline/build/toolchain/install
+    ------------------------------[Finished]-------------------------------
+
+Where the `/home/work/scarv*` path will differ for your personal setup.
+We will update some of these environment variables shortly.
+
+At this point you should:
+
+* Have checked out the top level repository and its submodules.
+
+* Setup the workspace environment, ready to install the tools.
+
+== Installing Tools
+
+Next, you will need to install the following tools:
+
+The toolchain, ISS and PK all use a patch based methodology to maintain
+modifications to them.
+The patches are stored in `$REPO_HOME/src/toolchain`, and managed
+using the `Makefile` in there. Reading the `Makefile` should make
+it clear which commands to use to apply/update/revert the patches.
+Only the _apply_ commands will be described here.
+
+=== The modified toolchain:
+
+Run the following commands to patch, configure, build and install the
+RISC-V toolchain. It will be installed to where the `$RISCV` environment
+variable points, as per the project setup script.
+
+    cd $REPO_HOME
+    make -C src/toolchain binutils-apply-patch
+    make -C src/toolchain configure
+    make -C src/toolchain build
+
+The first command applies a patch to binutils so it knows how to
+assemble the custom AES instructions.
+The second configures the toolchain build, and the third builds it.
+
+This is another good point to stop and have a coffee, as building
+binutils and GCC can take a while.
+
+Once finished, the toolchain will have been installed to `$RISCV`.
+Look inside `$RISCV/bin` to see the familiar set of GCC programs,
+including `ld`, `as` and `gcc`.
+
+=== Instruction Set Simulator (Spike)
+
+Run the following commands to patch and build the ISS:
+
+    cd $REPO_HOME
+    make -C src/toolchain spike-apply-patch
+    make -C src/toolchain spike-configure
+    make -C src/toolchain spike-build
+
+=== Proxy Kernel (PK)
+
+Likewise for the proxy kernel:
+
+    cd $REPO_HOME
+    make -C src/toolchain pk-apply-patch
+    make -C src/toolchain pk-configure
+    make -C src/toolchain pk-build
+
+We build two versions of the PK: an RV32 and an RV64 variant. This is
+so we can test the RV64 and RV32 variants of the different AES ISEs.
+
+=== Verilator
+
+Install Verilator following the guide found
+https://www.veripool.org/projects/verilator/wiki/Installing[here].
+There is a script to do all of this for you:
+
+    source $REPO_HOME/bin/install-verilator.sh
+
+NOTE: The script will ask for `sudo` permissions to install pre-requesites.
+
+NOTE: You must `source` the script rather than just running is so that
+the `VERILATOR_ROOT` environment variable change takes effect.
+
+The exact version string we use is
+`4.100 2020-09-07 rev v4.100-10-g39eea781`.
+However, any `4.*` version should work just fine.
+
+We recommend *not* running the `make install` command. Only build
+Verilator in place, and set the `VERILATOR_ROOT` environment
+variable to point at the root of the Verilator repository.
+This simplifies the installation across many platforms and operating
+systems.
+It is described in section `3.5.1.1` of the installation
+guide as _"our personal favorite"_ method by the developers of verilator,
+and who are we to disagree?
+
+This is another good time to _make_, but not drink, some coffee.
+
+=== Yosys
+
+Install Yosys following the guide found
+http://www.clifford.at/yosys/download.html[here].
+
+We recommend building from source, and checking out the correct
+version used by our project: `v0.9-1706`.
+The exact build steps, hence, are:
+
+    cd $REPO_HOME/build
+    git clone https://github.com/cliffordwolf/yosys.git
+    cd yosys
+    git checkout 1dbc7017 # v0.9-1706
+    export YOSYS_ROOT=`pwd`
+    make config-gcc
+    make -j $(nproc)
+
+Alternativly, there is a script to do all of this for you:
+
+    source $REPO_HOME/bin/install-yosys.sh
+
+NOTE: The script will ask for `sudo` permissions to install pre-requesites.
+
+NOTE: You must `source` the script rather than just running is so that
+the `YOSYS_ROOT` environment variable change takes effect.
+
+Again, we **do not** recommend running `make install`. Simply set
+the `YOSYS_ROOT` environment variable to point at the top of
+the checked out Yosys repository, as is done in the `export` command
+above.
+
+Now is a good time to drink that coffee you make during the Verilator step.
+
+At this point, you should have:
+
+* Have checked out the top level repository and its submodules.
+
+* Setup the workspace environment, ready to install the tools.
+
+* Installed the patched toolchain, ISS and proxy kernel.
+
+* Installed Yosys (for synthesis) and Verilator (for simulation).
+
+== Hardware Synthesis
+
+First, we will try to synthesise the ISE hardware.
+
+=== Standalone ISEs
+
+The standalone ISE hardware implementations live in
+`$REPO_HOME/rtl/aes`.
+There is a `README` and `Makefile` in `$REPO_HOME/rtl` which shows
+how to synthesise each ISE variant as a standalone module.
+
+The most useful commands are:
+
+* `make print-synth-targets` to show which synthesis targets are
+   available.
+
+* make `synth-synth-aes_<variant>_<opt>` where `<variant>` is the
+  particular ISE variant, and `<opt>` is the optimisation goal (size or
+  latency).
+
+All of the synthesis results are put in `$REPO_BUILD/rtl/` under a
+subdirectory named for the ISE variant.
+Each subdirectory contains the synthesised RTL, the synthesis
+log and a circuit depth and cell usage report.
+
+Each synthesis target can be modified only to include encrypt instructions,
+rather than the default encrypt and decrypt.
+Adding `ENABLE_DECRYPT=0` to the make command-line will enable/disable
+decryption instructions.
+
+NOTE: Variant 3 (`v3`) size and latency optimisation variants are the same,
+since there is really only one sensible way to implement the instruction
+with a single SBox.
+
+NOTE: Only a latency optimised variant is provided for the RV64 ISE.
+
+Running
+
+    make -B -C rtl/ synth-all
+
+will create sumarised reports under `$REPO_HOME/build` called
+`synth-cells.rpt` and `synth-ltp.rtp`.
+
+=== CPU Integration
+
+Next, we will try to build the modified SCARV CPU, with each AES
+variant instantiated. There are some additional steps to set this
+up however.
+
+* Open a _new terminal_ and make `$REPO_HOME/extern/scarv-cpu` your
+  current working directory.
+
+* Run the SCARV-CPU project setup script
+
+    source bin/conf.sh.
+
+* This is necessary, since the SCARV-CPU uses different design flows
+  from the top-level aes-risc-pipeline repository.
+  It will automatically set the `YOSYS_ROOT`, `VERILATOR_ROOT` and `RISCV`
+  environment variables up correctly for your previously installed
+  versions.
+
+=== Synthesis
+
+To synthesise a baseline variant of the core with no AES ISE
+enabled, run:
+
+    make synthesise XC_CLASS_AES=0 XC_AES_DECRYPT=0 XC_AES_OPT_GOAL=size
+
+This will synthesise the baseline AES core, and put the results in
+`$REPO_HOME/work/synth`.
+
+NOTE: `$REPO_HOME` now points inside the `scarv-cpu` submodule.
+
+To synthesise a variant of the core for a particular AES ISE:
+
+    make synthesise \
+        XC_CLASS_AES=1 \
+        XC_AES_VARIANT=<VAR> \
+        XC_AES_DECRYPT=<0/1> \
+        XC_AES_OPT_GOAL=<size/latency>
+
+Where `<VAR>` corresponds to:
+
+* `0` - Baseline - no AES ISE instanced.
+
+* `1` - ISE Variant 1
+
+* `2` - ISE Variant 2
+
+* `3` - ISE Variant 3
+
+* `4` - ISE Variant 5 (Tiled)
+
+NOTE: ISE V4 cannot be used with the SCARV-CPU, as it requires a 64-bit
+base ISA.
+
+Hence, to run the Variant 5 ISE, with decryption enabled and optimising
+for size, you would run:
+    
+    make synthesise \
+        XC_CLASS_AES=1 \
+        XC_AES_VARIANT=4 \
+        XC_AES_DECRYPT=<0/1> \
+        XC_AES_OPT_GOAL=size
+
+All synthesis results are placed in `$REPO_HOME/work/synth`.
+You may want to save previous synthesis run results by copying the
+directory and re-naming it something useful.
+
+=== Simulation
+
+The software source for each implementation of the AES ISEs
+is kept in the `aes-risc-pipeline` repo under source.
+Depending on the selected variant, the right sources are included
+in the simple test harness in the `scarv-cpu` submodule under
+`verif/unit/aes`.
+
+To run a particular variant of the ISE through the RTL simulation,
+run:
+
+    make run-sim-v1-latency
+    make run-sim-v1-size
+    make run-sim-v2-latency
+    make run-sim-v2-size
+    make run-sim-v3-latency
+    make run-sim-v5-latency
+    make run-sim-v5-size     
+
+To run an RTL simulation, and store the results (including the VCD
+waveforms) under `$REPO_HOME/work/unit/aes-<VARIANT>`
+
+NOTE: Running `*-latency` will overwrite the results for `*-size` and
+vice-versa.
+
+To help with making sense of the waveforms (when using GTKWave), you
+can use the pre-provided wave layout file. Click on 
+`File -> Read Save File` and then (with the VCD waveform loaded),
+open `$REPO_HOME/flow/gtkwave/verilator.gtkw`.
+
+== Software Simulation
+
+Navigate back to the `aes-risc-pipeline` repository directory, and you can
+run the different AES variants in the Spike ISA simulator, which can
+be more software-developer friendly than the cycle accurate CPU simulation.
+
+The sources for each AES variant are found in `$REPO_HOME/src/aes.`
+
+To run each variant in the simulator:
+
+    make -C src/ test-bytewise
+    make -C src/ test-rv64
+    make -C src/ test-tiled
+    make -C src/ test-ttable
+    make -C src/ test-ttable64
+    make -C src/ test-v1
+    make -C src/ test-v2
+    make -C src/ test-v3        
+
+This will build and run the AES variant, and put the run artifacts
+in `$REPO_HOME/build/src`.
+
+== Troubleshooting
+
+=== `REPO_HOME` and `REPO_HOME`
+
+When working in the `scarv-cpu` submodule, v.s. the `aes-risc-pipeline`
+parent module, make sure you have the correct environment variables,
+set. You need to run the right `bin/conf.sh` project workspace
+script each time you switch between them. We recommend having
+separate terminal sessions open for each one.
+
+
