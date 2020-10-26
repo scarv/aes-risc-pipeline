@@ -12,6 +12,6 @@ This is the git repository for the paper
 to appear at CHES 2021.
 You can see an ePrint [here](https://eprint.iacr.org/2020/930.pdf)
 
-See the [Getting Started](docs/getting-started.adoc) guide for how
+See the [Getting Started](doc/getting-started.adoc) guide for how
 to use the repository.
 
