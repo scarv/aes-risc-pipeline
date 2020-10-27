@@ -1,8 +1,7 @@
 #!/bin/bash
 
-echo "Installing yosys."
+echo "Installing Verilator."
 
-set -e
 set -x
 
 sudo apt-get install git make autoconf g++ flex bison
@@ -24,3 +23,6 @@ make -j 4
 echo "Installation complete"
 
 cd $REPO_HOME
+
+set +x
+

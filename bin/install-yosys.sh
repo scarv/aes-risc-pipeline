@@ -2,7 +2,6 @@
 
 echo "Installing yosys."
 
-set -e
 set -x
 
 sudo apt-get install build-essential clang bison flex \
@@ -21,3 +20,6 @@ make -j $(nproc)
 echo "Installation complete"
 
 cd $REPO_HOME
+
+set +x
+

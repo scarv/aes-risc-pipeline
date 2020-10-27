@@ -241,19 +241,6 @@ This is another good time to _make_, but not drink, some coffee.
 
 Install Yosys following the guide found
 http://www.clifford.at/yosys/download.html[here].
-
-We recommend building from source, and checking out the correct
-version used by our project: `v0.9-1706`.
-The exact build steps, hence, are:
-
-    cd $REPO_HOME/build
-    git clone https://github.com/cliffordwolf/yosys.git
-    cd yosys
-    git checkout 1dbc7017 # v0.9-1706
-    export YOSYS_ROOT=`pwd`
-    make config-gcc
-    make -j $(nproc)
-
 Alternativly, there is a script to do all of this for you:
 
     source $REPO_HOME/bin/install-yosys.sh
@@ -296,7 +283,7 @@ The most useful commands are:
 * `make print-synth-targets` to show which synthesis targets are
    available.
 
-* make `synth-synth-aes_<variant>_<opt>` where `<variant>` is the
+* `make synth-synth-aes_<variant>_<opt>` where `<variant>` is the
   particular ISE variant, and `<opt>` is the optimisation goal (size or
   latency).
 
@@ -318,6 +305,7 @@ NOTE: Only a latency optimised variant is provided for the RV64 ISE.
 
 Running
 
+    cd $REPO_HOME
     make -B -C rtl/ synth-all
 
 will create sumarised reports under `$REPO_HOME/build` called
@@ -341,6 +329,9 @@ up however.
   It will automatically set the `YOSYS_ROOT`, `VERILATOR_ROOT` and `RISCV`
   environment variables up correctly for your previously installed
   versions.
+
+NOTE: this will update the value of `$REPO_HOME` in your new terminal
+to point at the `extern/scarv-cpu` submodule.
 
 === Synthesis
 
