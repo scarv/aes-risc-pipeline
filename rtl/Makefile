@@ -84,7 +84,7 @@ $(call map_synth_rpt,${1}) : ${2}
         -p "proc" \
         -p "synth -top ${3} -flatten" \
         -p "abc -g cmos" \
-        -p "opt fast" \
+        -p "opt -fast" \
         -p "write_verilog $(call map_cmos_verilog,${1})" \
         -p "flatten" \
         -p "tee -o $(call map_synth_rpt,${1}) stat -tech cmos -liberty $(ASIC_LIB_FILE)" \

@@ -2,11 +2,16 @@
 = AES RISC-V ISE - Getting Started
 Ben Marshall <ben.marshall@bristol.ac.uk>
 :toc:
+:homepage: https://github.com/scarv/aes-risc-pipeline
+
 
 == Introduction
 
-This guide should explain how to get started with this repository and
-recreate our experimental results.
+This document explains how to use the https://github.com/scarv/aes-risc-pipeline[aes-risc-pipeline] repository,
+associated with the 
+https://eprint.iacr.org/2020/930.pdf[paper]
+"_The design of scalar AES Instruction Set Extensions for RISC-V_",
+presented at CHES 2021.
 Specifically, by the end, you will have:
 
 * Built our patched toolchain to compile assembly programs using the
@@ -42,6 +47,7 @@ extra tooling to work with, which we cannot support very easily.
 This is an involved project to replicate. Feel free to raise a 
 https://github.com/scarv/aes-risc-pipeline/issues/new[Github issue]
 if you have a problem.
+You can also email ben.marshall@bristol.ac.uk, and I will do my best to help.
 
 **Good luck!**
 
@@ -267,6 +273,31 @@ At this point, you should have:
 
 * Installed Yosys (for synthesis) and Verilator (for simulation).
 
+
+== Software Simulation
+
+Navigate to the `aes-risc-pipeline` repository directory, and you can
+run the different AES variants in the Spike ISA simulator, which can
+be more software-developer friendly than the cycle accurate CPU simulation.
+
+The sources for each AES variant are found in `$REPO_HOME/src/aes.`
+
+To run each variant in the simulator:
+
+    cd $REPO_HOME
+    make -C src/ test-bytewise
+    make -C src/ test-rv64
+    make -C src/ test-tiled
+    make -C src/ test-ttable
+    make -C src/ test-ttable64
+    make -C src/ test-v1
+    make -C src/ test-v2
+    make -C src/ test-v3        
+
+This will build and run the AES variant, and put the run artifacts
+in `$REPO_HOME/build/src`.
+
+
 == Hardware Synthesis
 
 First, we will try to synthesise the ISE hardware.
@@ -381,7 +412,7 @@ All synthesis results are placed in `$REPO_HOME/work/synth`.
 You may want to save previous synthesis run results by copying the
 directory and re-naming it something useful.
 
-=== Simulation
+=== Cycle Accurate Simulation
 
 The software source for each implementation of the AES ISEs
 is kept in the `aes-risc-pipeline` repo under source.
@@ -411,27 +442,6 @@ can use the pre-provided wave layout file. Click on
 `File -> Read Save File` and then (with the VCD waveform loaded),
 open `$REPO_HOME/flow/gtkwave/verilator.gtkw`.
 
-== Software Simulation
-
-Navigate back to the `aes-risc-pipeline` repository directory, and you can
-run the different AES variants in the Spike ISA simulator, which can
-be more software-developer friendly than the cycle accurate CPU simulation.
-
-The sources for each AES variant are found in `$REPO_HOME/src/aes.`
-
-To run each variant in the simulator:
-
-    make -C src/ test-bytewise
-    make -C src/ test-rv64
-    make -C src/ test-tiled
-    make -C src/ test-ttable
-    make -C src/ test-ttable64
-    make -C src/ test-v1
-    make -C src/ test-v2
-    make -C src/ test-v3        
-
-This will build and run the AES variant, and put the run artifacts
-in `$REPO_HOME/build/src`.
 
 == Troubleshooting
 
@@ -442,5 +452,4 @@ parent module, make sure you have the correct environment variables,
 set. You need to run the right `bin/conf.sh` project workspace
 script each time you switch between them. We recommend having
 separate terminal sessions open for each one.
-
 
